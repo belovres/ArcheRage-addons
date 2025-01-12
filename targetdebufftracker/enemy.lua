@@ -173,7 +173,7 @@ buffAnchor:SetHandler("OnUpdate", buffAnchor.OnUpdate)
 local languageSetting = "English"
 --language strings
 local BUFFADDGUIDE = " showall/list/add/remove [buffid] [comment(optional)]"
-local INVALIDCOMMAND = "Invalid command. !debuff / !buff / !showids / !import / !export \n Self commands: !sdebuff / !sbuff / !sshowids / !simport / !sexport"
+local INVALIDCOMMAND = "Invalid command. !debuff / !buff / !showids / !import / !export"
 local BUFFLOADSUCCESS = "Buffs loaded successfully."
 local TABLE_EMPTY = "buffs.lua not found. Starting with an empty buffs table."
 local FILENOTFOUND = "buffs.lua not found. An empty buffs table will be created."
@@ -190,7 +190,7 @@ languageSetting = X2Locale:GetLocale()
 
 if languageSetting == "zh_cn" then
     BUFFADDGUIDE = " showall/list/add/remove [buffid] [备注（可选]"
-    INVALIDCOMMAND = "无效的指令。  !debuff / !buff / !showids / !import / !export \n 自身指令: !sdebuff / !sbuff / !sshowids / !simport / !sexport"
+    INVALIDCOMMAND = "无效的指令。  !debuff / !buff / !showids / !import / !export"
     BUFFLOADSUCCESS = "增益效果加载成功。"
     TABLE_EMPTY = "未找到 buffs.lua。将从空的增益效果表开始。"
     FILENOTFOUND = "未找到 buffs.lua。将创建一个空的增益效果表。"
@@ -205,7 +205,7 @@ if languageSetting == "zh_cn" then
     SHOWING_ALL = "切换显示所有 "
 elseif languageSetting == "ru_ru" then
     BUFFADDGUIDE = " showall/list/add/remove [buffid] [комментарий (необязательно)]"
-    INVALIDCOMMAND = "Неверная команда.  !debuff / !buff / !showids / !import / !export \n Команды для себя: !sdebuff / !sbuff / !sshowids / !simport / !sexport"
+    INVALIDCOMMAND = "Неверная команда.  !debuff / !buff / !showids / !import / !export"
     BUFFLOADSUCCESS = "Бафы успешно загружены."
     TABLE_EMPTY = "Файл buffs.lua не найден. Начинаем с пустой таблицы бафов."
     FILENOTFOUND = "Файл buffs.lua не найден. Будет создана пустая таблица бафов."
