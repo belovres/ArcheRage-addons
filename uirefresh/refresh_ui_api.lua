@@ -82,7 +82,7 @@ local function CreateButton()
 end
 
 local function EnteredWorld()
-    X2Chat:DispatchChatMessage(CMF_SYSTEM, string.format("My name is %s", X2Unit:UnitName("player")))
+--    X2Chat:DispatchChatMessage(CMF_SYSTEM, string.format("My name is %s", X2Unit:UnitName("player")))
     CreateButton()
 end
 UIParent:SetEventHandler(UIEVENT_TYPE.ENTERED_WORLD, EnteredWorld)
