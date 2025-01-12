@@ -112,7 +112,7 @@ function buffAnchor:OnUpdate(dt)
         local y = math.floor(0.5+nScrY_Tar)
         buffAnchor:Show(true)
         buffAnchor:Enable(true)
-        buffAnchor:AddAnchor("TOPLEFT", "UIParent", x-60, y-20)
+        buffAnchor:AddAnchor("TOPLEFT", "UIParent", x+40, y-20)
 
         -- Handle buffs
         buffAllString = ""
