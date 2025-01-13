@@ -80,7 +80,11 @@ local function drawIcon(w, iconPath, id, xOffset, yOffset, duration, stacks, idN
         lblDuration.style:SetColor(1, 1, 1, 1.0)
         lblDuration.style:SetOutline(true)
         lblDuration.style:SetAlign(ALIGN_LEFT)
-        lblDuration:SetText(lblDuration)
+        if type(lblDuration) == "string" then
+            lblDuration:SetText(lblDuration)
+        else
+            lblDuration:SetText("")
+        end
             -- Add a timer label using stacks
         --local lblStacks = w:CreateChildWidget("label", "lblStacks", 0, true)
         --lblStacks:Show(true)
@@ -94,7 +98,7 @@ local function drawIcon(w, iconPath, id, xOffset, yOffset, duration, stacks, idN
         --drawableNmyLabels_stacks[id] = lblStacks
         drawableNmyIcons[id] = drawableIcon    
     else 
-        if id ~= nil then
+        if id ~= nil and drawableNmyLabels[id] ~= nil then
             drawableNmyLabels[id]:Show(false)
             drawableNmyIcons[id]:SetVisible(false)
         end
