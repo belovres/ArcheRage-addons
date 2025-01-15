@@ -740,13 +740,14 @@ Global variables
 
 Allowed functions
 ----------------------------------------------------------------------------------------
+GetBagItemInfo(bagId, slot)
+EquipBagItem(slot, isAuxEquip)
 ----------------------------------------------------------------------------------------
 
 Available/not allowed functions
 ----------------------------------------------------------------------------------------
 PickupBagItemPartial(bagId, slot, amount)
 HasPickedItem()
-GetBagItemInfo(bagId, slot)
 GetMountableBagItemInfo(mountIndex, bagId, slot)
 GetMountableSlotItemInfo(slot)
 GetRenewItemPreviewTooltipText(bagId, sourceSlot, targetSlot)
@@ -761,7 +762,6 @@ FindBagItemByEquipSlot(bagId, equipSlot)
 CountBagItemByItemType(itemType)
 FindFirstBagSlotItemByItemType(itemType)
 FindFirstBagItemInfoByItemType(itemType)
-EquipBagItem(slot, isAuxEquip)
 CountEmptyBagSlots()
 Capacity()
 CountItems()
@@ -1887,6 +1887,8 @@ EST_COSPLAY
 
 Allowed functions
 ----------------------------------------------------------------------------------------
+GetEquippedItemType(equipSlot)
+GetEquippedItemTooltipInfo(equipSlot, targetEquippedItem)
 ----------------------------------------------------------------------------------------
 
 Available/not allowed functions
@@ -1898,8 +1900,6 @@ PickupMateEquippedItem(unit, equipSlot)
 GetEquippedItemInfo(unit, equipSlot)
 GetEquippedItemTooltipText(unit, equipSlot)
 GetPreliminaryItemTooltipText(equipSlot)
-GetEquippedItemTooltipInfo(equipSlot, targetEquippedItem)
-GetEquippedItemType(equipSlot)
 UseEquippedItemByType(itemType)
 IsEquippedItemByType(itemType)
 FindEquippedItemByType(itemType)
@@ -3878,6 +3878,21 @@ ZP_RESERVED
 
 Allowed functions
 ----------------------------------------------------------------------------------------
+ChangeAppellation(nameType, effectType)
+GetUnitAppellationRouteList()
+GetAppellationCount()
+GetAppellations(routeFilter, pageIndex)
+GetAppellationsCount(routeFilter)
+GetShowingAppellation()
+GetEffectAppellation()
+GetAppellationMyLevelInfo()
+GetAppellationBuffInfoByLevels()
+GetAppellationRouteInfo(type)
+GetAppellationStampInfo()
+SetAppellationStamp(stampId)
+GetAppellationMyStamp()
+GetAppellationChangeItemInfo()
+GetStampChangeItemInfo()
 ----------------------------------------------------------------------------------------
 
 Available/not allowed functions
@@ -3921,21 +3936,6 @@ OpendTutorialWindow(id)
 GetPayMethod()
 GetPayLocation()
 HasSlaveUnit()
-GetUnitAppellationRouteList()
-GetAppellationCount()
-GetAppellations(routeFilter, pageIndex)
-GetAppellationsCount(routeFilter)
-ChangeAppellation(nameType, effectType)
-GetShowingAppellation()
-GetEffectAppellation()
-GetAppellationMyLevelInfo()
-GetAppellationBuffInfoByLevels()
-GetAppellationRouteInfo(type)
-GetAppellationStampInfo()
-SetAppellationStamp(stampId)
-GetAppellationMyStamp()
-GetAppellationChangeItemInfo()
-GetStampChangeItemInfo()
 GetUseULC()
 GetULCList()
 GetULCInfo(ulcType)
@@ -4375,6 +4375,7 @@ HOUSING_LIST_FILTER_PUBLIC
 
 Allowed functions
 ----------------------------------------------------------------------------------------
+GetResidentBoardContent(boardType)
 ----------------------------------------------------------------------------------------
 
 Available/not allowed functions
@@ -4387,7 +4388,6 @@ FireNuonsArrow(zoneGroupType)
 RequestHousingTradeList(zoneGroupType, filterindex, searchWord)
 FilterHousingTradeList(filterindex, searchWord)
 GetHousingTradeRefreshTime()
-GetResidentBoardContent(boardType)
 GetContributionRankReward(zoneGroupType)
 ----------------------------------------------------------------------------------------
 
@@ -4648,6 +4648,11 @@ MPT_MONTHLY
 
 Allowed functions
 ----------------------------------------------------------------------------------------
+GetSpecialtyRatio()
+GetZoneSpecialtyRatio()
+GetSpecialtyRatioBetween(fromZoneGroup, toZoneGroup)
+GetProductionZoneGroups()
+GetSellableZoneGroups(fromZoneGroup)
 ----------------------------------------------------------------------------------------
 
 Available/not allowed functions
@@ -4670,11 +4675,6 @@ GetBackpackSellType()
 SellBackPackGoods()
 BuyBackPackGoods(itemType)
 ListBackPackGoods(categoryType, name)
-GetSpecialtyRatio()
-GetZoneSpecialtyRatio()
-GetSpecialtyRatioBetween(fromZoneGroup, toZoneGroup)
-GetProductionZoneGroups()
-GetSellableZoneGroups(fromZoneGroup)
 GetSpecialtyBuyConfirmContent(itemType)
 GetSpecialtyBuyRatioRangeTooltip()
 GetBackPackGoodCategories()
@@ -5097,6 +5097,8 @@ UnitRemovableDebuffTooltip(unit, buffIndex)
 UnitRemovableDebuff(unit, buffIndex)
 UnitRemovableDebuffCount(unit)
 GetUnitScreenPosition(unit)
+UnitGearScore(unit)
+GetTargetAbilityTemplates(target)
 ----------------------------------------------------------------------------------------
 
 Available/not allowed functions
@@ -5127,7 +5129,6 @@ UnitPortraitPath(unit)
 UnitTeamAuthority(unit)
 UnitIsForceAttack(unit)
 UnitCombatState(unit)
-UnitGearScore(unit)
 UnitHeirIncreases(unit)
 IsMe(unit)
 IsReporter(unit)
@@ -5149,7 +5150,6 @@ GetTopLevelFactionNameById(factionId)
 GetFactionName(target)
 GetUnitTypeString(target)
 GetTargetTypeString()
-GetTargetAbilityTemplates(target)
 GetTargetKindType(target)
 GetCombatRelationshipStr(target)
 GetNpcInfo(target)
