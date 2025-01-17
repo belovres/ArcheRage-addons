@@ -1,4 +1,6 @@
 -------------- Original Author: Strawberry --------------
+--- Extra thanks to Tamaki, Nidoran, Ingram & 우와앙  ---
+--------------- The War Room lives on -------------------
 ----------------- Discord: exec_noir --------------------
 ADDON:ImportObject(OBJECT_TYPE.TEXT_STYLE)
 ADDON:ImportObject(OBJECT_TYPE.BUTTON)
@@ -35,7 +37,9 @@ local lastdeBuffString = ""
 
 local drawableNmyIcons = {} -- Table to store drawn icons, must be global
 local drawableNmyLabels = {} -- Table to store drawn counters, must be global
--- helped function for array dumping --
+
+local drawableNmyLabels_stacks = {} -- stacks
+-- helper function for array dumping --
 local function dump(o)
  if type(o) == 'table' then
   local s = '{ '
@@ -50,16 +54,20 @@ local function dump(o)
 end
 
 ------------------------ Icon drawing function ------------------------
-local function drawIcon(w, iconPath, id, xOffset, yOffset, duration)
+local function drawIcon(w, iconPath, id, xOffset, yOffset, duration, stacks)
+    stacks = (stacks == "1") and "" or stacks
     -- If the icon already exists, don't redraw it, instead update it
     if drawableNmyIcons[id] ~= nil then
         if not drawableNmyIcons[id]:IsVisible() then
             drawableNmyIcons[id]:SetVisible(true)
             drawableNmyLabels[id]:Show(true)
+            drawableNmyLabels_stacks[id]:Show(true)
         end
         drawableNmyIcons[id]:AddAnchor("LEFT", w, xOffset, yOffset) 
         drawableNmyLabels[id]:AddAnchor("LEFT", w, xOffset, yOffset) 
         drawableNmyLabels[id]:SetText(duration)
+        drawableNmyLabels_stacks[id]:AddAnchor("LEFT", w, xOffset+5, yOffset-10) 
+        drawableNmyLabels_stacks[id]:SetText(stacks)
         return
     end
     -- Create an icon using iconPath
@@ -68,7 +76,7 @@ local function drawIcon(w, iconPath, id, xOffset, yOffset, duration)
     drawableIcon:ClearAllTextures() -- Every other usage of AddTexture called this first 🤷
     drawableIcon:AddTexture(iconPath) -- path to dds texture to load
     drawableIcon:SetVisible(true)
-    -- Add a timer label using duration
+    -- add timer label
     local lblDuration = w:CreateChildWidget("label", "lblDuration", 0, true)
     lblDuration:Show(true)
     lblDuration:EnablePick(false)
@@ -76,8 +84,17 @@ local function drawIcon(w, iconPath, id, xOffset, yOffset, duration)
     lblDuration.style:SetOutline(true)
     lblDuration.style:SetAlign(ALIGN_LEFT)
     lblDuration:SetText(duration)
+    -- add stacks label
+    local lblStacks = w:CreateChildWidget("label", "lblStacks", 0, true)
+    lblStacks:Show(true)
+    lblStacks:EnablePick(false)
+    lblStacks.style:SetColor(0, 1, 1, 1.0)
+    lblStacks.style:SetOutline(true)
+    lblStacks.style:SetAlign(ALIGN_RIGHT)
+    lblStacks:SetText(stacks)
     -- Save the drawn icon to the global object array
     drawableNmyLabels[id] = lblDuration
+    drawableNmyLabels_stacks[id] = lblStacks
     drawableNmyIcons[id] = drawableIcon
 end
 
@@ -109,7 +126,8 @@ function buffAnchor:OnUpdate(dt)
                 --local iconPath = target_buffs[buff["name"]]
                 iconPath = buffExtra["path"]
                 local duration = buff["timeLeft"] and tostring(math.floor(buff["timeLeft"]/1000)) or ""
-                drawIcon(buffAnchor, iconPath, buff["name"], 30 * buffCounter, 0, duration)
+                local stacks = tostring(buff["stack"] or "")
+                drawIcon(buffAnchor, iconPath, buff["name"], 30 * buffCounter, 0, duration, stacks)
                 buffCounter = buffCounter + 1
             end
             buffAllString = buffAllString .. buff["name"]  .. " - " .. strBuffId .. "\n"       
@@ -126,7 +144,8 @@ function buffAnchor:OnUpdate(dt)
                 currentBuffs[debuff["name"]] = true
                 iconPath = debuffExtra["path"]
                 local duration = debuff["timeLeft"] and tostring(math.floor(debuff["timeLeft"]/1000)) or ""
-                drawIcon(buffAnchor, iconPath, debuff["name"], 30 * debuffCounter, 35, duration)
+                local stacks = tostring(debuff["stack"] or "")
+                drawIcon(buffAnchor, iconPath, debuff["name"], 30 * debuffCounter, 35, duration, stacks)
                 debuffCounter = debuffCounter + 1
             end
             debuffAllString = debuffAllString .. debuff["name"] .. " - " .. strdeBuffId .. "\n"
@@ -143,6 +162,7 @@ function buffAnchor:OnUpdate(dt)
         for id, icon in pairs(drawableNmyIcons) do
             if not currentBuffs[id] and icon:IsVisible() then
                 drawableNmyLabels[id]:Show(false)
+                drawableNmyLabels_stacks[id]:Show(false)
                 icon:SetVisible(false)
             end
         end
@@ -157,7 +177,7 @@ buffAnchor:SetHandler("OnUpdate", buffAnchor.OnUpdate)
 local languageSetting = "English"
 --language strings
 local BUFFADDGUIDE = " showall/list/add/remove [buffid] [comment(optional)]"
-local INVALIDCOMMAND = "Invalid command. !export / !debuff / !buff / !showids"
+local INVALIDCOMMAND = "Invalid command. !debuff / !buff / !showids / !import / !export"
 local BUFFLOADSUCCESS = "Buffs loaded successfully."
 local TABLE_EMPTY = "buffs.lua not found. Starting with an empty buffs table."
 local FILENOTFOUND = "buffs.lua not found. An empty buffs table will be created."
@@ -192,7 +212,7 @@ if languageSetting == "zh_cn" then
     LOADSUCCESS = "成功加载了 debuff 插件。作者: Strawberry"
 elseif languageSetting == "ru_ru" then
     BUFFADDGUIDE = " showall/list/add/remove [buffid] [комментарий (необязательно)]"
-    INVALIDCOMMAND = "Неверная команда. !export / !debuff / !buff / !showids"
+    INVALIDCOMMAND = "Неверная команда.  !debuff / !buff / !showids / !import / !export"
     BUFFLOADSUCCESS = "Бафы успешно загружены."
     TABLE_EMPTY = "Файл buffs.lua не найден. Начинаем с пустой таблицы бафов."
     FILENOTFOUND = "Файл buffs.lua не найден. Будет создана пустая таблица бафов."
@@ -210,12 +230,18 @@ end
 
 --X2Chat:DispatchChatMessage(CMF_SYSTEM, languageSetting)
 -- Common function to load buffs or debuffs
-local effects = {}
+--local effects = {}
 local function loadEffects(effectType)
     local filename = "self_" .. effectType .. ".lua"
     local file = io.open(filename, "r")
 
     if file then
+        if effectType == "buff" then
+            target_buffs = {}  -- Reset the table for a clean load
+        elseif effectType == "debuff" then
+            target_debuffs = {}  -- Reset the table for a clean load
+        end
+
         for line in file:lines() do
             local id, name = line:match('%["(%d+)"%]%s*=%s*"(.-)"')
             if id and name then
@@ -232,8 +258,7 @@ local function loadEffects(effectType)
     end
 end
 
--- Common function to save buffs or debuffs to target_buffs or target_debuffs
-local function saveEffects(effectType, effects)
+local function saveEffects(effectType)
     local filename = "self_" .. effectType .. ".lua"
     local file = io.open(filename, "w")
     if not file then
@@ -241,15 +266,15 @@ local function saveEffects(effectType, effects)
         return
     end
 
+    local effectsToSave = effectType == "buff" and target_buffs or target_debuffs
     file:write("target_" .. effectType .. " = {\n")
-    for id, name in pairs(effects) do
+    for id, name in pairs(effectsToSave) do
         file:write(string.format('    ["%s"] = "%s",\n', id, name))
     end
     file:write("}\n")
     file:close()
 end
 
--- Common add function for both buffs and debuffs
 local function addEffect(effectType, effectId, comment)
     comment = comment or ""
     if effectType == "buff" then
@@ -257,18 +282,16 @@ local function addEffect(effectType, effectId, comment)
     elseif effectType == "debuff" then
         target_debuffs[effectId] = comment
     end
-    effects[effectId] = comment
-    saveEffects(effectType, effects)  -- Ensure the changes are saved to file
+    saveEffects(effectType) 
     X2Chat:DispatchChatMessage(CMF_SYSTEM, "Adding " .. effectType:sub(1, 1):upper() .. effectType:sub(2) .. " " .. effectId .. ":" .. (comment and comment or ""))
 end
 
--- Common remove function for both buffs and debuffs
+
 local function removeEffect(effectType, effectId)
     if effectType == "buff" then
         if target_buffs[effectId] then
             target_buffs[effectId] = nil
-            effects[effectId] = nil
-            saveEffects(effectType, effects)  -- Ensure the changes are saved to file
+            saveEffects(effectType)  
             X2Chat:DispatchChatMessage(CMF_SYSTEM, REMOVINGBUFF .. effectId)
         else
             X2Chat:DispatchChatMessage(CMF_SYSTEM, BUFFNOTFOUND .. effectId)
@@ -276,14 +299,14 @@ local function removeEffect(effectType, effectId)
     elseif effectType == "debuff" then
         if target_debuffs[effectId] then
             target_debuffs[effectId] = nil
-            effects[effectId] = nil
-            saveEffects(effectType, effects)  -- Ensure the changes are saved to file
+            saveEffects(effectType) 
             X2Chat:DispatchChatMessage(CMF_SYSTEM, REMOVINGBUFF .. effectId)
         else
             X2Chat:DispatchChatMessage(CMF_SYSTEM, BUFFNOTFOUND .. effectId)
         end
     end
 end
+
 
 local function listEffects(effectType)
     if effectType == "buff" then
@@ -334,7 +357,7 @@ local chatAggroEventListenerEvents = {
                     else
                         X2Chat:DispatchChatMessage(CMF_SYSTEM, firstWord:sub(2):lower() .. BUFFADDGUIDE)
                     end
-                elseif firstWord == "!sshowids" or firstWord == "!sbuffids"  then
+                elseif firstWord == "!sshowids" or firstWord == "!sbuffids" then
                     target_buffDebugMessages = not target_buffDebugMessages
                     target_debuffDebugMessages = not target_debuffDebugMessages
                     if target_buffDebugMessages == true then

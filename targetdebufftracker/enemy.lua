@@ -34,8 +34,10 @@ local lastBuffString = ""
 local debuffAllString = ""
 local lastdeBuffString = ""
 
+
 local drawableNmyIcons = {} -- Table to store drawn icons, must be global
 local drawableNmyLabels = {} -- Table to store drawn counters, must be global
+
 local drawableNmyLabels_stacks = {} -- stacks
 -- helper function for array dumping --
 local function dump(o)
@@ -68,6 +70,7 @@ local function drawIcon(w, iconPath, id, xOffset, yOffset, duration, stacks)
         drawableNmyLabels_stacks[id]:SetText(stacks)
         return
     end
+    -- Create an icon using iconPath
     local drawableIcon = w:CreateIconDrawable("artwork")
     drawableIcon:SetExtent(25,25) -- Width, height
     drawableIcon:ClearAllTextures() -- Every other usage of AddTexture called this first 🤷
@@ -169,11 +172,12 @@ buffAnchor:SetHandler("OnUpdate", buffAnchor.OnUpdate)
 
 
 
+
 ---------------------- Settings handler --------------------------------
 local languageSetting = "English"
 --language strings
 local BUFFADDGUIDE = " showall/list/add/remove [buffid] [comment(optional)]"
-local INVALIDCOMMAND = "Invalid command. !debuff / !buff / !showids / !import / !export"
+local INVALIDCOMMAND = "Invalid command. !debuff / !buff / !showids / !import / !export \n Self commands: !sdebuff / !sbuff / !sshowids / !simport / !sexport"
 local BUFFLOADSUCCESS = "Buffs loaded successfully."
 local TABLE_EMPTY = "buffs.lua not found. Starting with an empty buffs table."
 local FILENOTFOUND = "buffs.lua not found. An empty buffs table will be created."
@@ -186,11 +190,13 @@ local IMPORTTO = "Please import to: "
 local DISPLAYING_ALLBUFFS = "Displaying all buffs and debuffs of target."
 local HIDING_ALLBUFFS = "Hiding all buffs and debuffs of target"
 local SHOWING_ALL = "Toggling showing all "
+local LOADSUCCESS = "Succesfully loaded debuff plugin. Author: Strawberry"
+
 languageSetting = X2Locale:GetLocale()
 
 if languageSetting == "zh_cn" then
     BUFFADDGUIDE = " showall/list/add/remove [buffid] [备注（可选]"
-    INVALIDCOMMAND = "无效的指令。  !debuff / !buff / !showids / !import / !export"
+    INVALIDCOMMAND = "无效的指令。  !debuff / !buff / !showids / !import / !export \n 自身指令: !sdebuff / !sbuff / !sshowids / !simport / !sexport"
     BUFFLOADSUCCESS = "增益效果加载成功。"
     TABLE_EMPTY = "未找到 buffs.lua。将从空的增益效果表开始。"
     FILENOTFOUND = "未找到 buffs.lua。将创建一个空的增益效果表。"
@@ -203,9 +209,10 @@ if languageSetting == "zh_cn" then
     DISPLAYING_ALLBUFFS = "显示目标的所有增益和减益效果。"
     HIDING_ALLBUFFS = "隐藏目标的所有增益和减益效果。"
     SHOWING_ALL = "切换显示所有 "
+    LOADSUCCESS = "成功加载了 debuff 插件。作者: Strawberry"
 elseif languageSetting == "ru_ru" then
     BUFFADDGUIDE = " showall/list/add/remove [buffid] [комментарий (необязательно)]"
-    INVALIDCOMMAND = "Неверная команда.  !debuff / !buff / !showids / !import / !export"
+    INVALIDCOMMAND = "Неверная команда.  !debuff / !buff / !showids / !import / !export \n Команды для себя: !sdebuff / !sbuff / !sshowids / !simport / !sexport"
     BUFFLOADSUCCESS = "Бафы успешно загружены."
     TABLE_EMPTY = "Файл buffs.lua не найден. Начинаем с пустой таблицы бафов."
     FILENOTFOUND = "Файл buffs.lua не найден. Будет создана пустая таблица бафов."
@@ -218,6 +225,7 @@ elseif languageSetting == "ru_ru" then
     DISPLAYING_ALLBUFFS = "Отображение всех баффов и дебаффов цели."
     HIDING_ALLBUFFS = "Скрытие всех баффов и дебаффов цели."
     SHOWING_ALL = "Переключение отображения всех "
+    LOADSUCCESS = "Плагин дебаффов успешно загружен. Автор: Strawberry"
 end
 
 --X2Chat:DispatchChatMessage(CMF_SYSTEM, languageSetting)
@@ -301,11 +309,11 @@ end
 
 
 local function listEffects(effectType)
-	if effectType == "buff" then
-	    X2Chat:DispatchChatMessage(CMF_SYSTEM, dump(target_buffs))
-	elseif effectType == "debuff" then
+    if effectType == "buff" then
+        X2Chat:DispatchChatMessage(CMF_SYSTEM, dump(target_buffs))
+    elseif effectType == "debuff" then
         X2Chat:DispatchChatMessage(CMF_SYSTEM, dump(target_debuffs))
-	end
+    end
 end
 
 -- Chat event listener for commands
@@ -337,36 +345,36 @@ local chatAggroEventListenerEvents = {
                     elseif secondWord == "remove" and thirdWord then
                         removeEffect(effectType, thirdWord)
                     elseif secondWord == "list" then
-                    	listEffects(effectType)
+                        listEffects(effectType)
                     elseif secondWord == "showall" then
-                    	if effectType == "buff" then
-                           	showAllBuffs = not showAllBuffs
-                           	X2Chat:DispatchChatMessage(CMF_SYSTEM, SHOWING_ALL .. firstWord:sub(2))
-                    	elseif effectType == "debuff" then
-                    		showAllDebuffs = not showAllDebuffs
-                    		X2Chat:DispatchChatMessage(CMF_SYSTEM, SHOWING_ALL .. firstWord:sub(2))
-                    	end
+                        if effectType == "buff" then
+                            showAllBuffs = not showAllBuffs
+                            X2Chat:DispatchChatMessage(CMF_SYSTEM, SHOWING_ALL .. firstWord:sub(2))
+                        elseif effectType == "debuff" then
+                            showAllDebuffs = not showAllDebuffs
+                            X2Chat:DispatchChatMessage(CMF_SYSTEM, SHOWING_ALL .. firstWord:sub(2))
+                        end
                     else
                         X2Chat:DispatchChatMessage(CMF_SYSTEM, firstWord:sub(2):lower() .. BUFFADDGUIDE)
                     end
                 elseif firstWord == "!showids" or firstWord == "!buffids" then
-                	target_buffDebugMessages = not target_buffDebugMessages
-                	target_debuffDebugMessages = not target_debuffDebugMessages
-                	if target_buffDebugMessages == true then
-                      	X2Chat:DispatchChatMessage(CMF_SYSTEM, DISPLAYING_ALLBUFFS)
+                    target_buffDebugMessages = not target_buffDebugMessages
+                    target_debuffDebugMessages = not target_debuffDebugMessages
+                    if target_buffDebugMessages == true then
+                        X2Chat:DispatchChatMessage(CMF_SYSTEM, DISPLAYING_ALLBUFFS)
                     else
                         X2Chat:DispatchChatMessage(CMF_SYSTEM, HIDING_ALLBUFFS)
-                	end
+                    end
                 elseif firstWord == "!export" then
-                	local exportLocation = io.popen("cd"):read("*l")
-                	exportLocation = exportLocation:gsub("\\", "/")
+                    local exportLocation = io.popen("cd"):read("*l")
+                    exportLocation = exportLocation:gsub("\\", "/")
                     X2Chat:DispatchChatMessage(CMF_SYSTEM, EXPORTEDTO .. exportLocation .. "/buffs.lua & debuffs.lua")
                 elseif firstWord == "!import" then
-                	local importLocation = io.popen("cd"):read("*l")
-                	importLocation = importLocation:gsub("\\", "/")
+                    local importLocation = io.popen("cd"):read("*l")
+                    importLocation = importLocation:gsub("\\", "/")
                     X2Chat:DispatchChatMessage(CMF_SYSTEM, IMPORTTO .. importLocation .. "/buffs.lua & debuffs.lua")
                 else
-                	if firstWord ~= "!sdebuff" and firstWord ~= "!sbuff" and firstWord ~= "!sshowids" and firstWord ~= "!simport" and firstWord ~= "!sexport" then
+                    if firstWord ~= "!sdebuff" and firstWord ~= "!sbuff" and firstWord ~= "!sshowids" and firstWord ~= "!simport" and firstWord ~= "!sexport" then
                         X2Chat:DispatchChatMessage(CMF_SYSTEM, INVALIDCOMMAND)
                     end
                 end
@@ -392,3 +400,4 @@ RegistUIEvent(chatEventListenerAggro, chatAggroEventListenerEvents)
 -- Initial load of both buffs and debuffs
 loadEffects("buff") 
 loadEffects("debuff") 
+X2Chat:DispatchChatMessage(CMF_SYSTEM, LOADSUCCESS)
