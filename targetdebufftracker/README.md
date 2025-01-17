@@ -15,23 +15,29 @@ The **Target Debuff Tracker** is a tool that tracks buffs and debuffs of the sel
 To get command information, simply type `!` or `!help` in the chat.
 
 ### Supported Commands:
+Note:
 
-- `!debuff`
-- `!buff`
+You can prefix your command with 's' (`!sdebuff`, `!sshowids`, `'!simport'` etc) for the self-targeting section.
 
+
+
+`!debuff` 
+`!buff`: 
 These commands have the following subcommands:
 
-- `add <buffid> <comment>`
-  - Adds the buff by ID (optionally, with a comment).
+`add <buffid> <comment>`: 
+Adds the buff by ID (optionally, with a comment).
   
-- `remove <buffid>`
-  - Removes a buff by ID.
+`remove <buffid>`: 
+Removes a buff by ID.
   
-- `showall`
-  - Shows all buffs and debuffs (mostly for debugging).
+`showall`: 
+Shows all buffs and debuffs (mostly for debugging).
   
-- `list`
-  - Lists all saved buff IDs.
+`list`: 
+Lists all saved buff IDs.
+
+
 
 ![Buff track example](https://i.imgur.com/CAt4o1f.png)
 
