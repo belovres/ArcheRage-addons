@@ -62,7 +62,7 @@ end
 
 local function onShotEvent(unitId, eventType, sourceName, targetName, abilityId, abilityName, damageType, effectType, isActive)
     if tostring(abilityId):find("PARRY") then
-        X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring(targetName) .. " parried, resetting their tiger strike.")
+        --X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring(targetName) .. " parried, resetting their tiger strike.")
         timerDuration = 0
         activeTimers[targetName] = { end_time = os.time() + timerDuration }
     elseif tostring(abilityName):find("Tiger Strike") then
@@ -70,14 +70,14 @@ local function onShotEvent(unitId, eventType, sourceName, targetName, abilityId,
         if existingTimer then
             local remaining_time = existingTimer.end_time - os.time()
             if remaining_time <= 0 then
-                X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring(sourceName) .. " tiger striked from zero, resetting TS timer.")
+                --X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring(sourceName) .. " tiger striked from zero, resetting TS timer.")
                 timerDuration = 28
                 activeTimers[sourceName] = { end_time = os.time() + timerDuration }
             else
-                X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring(sourceName) .. " tiger strike ignored, timer is still active.")
+                --X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring(sourceName) .. " tiger strike ignored, timer is still active.")
             end
         else
-            X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring(sourceName) .. " tiger striked, setting timer.")
+            --X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring(sourceName) .. " tiger striked, setting timer.")
             timerDuration = 28
             activeTimers[sourceName] = { end_time = os.time() + timerDuration }
         end
@@ -126,7 +126,7 @@ function buffAnchor:OnUpdate(dt)
                     break
                 end
             else
-                X2Chat:DispatchChatMessage(CMF_SYSTEM, "Timer expired for " .. currentTargetName .. ", reset it")
+                --X2Chat:DispatchChatMessage(CMF_SYSTEM, "Timer expired for " .. currentTargetName .. ", reset it")
                 activeTimers[targetName] = nil
             end
         end
