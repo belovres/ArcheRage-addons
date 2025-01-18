@@ -23,6 +23,9 @@ local buffAnchor = CreateEmptyWindow("buffAnchor", "UIParent")
 buffAnchor:Show(true)
 
 local target_buffs = {}
+local parryCooldown = {}
+local PARRY_COOLDOWN_TIME = 12  -- 12 seconds cooldown after a parry
+
 
 local buffAllString = ""
 local lastBuffString = ""
@@ -62,9 +65,17 @@ end
 
 local function onShotEvent(unitId, eventType, sourceName, targetName, abilityId, abilityName, damageType, effectType, isActive)
     if tostring(abilityId):find("PARRY") then
-        --X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring(targetName) .. " parried, resetting their tiger strike.")
-        timerDuration = 0
-        activeTimers[targetName] = { end_time = os.time() + timerDuration }
+        local lastParryTime = parryCooldown[targetName]
+        local currentTime = os.time()
+
+        if lastParryTime == nil or (currentTime - lastParryTime >= PARRY_COOLDOWN_TIME) then
+            --X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring(targetName) .. " parried, resetting their tiger strike.")
+            timerDuration = 0
+            activeTimers[targetName] = { end_time = os.time() + timerDuration }
+            parryCooldown[targetName] = currentTime
+        else
+            --X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring(targetName) .. " parried, but the cooldown is active.")
+        end
     elseif tostring(abilityName):find("Tiger Strike") then
         local existingTimer = activeTimers[sourceName]
         if existingTimer then
@@ -83,6 +94,7 @@ local function onShotEvent(unitId, eventType, sourceName, targetName, abilityId,
         end
     end
 end
+
 
 
 UIParent:SetEventHandler(UIEVENT_TYPE.COMBAT_MSG, onShotEvent)
