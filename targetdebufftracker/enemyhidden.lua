@@ -130,7 +130,14 @@ function buffAnchor:OnUpdate(dt)
             local buffExtra = X2Unit:UnitHiddenBuff("target", i)
             strBuffId = tostring(buffExtra["buff_id"]) .. "-" .. buff["name"]
             --X2Chat:DispatchChatMessage(CMF_SYSTEM, strBuffId)
-            if buffExtra["buff_id"] == 22969 or showAllBuffs then
+            local buffIds = {
+                [22969] = true,
+                [23214] = true,
+                [27128] = true,
+                [24405] = true,
+                [32871] = true
+            }
+            if buffIds[buffExtra["buff_id"]] or showAllBuffs then
                 --X2Chat:DispatchChatMessage(CMF_SYSTEM, "extra extra!!" .. strBuffId)
                 currentBuffs[buff["name"]] = true
                 --local iconPath = target_buffs[buff["name"]]

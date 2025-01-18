@@ -3,4 +3,4 @@
 ../globals/window.lua
 enemy.lua
 self.lua
-defiance.lua
+enemyhidden.lua
