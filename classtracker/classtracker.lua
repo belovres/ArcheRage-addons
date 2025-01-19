@@ -102,6 +102,7 @@ local nameMappings = {
     ["name_3_4_9"] = "Songer", -- Tomb Warden
     ["name_9_10_14"] = "Dancer", -- Glamorous Savior
     ["name_8_10_14"] = "Dancer", -- Darkness Savior
+    ["name_8_9_14"] = "Dancer", -- Bloody Dancer
     ["name_2_8_10"] = "Healer", -- Assassin
     ["name_8_9_10"] = "Healer", -- Confessor
     ["name_3_9_10"] = "Healer"-- Caretaker
@@ -159,7 +160,7 @@ function buffAnchor:OnUpdate(dt)
 		}
 		table.sort(indices)
 		local keyStr = string.format("name_%d_%d_%d", indices[1], indices[2], indices[3])
-		X2Chat:DispatchChatMessage(CMF_SYSTEM, keyStr)
+		--X2Chat:DispatchChatMessage(CMF_SYSTEM, keyStr)
 		fakeClassName = nameMappings[keyStr] or "unknown"
 		local name = X2Locale:LocalizeUiText(COMBINED_ABILITY_NAME_TEXT, keyStr, "")
 		if name == nil then
