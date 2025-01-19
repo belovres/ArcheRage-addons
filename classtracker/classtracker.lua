@@ -56,7 +56,8 @@ local roleIcons = {
     Dancer = "ui/icon/icon_skill_pleasure02.dds",
     Swiftblade = "ui/icon/icon_skill_assassin43.dds",
     Healer = "ui/icon/icon_skill_love01.dds",
-    unknown = "ui/icon/top_question_mark.dds"
+    unknown = "ui/icon/top_question_mark.dds",
+    npc = ""
 }
 
 local function initializeIcons(w)
@@ -83,19 +84,33 @@ end
 initializeIcons(buffAnchor)
 
 local nameMappings = {
-    ["name_1_5_8"] = "Melee", -- Executioner
-    ["name_1_8_9"] = "Melee", -- Blade Dancer
-    ["name_3_4_9"] = "Songer", -- Tomb Warden
     ["name_3_4_5"] = "Tank", -- Skullknight
+    ["name_1_5_8"] = "Melee", -- Executioner
+    ["name_1_3_5"] = "Melee", -- Doomlord
+    ["name_1_8_9"] = "Melee", -- Blade Dancer
+    ["name_1_3_4"] = "Melee", -- Abolisher
+    ["name_1_4_8"] = "Melee", -- Darkrunner
+    ["name_1_8_12"] = "Swiftblade", -- Deathwish
+    ["name_7_8_11"] = "Malediction", -- Fanatic
+    ["name_7_9_11"] = "Malediction", -- Spectre
+    ["name_7_8_9"] = "Mage", -- Fanatic
+    ["name_6_8_9"] = "Archer", -- Ebonsong
     ["name_6_8_13"] = "Gunner", -- Deathtrigger
+    ["name_4_8_13"] = "Gunner", -- Bounty Hunter
+    ["name_5_6_13"] = "Gunner", -- Banebolt
+    ["name_8_9_13"] = "Gunner", -- Privateer
+    ["name_3_4_9"] = "Songer", -- Tomb Warden
+    ["name_9_10_14"] = "Dancer", -- Glamorous Savior
+    ["name_8_10_14"] = "Dancer", -- Darkness Savior
     ["name_2_8_10"] = "Healer", -- Assassin
-    ["name_8_9_10"] = "Healer" -- Confessor
+    ["name_8_9_10"] = "Healer", -- Confessor
+    ["name_3_9_10"] = "Healer"-- Caretaker
 }
 
 local function hideNonMatchingIcons(currentClassName)
     for className, drawableIcon in pairs(drawableIcons) do
         if className ~= currentClassName then
-            drawableIcon:SetVisible(false) -- Hide icons that don't match
+            drawableIcon:SetVisible(false)
         end
     end
 end
@@ -156,7 +171,7 @@ function buffAnchor:OnUpdate(dt)
             drawIcon(buffAnchor, iconPath, 1, 0, 0, fakeClassName, actualClassName)
         else
         	drawableNmyLabels[1]:Show(false)
-	        hideNonMatchingIcons("unknown")
+	        hideNonMatchingIcons("npc")
 	        --drawableNmyIcons[1]:SetVisible(false)
         end
     end
