@@ -10,9 +10,7 @@ ADDON:ImportObject(OBJECT_TYPE.LABEL)
 ADDON:ImportObject(OBJECT_TYPE.ICON_DRAWABLE)
 ADDON:ImportObject(OBJECT_TYPE.IMAGE_DRAWABLE)
 
-ADDON:ImportAPI(API_TYPE.OPTION.id)
 ADDON:ImportAPI(API_TYPE.CHAT.id)
-ADDON:ImportAPI(API_TYPE.ACHIEVEMENT.id)
 ADDON:ImportAPI(API_TYPE.UNIT.id)
 ADDON:ImportAPI(API_TYPE.LOCALE.id)
 
@@ -20,29 +18,7 @@ ADDON:ImportAPI(API_TYPE.LOCALE.id)
 local buffAnchor = CreateEmptyWindow("buffAnchor", "UIParent")
 buffAnchor:Show(true)
 
-local target_buffs = {}
-local target_buffDebugMessages = false
-local showAllBuffs = false
-
-local buffAllString = ""
-local lastBuffString = ""
-
-local drawableNmyIcons = {}
 local drawableNmyLabels = {} 
--- helper function for array dumping --
-local function dump(o)
- if type(o) == 'table' then
-  local s = '{ '
-  for k,v in pairs(o) do
-    if type(k) ~= 'number' then k = '"'..k..'"' end
-    s = s .. '['..k..'] = ' .. dump(v) .. ','
-  end
-  return s .. '} '
- else
-  return tostring(o)
- end
-end
-
 local drawableIcons = {}
 
 local roleIcons = {
@@ -151,7 +127,6 @@ local function drawIcon(w, iconPath, id, xOffset, yOffset, className, actualClas
     lblDuration:AddAnchor("LEFT",w,xOffset,yOffset+20)
     lblDuration:SetText(actualClassName)
     drawableNmyLabels[id] = lblDuration
-    --drawableNmyIcons[id] = drawableIcon
 end
 
 function buffAnchor:OnUpdate(dt)
@@ -173,20 +148,24 @@ function buffAnchor:OnUpdate(dt)
 		}
 		table.sort(indices)
 		local keyStr = string.format("name_%d_%d_%d", indices[1], indices[2], indices[3])
-		--X2Chat:DispatchChatMessage(CMF_SYSTEM, keyStr)
 		fakeClassName = nameMappings[keyStr] or "unknown"
-		local name = X2Locale:LocalizeUiText(COMBINED_ABILITY_NAME_TEXT, keyStr, "")
-		if name == nil then
-		  name = GetUIText(COMBINED_ABILITY_NAME_TEXT, "name_9_9_9")
-		end
+		local name = ""
+		if keyStr ~= "name_30_30_30" then
+			name = X2Locale:LocalizeUiText(COMBINED_ABILITY_NAME_TEXT, keyStr, "")
+			--X2Chat:DispatchChatMessage(CMF_SYSTEM, keyStr)
+			--X2Chat:DispatchChatMessage(CMF_SYSTEM, name)
+			if name == nil then
+			  name = GetUIText(COMBINED_ABILITY_NAME_TEXT, "name_9_9_9")
+			end
+	    end
         local actualClassName = name
-        if keyStr ~= "name_30_30_30" then
-        	--drawableNmyLabels[1]:Show(true)
+        if keyStr ~= "name_30_30_30" and actualClassName ~= "" then
             drawIcon(buffAnchor, iconPath, 1, 0, 0, fakeClassName, actualClassName)
         else
-        	drawableNmyLabels[1]:Show(false)
+            if drawableNmyLabels[1] ~= nil then
+                drawableNmyLabels[1]:Show(false)
+            end
 	        hideNonMatchingIcons("npc")
-	        --drawableNmyIcons[1]:SetVisible(false)
         end
     end
 end
