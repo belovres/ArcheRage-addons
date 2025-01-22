@@ -1,0 +1,3 @@
+--todo
+--statue (red, blue | nuia haranya pirate)
+--drum, goblet, food (max rank, table rank, max-1 rank), resi/toughness book
