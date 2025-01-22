@@ -53,9 +53,11 @@ local nameMappings = {
     ["name_3_9_10"] = "Healer",-- Caretaker
     ["name_2_4_10"] = "Healer"-- Hierophant
 }
-
 function checkClasses()
     local classCounts = {}
+    local bannedPlayers = {}
+    local bannedClasses = { "Blade Dancer", "Fanatic" }
+
     for team = 1, 2 do
         for member = 1, 50 do
             local teamId = string.format("team_%02d_%02d", team, member)
@@ -76,11 +78,17 @@ function checkClasses()
                     name = X2Locale:LocalizeUiText(COMBINED_ABILITY_NAME_TEXT, keyStr, "")
                     if name ~= nil and name ~= "" then
                         classCounts[name] = (classCounts[name] or 0) + 1
+                        for _, bannedClass in ipairs(bannedClasses) do
+                            if name == bannedClass then
+                                table.insert(bannedPlayers, string.format("%s(%s)", playerName, name))
+                            end
+                        end
                     end
                 end
             end
         end
     end
+
     local classArray = {}
     for className, count in pairs(classCounts) do
         table.insert(classArray, {name = className, count = count})
@@ -89,6 +97,7 @@ function checkClasses()
     table.sort(classArray, function(a, b)
         return a.count > b.count
     end)
+
     local soloClasses = {}
     local tallyMessage = "Class distribution:\n"
 
@@ -99,12 +108,20 @@ function checkClasses()
             table.insert(soloClasses, entry.name)
         end
     end
+
     X2Chat:DispatchChatMessage(CMF_SYSTEM, tallyMessage)
+
     if #soloClasses > 0 then
         local soloMessage = "You have one of the following: " .. table.concat(soloClasses, ", ")
         X2Chat:DispatchChatMessage(CMF_SYSTEM, soloMessage)
     end
+
+    if #bannedPlayers > 0 then
+        local bannedMessage = "The following people are playing banned classes: " .. table.concat(bannedPlayers, ", ")
+        X2Chat:DispatchChatMessage(CMF_SYSTEM, bannedMessage)
+    end
 end
+
 
 
 local okButton = nil
