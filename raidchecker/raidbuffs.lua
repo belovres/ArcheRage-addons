@@ -120,7 +120,7 @@ local function CreateButton()
     }
     ApplyButtonSkin(okButton, buttonskin)
     -- okButton:SetUILayer("game")
-    okButton:AddAnchor("BOTTOM", "UIParent", 700, -100)
+    okButton:AddAnchor("BOTTOM", "UIParent", 700, -230)
     okButton:Show(true)
     okButton:EnableDrag(true)
 
