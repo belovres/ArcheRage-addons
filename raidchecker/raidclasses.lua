@@ -14,45 +14,6 @@ ADDON:ImportAPI(API_TYPE.CHAT.id)
 ADDON:ImportAPI(API_TYPE.UNIT.id)
 ADDON:ImportAPI(API_TYPE.LOCALE.id)
 
---i'm sure these namemappings will be useful at some point
---maybe put them in global?
-local nameMappings = {
-    ["name_3_4_5"] = "Tank", -- Skullknight
-    ["name_2_3_4"] = "Tank", -- Dreambreaker
-    ["name_1_5_8"] = "Melee", -- Executioner
-    ["name_1_3_5"] = "Melee", -- Doomlord
-    ["name_1_8_9"] = "Melee", -- Blade Dancer
-    ["name_1_3_4"] = "Melee", -- Abolisher
-    ["name_1_4_8"] = "Melee", -- Darkrunner
-    ["name_1_4_9"] = "Melee", -- Herald
-    ["name_1_8_12"] = "Swiftblade", -- Deathwish
-    ["name_1_5_12"] = "Swiftblade", -- Deathwish
-    ["name_7_8_11"] = "Malediction", -- Fanatic
-    ["name_7_9_11"] = "Malediction", -- Spectre
-    ["name_7_8_9"] = "Mage", -- I forgot
-    ["name_4_7_8"] = "Mage", -- Enigmatist
-    ["name_3_4_7"] = "Mage", -- Thaumaturge
-    ["name_2_7_8"] = "Mage", -- Daggerspell
-    ["name_6_8_9"] = "Archer", -- Ebonsong
-    ["name_6_9_10"] = "Archer", -- Soulsong
-    ["name_2_6_9"] = "Archer", -- Hex Ranger
-    ["name_6_8_13"] = "Gunner", -- Deathtrigger
-    ["name_4_8_13"] = "Gunner", -- Bounty Hunter
-    ["name_5_6_13"] = "Gunner", -- Banebolt
-    ["name_8_9_13"] = "Gunner", -- Privateer
-    ["name_4_9_13"] = "Gunner", -- Minstrel
-    ["name_3_4_9"] = "Songer", -- Tomb Warden
-    ["name_9_10_14"] = "Dancer", -- Glamorous Savior
-    ["name_8_10_14"] = "Dancer", -- Darkness Savior
-    ["name_2_10_14"] = "Dancer", -- Fear Savior
-    ["name_8_9_14"] = "Dancer", -- Bloody Dancer
-    ["name_2_8_10"] = "Healer", -- Assassin
-    ["name_4_8_10"] = "Healer", -- Soothsayer
-    ["name_2_9_10"] = "Healer", -- Athame
-    ["name_8_9_10"] = "Healer", -- Confessor
-    ["name_3_9_10"] = "Healer",-- Caretaker
-    ["name_2_4_10"] = "Healer"-- Hierophant
-}
 function checkClasses()
     local classCounts = {}
     local bannedPlayers = {}
@@ -78,6 +39,7 @@ function checkClasses()
                     name = X2Locale:LocalizeUiText(COMBINED_ABILITY_NAME_TEXT, keyStr, "")
                     if name ~= nil and name ~= "" then
                         classCounts[name] = (classCounts[name] or 0) + 1
+
                         for _, bannedClass in ipairs(bannedClasses) do
                             if name == bannedClass then
                                 table.insert(bannedPlayers, string.format("%s(%s)", playerName, name))
@@ -102,19 +64,33 @@ function checkClasses()
     local tallyMessage = "Class distribution:\n"
 
     for _, entry in ipairs(classArray) do
-        if entry.count > 1 then
+        if entry.count >= 3 then
             tallyMessage = tallyMessage .. string.format("You have %d of class %s\n", entry.count, entry.name)
         else
             table.insert(soloClasses, entry.name)
         end
     end
 
+    local lessThanFourClasses = {}
+    for _, entry in ipairs(classArray) do
+        if entry.count < 3 then
+            table.insert(lessThanFourClasses, string.format("%s (%d)", entry.name, entry.count))
+        end
+    end
+
     X2Chat:DispatchChatMessage(CMF_SYSTEM, tallyMessage)
 
-    if #soloClasses > 0 then
-        local soloMessage = "You have one of the following: " .. table.concat(soloClasses, ", ")
-        X2Chat:DispatchChatMessage(CMF_SYSTEM, soloMessage)
+    if #lessThanFourClasses > 0 then
+        local lessThanFourMessage = "You have less than 3 of the following: " .. table.concat(lessThanFourClasses, ", ")
+        X2Chat:DispatchChatMessage(CMF_SYSTEM, lessThanFourMessage)
     end
+
+
+
+    --if #soloClasses > 0 then
+    --    local soloMessage = "You have one of the following: " .. table.concat(soloClasses, ", ")
+    --    X2Chat:DispatchChatMessage(CMF_SYSTEM, soloMessage)
+    --end
 
     if #bannedPlayers > 0 then
         local bannedMessage = "The following people are playing banned classes: " .. table.concat(bannedPlayers, ", ")
@@ -179,7 +155,4 @@ local function CreateButton()
 
 end
 
-local function EnteredWorld()
-    CreateButton()
-end
-UIParent:SetEventHandler(UIEVENT_TYPE.ENTERED_WORLD, EnteredWorld)
+CreateButton()
