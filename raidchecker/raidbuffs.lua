@@ -19,11 +19,11 @@ ADDON:ImportAPI(API_TYPE.LOCALE.id)
 
 --https://wiki.archerage.to/ru-en/search/q is your friend
 local buffsToCheck = {
---    drum = {5700},
-    statue = {30768, 30765, 30766, 30760, 1, 1}--,
---    book = {20552, 21795},
---    ribs = {685, 597, 689, 693, 21791, 21792, 21793, 21794},
---    goblet = {7685, 21796, 21801, 21806, 21811, 21819, 21846, 7686, 21797, 21802, 21807, 21812, 21820, 7687, 21798, 21803, 21808, 21813, 21821, 7688, 21799, 21804, 21809, 21814, 21822, 7689, 21800, 21805, 21810, 21815, 21823, 24469, 24470, 24471, 24472, 24473, 24474}
+    drum = {5700},
+    statue = {30768, 30765, 30766, 30760, 1, 1},
+    book = {20552, 21795},
+    ribs = {685, 597, 689, 693, 21791, 21792, 21793, 21794},
+    goblet = {7685, 21796, 21801, 21806, 21811, 21819, 21846, 7686, 21797, 21802, 21807, 21812, 21820, 7687, 21798, 21803, 21808, 21813, 21821, 7688, 21799, 21804, 21809, 21814, 21822, 7689, 21800, 21805, 21810, 21815, 21823, 24469, 24470, 24471, 24472, 24473, 24474}
 }
 local function formatPlayerName(member)
     local team = math.ceil(member / 5)
@@ -42,34 +42,38 @@ function checkBuffs()
             local playerName = X2Unit:UnitName(teamId)
             if playerName then
                 local UBuffCount = X2Unit:UnitBuffCount(teamId)
-                local hasBuff = {}
-                for category in pairs(buffsToCheck) do
-                    hasBuff[category] = false
-                end
+                if UBuffCount > 2 then
+                    local hasBuff = {}
+                    for category in pairs(buffsToCheck) do
+                        hasBuff[category] = false
+                    end
 
-                for i = 1, UBuffCount do
-                    local buffExtra = X2Unit:UnitBuff(teamId, i)
-                    local buffId = buffExtra["buff_id"]
+                    for i = 1, UBuffCount do
+                        local buffExtra = X2Unit:UnitBuff(teamId, i)
+                        local buffId = buffExtra["buff_id"]
 
-                    --X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring(buffId))
-                    for category, ids in pairs(buffsToCheck) do
-                        for _, id in ipairs(ids) do
-                            if id == buffId then
-                                --X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring(buffId) .. "found as" .. tostring(id))
-                                hasBuff[category] = true
+                        --X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring(buffId))
+                        for category, ids in pairs(buffsToCheck) do
+                            for _, id in ipairs(ids) do
+                                if id == buffId then
+                                    --X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring(buffId) .. "found as" .. tostring(id))
+                                    hasBuff[category] = true
+                                    break
+                                end
+                            end
+                            if hasBuff[category] then
                                 break
                             end
                         end
-                        if hasBuff[category] then
-                            break
+                    end
+
+                    for category, present in pairs(hasBuff) do
+                        if not present then
+                            table.insert(missingByBuff[category], playerName .. tostring(team) .. "-" .. formatPlayerName(member))
                         end
                     end
-                end
-
-                for category, present in pairs(hasBuff) do
-                    if not present then
-                        table.insert(missingByBuff[category], playerName .. tostring(team) .. "-" .. formatPlayerName(member))
-                    end
+                else
+                    --out of range handler?
                 end
             end
         end
