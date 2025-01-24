@@ -9,12 +9,9 @@ All addons should fall under acceptable use of the addon policy.
 
 ## Installation
 
-Directly clone the repository into C:\ArcheRage\Documents\Addon or wherever your Addon folder is located. 
+Directly clone the repository into C:\ArcheRage\Documents\Addon or wherever your Addon folder is located. The "globals" folder is needed for all addons.
 
-Please remember to enable addons here:
-![installation guide](https://i.imgur.com/ng1I1FQ.png)
-
-Then restart your client and enable the addons you need in character select:
+After that restart your client and enable the addons you need in character select:
 ![char select](https://i.imgur.com/zYkJFuJ.png)
     
 ## Contributing
