@@ -130,4 +130,4 @@ local RegistUIEvent = function(window, eventTable)
     window:RegisterEvent(key)
   end
 end
---RegistUIEvent(chatEventListenerAggro, chatAggroEventListenerEvents)
+RegistUIEvent(chatEventListenerAggro, chatAggroEventListenerEvents)
