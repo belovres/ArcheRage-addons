@@ -14,8 +14,14 @@ function TranslateAndLog {
     if ($text -match "(.*?[\]:])\s*(.*)") {
         $prefix = $matches[1]  # before "] :" or "]:"
         $message = $matches[2]  # after "] :" or "]:"
-       
-        $prefix = $prefix -replace "\s+", ""
+
+        # zone changes can just be skipped
+        if ($message -match "@motherfaction|@zonegroupname|@coordinates") {
+            return
+        }
+
+        $encodedMessage = [System.Web.HttpUtility]::UrlEncode($message)
+
         function translateThisGoogle {
             param (
                 [string]$translate,
@@ -25,16 +31,18 @@ function TranslateAndLog {
             $Response = Invoke-RestMethod -Uri $Uri -Method Get
             return $Response[0].SyncRoot | ForEach-Object { $_[0] }
         }
-        $translation = ""
-        if ($message.Trim() -ne "") {
-            $translation = translateThisGoogle -translate $lang -text $message
-        } else {
-            $translation = $message 
+
+        $translation = translateThisGoogle -translate $lang -text $encodedMessage
+        $translation = [System.Web.HttpUtility]::UrlDecode($translation)
+
+        # don't print untranslated strings
+        if ($translation -ne $message) {
+            $logEntry = "$prefix $translation".Trim()
+            Add-Content -Path $logFilePath -Value $logEntry
         }
-        $logEntry = "$prefix $translation".Trim()
-        Add-Content -Path $logFilePath -Value $logEntry
     }
 }
+
 function ProcessChatLog {
     $pathFile = 'ChatTranslationInput_1.log'
     if (Test-Path $pathFile) {
