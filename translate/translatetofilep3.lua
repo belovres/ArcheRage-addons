@@ -23,6 +23,11 @@ function refreshForcer:OnUpdate(dt)
     file:close()
 
     if lastLine and lastLine ~= lastPrintedLine then
+        --don't print bugged lines
+        if lastLine:match("00000") then
+            lastPrintedLine = lastLine
+            return
+        end
         local outputLine = lastLine:gsub(" ", "", 1)
         X2Chat:DispatchChatMessage(CMF_SYSTEM, outputLine)
         lastPrintedLine = lastLine
