@@ -11,10 +11,10 @@ function TranslateAndLog {
     )
 
     # check for "] :" or "]:"
-    if ($text -match "(.*?[\]:])\s*(.*)") {
+    if ($text -match "(.*?\].*?\])\s*(.*)") {
         $prefix = $matches[1]  # before "] :" or "]:"
         $message = $matches[2]  # after "] :" or "]:"
-
+        #Write-Host "The value of myVar is: $prefix and $message"
         # zone changes can just be skipped
         if ($message -match "@motherfaction|@zonegroupname|@coordinates") {
             return
