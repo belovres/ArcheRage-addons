@@ -23,10 +23,12 @@ function refreshForcer:OnUpdate(dt)
     file:close()
 
     if lastLine and lastLine ~= lastPrintedLine then
-        X2Chat:DispatchChatMessage(CMF_SYSTEM, lastLine)
+        local outputLine = lastLine:gsub(" ", "", 1)
+        X2Chat:DispatchChatMessage(CMF_SYSTEM, outputLine)
         lastPrintedLine = lastLine
     end
 end
+
 --force continuous updates
 refreshForcer:SetHandler("OnUpdate", refreshForcer.OnUpdate)
 --X2Chat:DispatchChatMessage(CMF_SYSTEM, string.format("lua logging"))
