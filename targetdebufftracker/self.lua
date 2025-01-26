@@ -210,7 +210,7 @@ if languageSetting == "zh_cn" then
     HIDING_ALLBUFFS = "隐藏自身的所有增益和减益效果。"
     SHOWING_ALL = "切换显示所有 "
     LOADSUCCESS = "成功加载了 debuff 插件。作者: Strawberry"
-elseif languageSetting == "ru_ru" then
+elseif languageSetting == "ru" then
     BUFFADDGUIDE = " showall/list/add/remove [buffid] [комментарий (необязательно)]"
     INVALIDCOMMAND = "Неверная команда.  !debuff / !buff / !showids / !import / !export"
     BUFFLOADSUCCESS = "Бафы успешно загружены."
