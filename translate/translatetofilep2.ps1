@@ -41,7 +41,7 @@ function TranslateAndLog {
         if ($translation -ne $message) {
             $logEntry = "$prefix $translation".Trim()
             try {
-                Add-Content -Path $logFilePath -Value $logEntry -ErrorAction Stop
+                Add-Content -Path $logFilePath -Value $logEntry -ErrorAction Stop -Encoding UTF8
             } catch {
                 Write-Host "Error writing to log file: $_" -ForegroundColor Red
                 exit 1
