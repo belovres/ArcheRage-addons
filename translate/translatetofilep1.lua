@@ -17,6 +17,8 @@ local channelColors = {
     [6] = {color = "FF89AA30", name = "Nation"},
     [7] = {color = "FF649DFC", name = "Guild"},
     [9] = {color = "FF1ED556", name = "Family"},
+    [10] = {color = "FFFF7D1D", name = "Commander"},
+    [11] = {color = "FFF5AE25", name = "Trial"},
     [18] = {color = "FF35EECA", name = "Global"}
 }
 
