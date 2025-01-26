@@ -2,6 +2,10 @@
 #--------------- Extra thanks to otu  -------------------
 #---------------- Discord: exec_noir --------------------
 
+param (
+    [string]$lang = "en" #default is english
+)
+
 Add-Type -AssemblyName "System.Web"
 
 $logFilePath = ".\ChatTranslationOutput_1.log"
@@ -55,7 +59,7 @@ function ProcessChatLog {
     if (Test-Path $pathFile) {
         Get-Content -Path $pathFile -Wait -Tail 0 -Encoding UTF8 | ForEach-Object {
             if ($_ -ne "") { #todo: add this as variable to bat
-                TranslateAndLog -lang "en" -text $_
+                TranslateAndLog -lang $lang -text $_
             }
         }
     } else {
