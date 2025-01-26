@@ -2,6 +2,8 @@
 #--------------- Extra thanks to otu  -------------------
 #---------------- Discord: exec_noir --------------------
 
+Add-Type -AssemblyName "System.Web"
+
 $logFilePath = ".\ChatTranslationOutput_1.log"
 
 function TranslateAndLog {
@@ -38,7 +40,12 @@ function TranslateAndLog {
         # don't print untranslated strings
         if ($translation -ne $message) {
             $logEntry = "$prefix $translation".Trim()
-            Add-Content -Path $logFilePath -Value $logEntry
+            try {
+                Add-Content -Path $logFilePath -Value $logEntry -ErrorAction Stop
+            } catch {
+                Write-Host "Error writing to log file: $_" -ForegroundColor Red
+                exit 1
+            }
         }
     }
 }
@@ -47,14 +54,19 @@ function ProcessChatLog {
     $pathFile = 'ChatTranslationInput_1.log'
     if (Test-Path $pathFile) {
         Get-Content -Path $pathFile -Wait -Tail 0 -Encoding UTF8 | ForEach-Object {
-		    #change "en" here to whatever you want
-			#maybe make this an in-game setting somehow? idk
-            if ($_ -ne "") {
+            if ($_ -ne "") { #todo: add this as variable to bat
                 TranslateAndLog -lang "en" -text $_
             }
         }
     } else {
         Write-Host "Chat log file not found: $pathFile"
+        exit 2
     }
 }
-ProcessChatLog
+
+try {
+    ProcessChatLog
+} catch {
+    Write-Host "Unexpected error: $_" -ForegroundColor Red
+    exit 3
+}
