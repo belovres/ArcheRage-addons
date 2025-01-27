@@ -24,7 +24,7 @@ function refreshForcer:OnUpdate(dt)
 
     if lastLine and lastLine ~= lastPrintedLine then
         --don't print bugged lines
-        if lastLine:match("00000") then
+        if lastLine:match("00000") or lastLine:match("DAILY_MSG") then
             lastPrintedLine = lastLine
             return
         end
