@@ -5099,11 +5099,14 @@ UnitRemovableDebuffCount(unit)
 GetUnitScreenPosition(unit)
 UnitGearScore(unit)
 GetTargetAbilityTemplates(target)
+GetTargetUnitId()
+GetUnitNameById(stringId)
+GetUnitId(unit)
+
 ----------------------------------------------------------------------------------------
 
 Available/not allowed functions
 ----------------------------------------------------------------------------------------
-GetUnitId(unit)
 UnitHealthRecovery(unit)
 UnitHealthBarSplit(unit)
 UnitManaRecovery(unit)
@@ -5154,10 +5157,8 @@ GetTargetKindType(target)
 GetCombatRelationshipStr(target)
 GetNpcInfo(target)
 GetNpcTypeIndex(target)
-GetTargetUnitId()
 TargetUnit(unit)
 ReleaseTarget()
-GetUnitNameById(stringId)
 GetUnitType(unit)
 GetUnitGradeById(stringId)
 GetUnitInfoById(stringId)
