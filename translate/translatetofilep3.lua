@@ -12,10 +12,27 @@ refreshForcer:Show(true)
 ------------------------ Function called perpetually ------------------------
 local path = "../Documents/Addon/translate/ChatTranslationOutput_1.log"
 local lastPrintedLine = nil
+local lastDeleteTime = os.time()
+local deleteInterval = 600
+
+local function resetLogFile()
+    local file = io.open(path, "w")
+    if file then
+        file:write("\239\187\191") -- UTF-8 BOM
+        file:close()
+    end
+end
 
 --basically just constantly refresh and act like tail functionality on linux
 function refreshForcer:OnUpdate(dt)
+    if os.time() - lastDeleteTime >= deleteInterval then
+        os.remove(path)
+        resetLogFile()
+        lastDeleteTime = os.time()
+    end
+
     local file = io.open(path, "r")
+    if not file then return end
     local lastLine
     for line in file:lines() do
         lastLine = line
@@ -24,7 +41,7 @@ function refreshForcer:OnUpdate(dt)
 
     if lastLine and lastLine ~= lastPrintedLine then
         --don't print bugged lines
-        if lastLine:match("00000") or lastLine:match("DAILY_MSG") then
+        if lastLine:match("00000") or lastLine:match("DAILY_MSG") or lastLine:match("\239\187\191") then
             lastPrintedLine = lastLine
             return
         end

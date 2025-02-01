@@ -22,6 +22,8 @@ refreshForcer:Show(true)
 ------------------------ Function called perpetually ------------------------
 local path = "../Documents/ArcheRage.log"
 local lastPrintedLine = nil
+local lastDeleteTime = os.time() -- Store the initial time
+local deleteInterval = 600 -- 10 minutes in seconds
 
 --read it the first time to get all errors printed
 local file1 = io.open(path, "r")
@@ -34,7 +36,16 @@ file1:close()
 
 --basically just constantly refresh and act like tail functionality on linux
 function refreshForcer:OnUpdate(dt)
+    local currentTime = os.time()
+    if currentTime - lastDeleteTime >= deleteInterval then
+        os.remove(path) -- Delete the file
+        lastDeleteTime = currentTime -- Reset the delete timer
+        --X2Chat:DispatchChatMessage(CMF_SYSTEM, "Log file reset.")
+    end
+
+    -- Read the last line of the file
     local file = io.open(path, "r")
+    if not file then return end
     local lastLine
     for line in file:lines() do
         lastLine = line

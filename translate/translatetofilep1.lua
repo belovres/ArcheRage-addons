@@ -112,6 +112,8 @@ end
 
 local logFilePath = "../Documents/Addon/translate/ChatTranslationInput_1.log"
 local logFile = io.open(logFilePath, "a")
+local lastDeleteTime = os.time()
+local deleteInterval = 600
 
 if not logFile then
     X2Chat:DispatchChatMessage(CMF_SYSTEM,"Failed to open log file: " .. logFilePath)
@@ -127,12 +129,28 @@ end
 local function reOpenLogFile()
     logFile = io.open(logFilePath, "a")
 end
+
+local function resetLogFile()
+    closeLogFile()
+    local file = io.open(logFilePath, "w")
+    if file then
+        file:write("\239\187\191") -- UTF-8 BOM
+        file:close()
+    end
+end
+
 closeLogFile()
 
 local saySpace = ""
 --chat listener
 local chatAggroEventListenerEvents = {
     CHAT_MESSAGE = function(channel, relation, name, message, info)
+        if os.time() - lastDeleteTime >= deleteInterval then
+            os.remove(logFilePath)
+            resetLogFile()
+            lastDeleteTime = os.time()
+        end
+
         if channel ==  0 then
             saySpace = " "
         else
