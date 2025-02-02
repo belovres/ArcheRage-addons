@@ -19,10 +19,25 @@ ADDON:ImportAPI(API_TYPE.LOCALE.id)
 -- create an empty window that forces continuous updates
 local refreshForcer = CreateEmptyWindow("refreshForcer", "UIParent")
 refreshForcer:Show(true)
------------------------- Function called perpetually ------------------------
-local path = "../Documents/ArcheRage.log"
+------------------------ Function called perpetually ------------------------.
+local logpaths = {
+    "../Documents/archerage.log",
+    "../Documents/ArcheRage.log"
+}
+
+local function find_existing_file(paths)
+    for _, path in ipairs(paths) do
+        local f = io.open(path, "r")
+        if f then
+            f:close()
+            return path
+        end
+    end
+    return nil
+end
+local path = find_existing_file(logpaths)
 local lastPrintedLine = nil
-local lastDeleteTime = os.time() -- Store the initial time
+local lastDeleteTime = os.time()
 local deleteInterval = 600 -- 10 minutes in seconds
 
 --read it the first time to get all errors printed
@@ -38,12 +53,12 @@ file1:close()
 function refreshForcer:OnUpdate(dt)
     local currentTime = os.time()
     if currentTime - lastDeleteTime >= deleteInterval then
-        os.remove(path) -- Delete the file
-        lastDeleteTime = currentTime -- Reset the delete timer
+        os.remove(path)
+        lastDeleteTime = currentTime
         --X2Chat:DispatchChatMessage(CMF_SYSTEM, "Log file reset.")
     end
 
-    -- Read the last line of the file
+    -- read the last line of the file
     local file = io.open(path, "r")
     if not file then return end
     local lastLine
@@ -52,10 +67,10 @@ function refreshForcer:OnUpdate(dt)
     end
     file:close()
 
-    -- Check if last line is lua and not duplicate
+    -- check if last line is lua and not duplicate
     if lastLine and lastLine:lower():find("lua") and lastLine ~= lastPrintedLine then
         X2Chat:DispatchChatMessage(CMF_SYSTEM, lastLine)
-        lastPrintedLine = lastLine  -- Update the last printed line
+        lastPrintedLine = lastLine
     end
 end
 --force continuous updates
