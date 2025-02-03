@@ -42,7 +42,8 @@ function TranslateAndLog {
         $translation = [System.Web.HttpUtility]::UrlDecode($translation)
 
         # don't print untranslated strings
-        if ($translation -ne $message) {
+        if ($translation.Trim() -ne ($message -replace "\+" , " ").Trim()) {
+        #if ($translation.Trim() -ne $message.Trim()) {
             $logEntry = "$prefix $translation".Trim()
             try {
                 Add-Content -Path $logFilePath -Value $logEntry -ErrorAction Stop -Encoding UTF8
