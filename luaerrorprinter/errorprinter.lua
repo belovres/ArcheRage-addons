@@ -52,10 +52,16 @@ file1:close()
 --basically just constantly refresh and act like tail functionality on linux
 function refreshForcer:OnUpdate(dt)
     local currentTime = os.time()
+    --empty out archerage.log regularly to prevent frame issues from reading big files
     if currentTime - lastDeleteTime >= deleteInterval then
-        os.remove(path)
+        local f = io.open(path, "w")
+        if f then
+            f:close()
+            --X2Chat:DispatchChatMessage(CMF_SYSTEM, "Log file cleared:" .. path)
+        else
+            X2Chat:DispatchChatMessage(CMF_SYSTEM, "Failed to open log file for clearing:" .. path .. ", seeing this error often could lead to frame drops.")
+        end
         lastDeleteTime = currentTime
-        --X2Chat:DispatchChatMessage(CMF_SYSTEM, "Log file reset.")
     end
 
     -- read the last line of the file
