@@ -1,3 +1,5 @@
+-------------- Original Author: Strawberry --------------
+----------------- Discord: exec.noir --------------------
 ADDON:ImportObject(OBJECT_TYPE.TEXT_STYLE)
 ADDON:ImportObject(OBJECT_TYPE.BUTTON)
 ADDON:ImportObject(OBJECT_TYPE.DRAWABLE)
