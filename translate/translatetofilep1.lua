@@ -113,7 +113,7 @@ end
 local logFilePath = "../Documents/Addon/translate/ChatTranslationInput_1.log"
 local logFile = io.open(logFilePath, "a")
 local lastDeleteTime = os.time()
-local deleteInterval = 600
+local deleteInterval = 6000
 
 if not logFile then
     X2Chat:DispatchChatMessage(CMF_SYSTEM,"Failed to open log file: " .. logFilePath)

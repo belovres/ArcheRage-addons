@@ -13,7 +13,7 @@ refreshForcer:Show(true)
 local path = "../Documents/Addon/translate/ChatTranslationOutput_1.log"
 local lastPrintedLine = nil
 local lastDeleteTime = os.time()
-local deleteInterval = 600
+local deleteInterval = 6000
 
 local function resetLogFile()
     local file = io.open(path, "w")
