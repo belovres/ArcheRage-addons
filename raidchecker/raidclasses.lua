@@ -91,8 +91,9 @@ function checkClasses()
             table.insert(lessThanFourClasses, string.format("%s (%d)", entry.name, entry.count))
         end
     end
-
-    X2Chat:DispatchChatMessage(CMF_SYSTEM, tallyMessage)
+    if amountOfRaids ~= 0 then
+        X2Chat:DispatchChatMessage(CMF_SYSTEM, tallyMessage)
+    end
 
     if #lessThanFourClasses > 0 then
         local lessThanFourMessage = "You have less than 3 of the following: " .. table.concat(lessThanFourClasses, ", ")

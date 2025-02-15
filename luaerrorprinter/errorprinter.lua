@@ -80,7 +80,7 @@ function refreshForcer:OnUpdate(dt)
         and not lastLine:find("localized ui text for 92")
         and not lastLine:find("locale/zh_cn.alb")
         and not lastLine:find("ui/tower_defense/0")
-        and not lastLine:find("teamIndex1;invalid") then
+        and not lastLine:find("teamIndex:1;invalid") then
         X2Chat:DispatchChatMessage(CMF_SYSTEM, lastLine)
         lastPrintedLine = lastLine
     end
