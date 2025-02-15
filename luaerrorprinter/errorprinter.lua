@@ -43,7 +43,11 @@ local deleteInterval = 600 -- 10 minutes in seconds
 --read it the first time to get all errors printed
 local file1 = io.open(path, "r")
 for line in file1:lines() do
-    if line:lower():find("lua") then
+    if line:lower():find("lua")
+        and not line:find("localized ui text for 92")
+        and not line:find("locale/zh_cn.alb")
+        and not line:find("ui/tower_defense/0")
+        and not line:find("teamIndex:1; invalid") then
         X2Chat:DispatchChatMessage(CMF_SYSTEM, line)
     end
 end
@@ -80,7 +84,7 @@ function refreshForcer:OnUpdate(dt)
         and not lastLine:find("localized ui text for 92")
         and not lastLine:find("locale/zh_cn.alb")
         and not lastLine:find("ui/tower_defense/0")
-        and not lastLine:find("teamIndex:1;invalid") then
+        and not lastLine:find("teamIndex:1; invalid") then
         X2Chat:DispatchChatMessage(CMF_SYSTEM, lastLine)
         lastPrintedLine = lastLine
     end
