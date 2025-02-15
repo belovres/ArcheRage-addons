@@ -130,7 +130,9 @@ end
 
 --these handle title setting from buttons:
 local function setTitle(titleId) 
-    X2Player:ChangeAppellation(0, tonumber(titleId))
+    local currentTitle = X2Player:GetShowingAppellation()
+    local currentTitleId = currentTitle[1]
+    X2Player:ChangeAppellation(currentTitleId, tonumber(titleId))
     --local currentTitle = X2Player:GetEffectAppellation()
     --local currentTitleId = tostring(currentTitle[1])
     --X2Chat:DispatchChatMessage(CMF_SYSTEM, "Changing to title failed:" .. titleId .. currentTitleId)
@@ -141,7 +143,7 @@ local function setTitle(titleId)
     return true
 end
 local function createTitleList()
-    -- Clear existing buttons
+    -- clear existing buttons
     for _, widget in ipairs(titleWidgets) do
         widget:SetText("")
         widget:AddAnchor("TOPLEFT", titleListWindow, 9999, 9999) -- don't think about this too much :)
