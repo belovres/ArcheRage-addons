@@ -74,7 +74,12 @@ function refreshForcer:OnUpdate(dt)
     file:close()
 
     -- check if last line is lua and not duplicate
-    if lastLine and lastLine:lower():find("lua") and lastLine ~= lastPrintedLine then
+    if lastLine
+        and lastLine:lower():find("lua")
+        and lastLine ~= lastPrintedLine
+        and not lastLine:find("localized ui text for 92")
+        and not lastLine:find("locale/zh_cn.alb")
+        and not lastLine:find("ui/tower_defense/0") then
         X2Chat:DispatchChatMessage(CMF_SYSTEM, lastLine)
         lastPrintedLine = lastLine
     end
