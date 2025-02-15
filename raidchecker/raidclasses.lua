@@ -18,10 +18,24 @@ function checkClasses()
     local classCounts = {}
     local bannedPlayers = {}
     local bannedClasses = { "Blade Dancer", "Fanatic" }
-
-    for team = 1, 2 do
+    local hasCoRaid = false
+    local amountOfRaids = 1
+    if X2Unit:UnitName("team_1_1") == nil and X2Unit:UnitName("team1") == nil then
+        X2Chat:DispatchChatMessage(CMF_SYSTEM, "Not in a raid.")
+        amountOfRaids = 0
+    end
+    if X2Unit:UnitName("team_1_1") ~= nil then
+        amountOfRaids = 2
+        hasCoRaid = true
+    end
+    for team = 1, amountOfRaids do
         for member = 1, 50 do
-            local teamId = string.format("team_%02d_%02d", team, member)
+            local teamId = ""
+            if hasCoRaid then
+                teamId = string.format("team_%02d_%02d", team, member)
+            else
+                teamId = string.format("team%02d", member)
+            end
             local playerName = X2Unit:UnitName(teamId)
             local templates = X2Unit:GetTargetAbilityTemplates(teamId)
 
