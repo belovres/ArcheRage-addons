@@ -41,6 +41,11 @@ local saySpace = ""
 --chat listener
 local chatAggroEventListenerEvents = {
     CHAT_MESSAGE = function(channel, relation, name, message, info)
+        if os.time() - lastDeleteTime >= deleteInterval then
+            os.remove(logFilePath)
+            resetLogFile()
+            lastDeleteTime = os.time()
+        end
         if info["isUserChat"] == true and channel ~= -3 then -- false for npc chat
 			local logMessage = table.concat({tostring(channel), 
 										     tostring(relation),
