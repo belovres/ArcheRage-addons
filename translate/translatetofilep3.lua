@@ -5,6 +5,35 @@ ADDON:ImportObject(OBJECT_TYPE.WINDOW)
 ADDON:ImportObject(OBJECT_TYPE.LABEL)
 
 ADDON:ImportAPI(API_TYPE.CHAT.id)
+ADDON:ImportAPI(API_TYPE.LOCALE.id)
+
+local locale = X2Locale:GetLocale() -- zh_cn, ru or else
+
+local option = {
+    specifyName = nil,
+    isOtherWorldMessage = false,
+    isUserChat = true,
+    messageLocale = LOCALE_INVALID,
+    npcBubbleChat = false,
+}
+
+local channelName = {
+        [-4] = CMF_WHISPER,
+        [0]  = CMF_SAY,
+        [1]  = CMF_ZONE,
+        [2]  = CMF_TRADE,
+        [3]  = CMF_FIND_PARTY,
+        [4]  = CMF_PARTY,
+        [5]  = CMF_RAID,
+        [6]  = CMF_FACTION,
+        [7]  = CMF_EXPEDITION,
+        [9]  = CMF_FAMILY,
+        [10] = CMF_RAID_COMMAND,
+        [11] = CMF_TRIAL,
+        [17] = CMF_SQUAD,
+        [18] = CMF_ALL_SERVER,
+    }
+    --channel;relation;name;message
 
 -- create an empty window that forces continuous updates
 local refreshForcer = CreateEmptyWindow("refreshForcer", "UIParent")
@@ -15,6 +44,18 @@ local lastPrintedLine = nil
 local lastDeleteTime = os.time()
 local deleteInterval = 6000
 
+--dummy option thanks Sparkle
+local option = {
+    specifyName = nil,
+    isOtherWorldMessage = false,
+    isUserChat = true,
+    messageLocale = LOCALE_INVALID,
+    npcBubbleChat = false,
+}
+local hostileColor = "|cFFA9362F"
+--local relation = 3 -- invalid/hostile/neutral/friendly 0/1/2/3
+
+
 local function resetLogFile()
     local file = io.open(path, "w")
     if file then
@@ -22,6 +63,47 @@ local function resetLogFile()
         file:close()
     end
 end
+--zh_cn, ru or else
+function rageCustomChannels(cmfInput) 
+    local customChannel = ""
+    if cmfInput == "global" then
+        if locale == "zh_cn" then
+            customChannel = "跨服"
+        elseif locale == "ru" then
+            customChannel = "Общий чат"
+        else
+            customChannel = "Global"
+        end
+    elseif cmfInput == "nation" then
+        if locale == "zh_cn" then
+            customChannel = "势力"
+        elseif locale == "ru" then
+            customChannel = "Союз"
+        else
+            customChannel = "Nation"
+        end
+    end
+    return customChannel
+end
+
+local channelTranslatedNames = {
+    [CMF_SAY] = X2Locale:LocalizeUiText(CHAT_FILTERING, "chat_normal_group1_common"),
+    [CMF_ZONE] = X2Locale:LocalizeUiText(CHAT_FILTERING, "chat_normal_group1_shout"), --has 1. in front?
+    [CMF_WHISPER] = X2Locale:LocalizeUiText(CHAT_FILTERING, "chat_normal_group1_whisper"),
+    [CMF_TRADE] = X2Locale:LocalizeUiText(CHAT_FILTERING, "chat_normal_group1_trade"),
+    [CMF_PARTY] = X2Locale:LocalizeUiText(CHAT_FILTERING, "chat_normal_group1_party"),
+    [CMF_FIND_PARTY] = X2Locale:LocalizeUiText(CHAT_FILTERING, "chat_normal_group1_search_party"),
+    [CMF_RAID] = X2Locale:LocalizeUiText(CHAT_FILTERING, "chat_normal_group1_raid"),
+    [CMF_EXPEDITION] = X2Locale:LocalizeUiText(CHAT_FILTERING, "chat_normal_group1_expedition"),
+    [CMF_FAMILY] = X2Locale:LocalizeUiText(COMMON_TEXT, "family"),
+    [CMF_TRIAL] = X2Locale:LocalizeUiText(CHAT_FILTERING, "chat_normal_group1_trial"),
+    [CMF_FACTION] = rageCustomChannels("nation"),
+    [CMF_RACE] = X2Locale:LocalizeUiText(CHAT_FILTERING, "chat_normal_group1_alliance"),
+    [CMF_SQUAD] = X2Locale:LocalizeUiText(CHAT_FILTERING, "chat_normal_group1_squad"),
+    [CMF_ALL_SERVER] = rageCustomChannels("global"),
+   }
+
+   --X2Chat:DispatchChatMessage(CMF_SYSTEM, dump(channelTranslatedNames))
 
 --basically just constantly refresh and act like tail functionality on linux
 function refreshForcer:OnUpdate(dt)
@@ -40,17 +122,20 @@ function refreshForcer:OnUpdate(dt)
     file:close()
 
     if lastLine and lastLine ~= lastPrintedLine then
-        --don't print bugged lines
-        if lastLine:match("00000") or lastLine:match("DAILY_MSG") or lastLine:match("\239\187\191") then
-            lastPrintedLine = lastLine
-            return
+        local outputLine = lastLine
+        local channel, relation, name, message = outputLine:match("([^;]+);([^;]+);([^;]+);(.+)")
+        cmf = tonumber(channel)        
+        if channel == "0" then -- say
+            if relation == "1" then --hostile speech
+                X2Chat:DispatchChatMessage(channelName[cmf], hostileColor .. "-> [" .. name .. "] : |o;" .. message, option)
+            else
+                X2Chat:DispatchChatMessage(channelName[cmf], "-> [" .. name .. "] : |o;" .. message, option)
+            end
+        else
+            X2Chat:DispatchChatMessage(channelName[cmf], "-> [" .. channelTranslatedNames[channelName[cmf]] .. ": " .. name .. "] : |o;" .. message, option)
         end
-        local outputLine = lastLine:gsub(" ", "", 1)
-        X2Chat:DispatchChatMessage(CMF_SYSTEM, outputLine)
         lastPrintedLine = lastLine
     end
 end
 
---force continuous updates
 refreshForcer:SetHandler("OnUpdate", refreshForcer.OnUpdate)
---X2Chat:DispatchChatMessage(CMF_SYSTEM, string.format("lua logging"))
