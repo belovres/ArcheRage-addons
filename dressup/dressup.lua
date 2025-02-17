@@ -20,6 +20,9 @@ local dressUpWindow = CreateEmptyWindow("dressUpWindow", "UIParent")
       dressUpWindow:AddAnchor("RIGHT", -920,0)
 local turnLeft = false
 local turnRight = false
+local zoomOutBool = false
+local zoomInBool = false
+local fov = 30
 
 local color = {}
     color.normal    = UIParent:GetFontColor("btn_df")
@@ -46,6 +49,12 @@ function dressUpWindow:OnUpdate(dt)
         modelViewer:AddRotation(200 * dt / 1000)
     elseif turnRight == true then 
         modelViewer:AddRotation(-200 * dt / 1000)
+      elseif zoomInBool == true then
+          modelViewer:SetFov(fov)
+          fov = fov - 0.3
+      elseif zoomOutBool == true then
+          modelViewer:SetFov(fov)
+          fov = fov + 0.3
     end 
 end 
 
@@ -89,6 +98,40 @@ local rotateLeft = modelViewer:CreateChildWidget("button", "rotateLeft", 0, true
           turnLeft = false
       end
       rotateLeft:SetHandler("OnLeave", rotateLeft.OnLeave)
+local ZoomInButt = modelViewer:CreateChildWidget("button", "ZoomInButt", 0, true)
+      ZoomInButt:AddAnchor("LEFT", modelViewer, 5, controlBarYOffset - 170)
+      ApplyButtonSkin(ZoomInButt, buttonskin)
+      ZoomInButt:SetExtent(35,35)
+      ZoomInButt:SetText("+")
+      function ZoomInButt:OnMouseDown(arg)
+          zoomInBool = true
+      end
+      ZoomInButt:SetHandler("OnMouseDown", ZoomInButt.OnMouseDown)
+      function ZoomInButt:OnMouseUp(arg)
+          zoomInBool = false
+      end
+      ZoomInButt:SetHandler("OnMouseUp", ZoomInButt.OnMouseUp)
+      function ZoomInButt:OnLeave(arg)
+          zoomInBool = false
+      end
+      ZoomInButt:SetHandler("OnLeave", ZoomInButt.OnLeave)
+local ZoomOutButt = modelViewer:CreateChildWidget("button", "ZoomOutButt", 0, true)
+      ZoomOutButt:AddAnchor("LEFT", modelViewer, 5, controlBarYOffset - 135)
+      ApplyButtonSkin(ZoomOutButt, buttonskin)
+      ZoomOutButt:SetExtent(35,35)
+      ZoomOutButt:SetText("-")
+      function ZoomOutButt:OnMouseDown(arg)
+          zoomOutBool = true
+      end
+      ZoomOutButt:SetHandler("OnMouseDown", ZoomOutButt.OnMouseDown)
+      function ZoomOutButt:OnMouseUp(arg)
+          zoomOutBool = false
+      end
+      ZoomOutButt:SetHandler("OnMouseUp", ZoomOutButt.OnMouseUp)
+      function ZoomOutButt:OnLeave(arg)
+          zoomOutBool = false
+      end
+      ZoomOutButt:SetHandler("OnLeave", ZoomOutButt.OnLeave)
 local closeViewer = modelViewer:CreateChildWidget("button", "rotateLeft", 0, true)
       closeViewer:AddAnchor("TOPRIGHT", modelViewer, -5, controlBarYOffset)
       ApplyButtonSkin(closeViewer, buttonskin)
@@ -121,13 +164,21 @@ local chatAggroEventListenerEvents = {
     CHAT_MESSAGE = function(channel, relation, name, message, info)
         if name == X2Unit:UnitName("player") then
             local firstWord = string.match(message, "/%w+")
-            local secondWord = string.match(message, "/%w+%s+(%w+)") 
+            local secondWord = string.match(message, "/[%w_]+%s+([%w_]+)")
             if firstWord == "/dressup" then
                 dressUpWindow:Show(true)
                 modelViewer:Init("player", true)
                 modelViewer:PlayAnimation(RELAX_ANIMATION_NAME, true)
             elseif firstWord == "/closedressup" then
                 dressUpWindow:Show(false)
+            elseif firstWord == "/animate" then
+                if secondWord ~= nil then
+                    X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring(secondWord))
+                    modelViewer:Init("player", true)
+                    modelViewer:PlayAnimation(tostring(secondWord), true)
+                else
+                    X2Chat:DispatchChatMessage(CMF_SYSTEM, "/animate <animationname>")
+                end
             elseif firstWord == "/equip" then
                 if secondWord ~= nil then
                     modelViewer:EquipItem(tonumber(secondWord))
