@@ -54,7 +54,11 @@ local option = {
 }
 local hostileColor = "|cFFA9362F"
 --local relation = 3 -- invalid/hostile/neutral/friendly 0/1/2/3
-
+local channelNames = {
+    global = { zh_cn = "跨服", ru = "Общий чат", default = "Global" },
+    nation = { zh_cn = "势力", ru = "Союз", default = "Nation" },
+    commander = { zh_cn = "指挥", ru = "Глава отряда", default = "Commander" }
+}
 
 local function resetLogFile()
     local file = io.open(path, "w")
@@ -63,28 +67,15 @@ local function resetLogFile()
         file:close()
     end
 end
---zh_cn, ru or else
-function rageCustomChannels(cmfInput) 
-    local customChannel = ""
-    if cmfInput == "global" then
-        if locale == "zh_cn" then
-            customChannel = "跨服"
-        elseif locale == "ru" then
-            customChannel = "Общий чат"
-        else
-            customChannel = "Global"
-        end
-    elseif cmfInput == "nation" then
-        if locale == "zh_cn" then
-            customChannel = "势力"
-        elseif locale == "ru" then
-            customChannel = "Союз"
-        else
-            customChannel = "Nation"
-        end
+function rageCustomChannels(cmfInput)
+    local translations = channelNames[cmfInput]
+    if translations then
+        return translations[locale] or translations.default
     end
-    return customChannel
+    
+    return ""
 end
+
 
 local channelTranslatedNames = {
     [CMF_SAY] = X2Locale:LocalizeUiText(CHAT_FILTERING, "chat_normal_group1_common"),
@@ -101,6 +92,7 @@ local channelTranslatedNames = {
     [CMF_RACE] = X2Locale:LocalizeUiText(CHAT_FILTERING, "chat_normal_group1_alliance"),
     [CMF_SQUAD] = X2Locale:LocalizeUiText(CHAT_FILTERING, "chat_normal_group1_squad"),
     [CMF_ALL_SERVER] = rageCustomChannels("global"),
+    [CMF_RAID_COMMAND] = rageCustomChannels("commander")
    }
 
    --X2Chat:DispatchChatMessage(CMF_SYSTEM, dump(channelTranslatedNames))
@@ -132,7 +124,9 @@ function refreshForcer:OnUpdate(dt)
                 X2Chat:DispatchChatMessage(channelName[cmf], "-> [" .. name .. "] : |o;" .. message, option)
             end
         else
-            X2Chat:DispatchChatMessage(channelName[cmf], "-> [" .. channelTranslatedNames[channelName[cmf]] .. ": " .. name .. "] : |o;" .. message, option)
+            if message ~= nil and channelName[cmf] ~= nil and channelTranslatedNames[channelName[cmf]] ~= nil and name ~= nil then
+                X2Chat:DispatchChatMessage(channelName[cmf], "-> [" .. channelTranslatedNames[channelName[cmf]] .. ": " .. name .. "] : |o;" .. message, option)
+            end
         end
         lastPrintedLine = lastLine
     end
