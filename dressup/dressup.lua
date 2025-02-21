@@ -164,7 +164,7 @@ local chatAggroEventListenerEvents = {
     CHAT_MESSAGE = function(channel, relation, name, message, info)
         if name == X2Unit:UnitName("player") then
             local firstWord = string.match(message, "/%w+")
-            local secondWord = string.match(message, "/[%w_]+%s+([%w_]+)")
+            local secondWord = string.match(message, "/[%w_]+%s+([^%s]+)")
             if firstWord == "/dressup" then
                 dressUpWindow:Show(true)
                 modelViewer:Init("player", true)
@@ -181,7 +181,11 @@ local chatAggroEventListenerEvents = {
                 end
             elseif firstWord == "/equip" then
                 if secondWord ~= nil then
-                    modelViewer:EquipItem(tonumber(secondWord))
+                  local equipThisItem = secondWord
+                    if secondWord:sub(1,1) == "|" then
+                      equipThisItem = secondWord:match("i(%d+),")
+                    end
+                    modelViewer:EquipItem(tonumber(equipThisItem))
                     modelViewer:PlayAnimation(RELAX_ANIMATION_NAME, true)
                 else
                     X2Chat:DispatchChatMessage(CMF_SYSTEM, "/equip <itemid>")
