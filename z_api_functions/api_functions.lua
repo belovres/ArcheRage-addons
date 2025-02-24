@@ -2796,6 +2796,7 @@ IIK_SOCKET_MODIFIER()
 NORMAL_ITEM_GRADE()
 POOR_ITEM_GRADE()
 MAX_SET_ITEMS()
+InfoFromLink(linkText) --second param can be empty, auction, coffer or guildBank
 ----------------------------------------------------------------------------------------
 
 Available/not allowed functions
@@ -2844,7 +2845,6 @@ IsInSlaveEquipChangeMode()
 GroupTypes()
 GroupName(itemGroupType)
 GroupDescription(itemGroupType)
-InfoFromLink(linkText)
 AllGradeTypes()
 NoPoorGradeTypes()
 GradeColor(grade)
@@ -4376,6 +4376,8 @@ HOUSING_LIST_FILTER_PUBLIC
 Allowed functions
 ----------------------------------------------------------------------------------------
 GetResidentBoardContent(boardType)
+RequestHousingTradeList(zoneGroupType, filterindex, searchWord) -- answer return via UIEvent "RESIDENT_HOUSING_TRADE_LIST"
+FilterHousingTradeList(filterindex, searchWord) -- answer return via UIEvent "RESIDENT_HOUSING_TRADE_LIST"
 ----------------------------------------------------------------------------------------
 
 Available/not allowed functions
@@ -4385,8 +4387,6 @@ RefreshResidentMembers(zoneGroupType, bool, int)
 GetResidentMembers(zoneGroupType, bool, int)
 GetResidentZoneList(zoneGroupType)
 FireNuonsArrow(zoneGroupType)
-RequestHousingTradeList(zoneGroupType, filterindex, searchWord)
-FilterHousingTradeList(filterindex, searchWord)
 GetHousingTradeRefreshTime()
 GetContributionRankReward(zoneGroupType)
 ----------------------------------------------------------------------------------------
@@ -5102,6 +5102,8 @@ GetTargetAbilityTemplates(target)
 GetTargetUnitId()
 GetUnitNameById(stringId)
 GetUnitId(unit)
+GetCurrentZoneGroup()
+UnitCastingInfo(unit)
 
 ----------------------------------------------------------------------------------------
 
@@ -5124,7 +5126,6 @@ UnitVisualRace(unit)
 UnitClass(unit)
 UnitIsDead(unit)
 UnitIsOffline(unit)
-UnitCastingInfo(unit)
 UnitInGroup(unit, groupType)
 UnitIsTeamMember(unit)
 UnitIsAggressiveHostile(unit)
@@ -5186,7 +5187,6 @@ IsVisualRaceExpired()
 GetRaceStr(race)
 GetGenderStr(gender)
 TargetFrameOpened()
-GetCurrentZoneGroup()
 IsInResurrectPeaceArea()
 GetTargetUnitString()
 GetBlessUthstinInfo(unit, pageNumber)
