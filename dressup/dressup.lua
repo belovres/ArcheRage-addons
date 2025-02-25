@@ -13,6 +13,7 @@ ADDON:ImportObject(OBJECT_TYPE.MODEL_VIEW)
 
 ADDON:ImportAPI(API_TYPE.CHAT.id)
 ADDON:ImportAPI(API_TYPE.UNIT.id)
+ADDON:ImportAPI(API_TYPE.ITEM.id)
 
 local dressUpModelViewerX = 600
 local dressUpModelViewerY = 800
@@ -179,13 +180,23 @@ local chatAggroEventListenerEvents = {
                 else
                     X2Chat:DispatchChatMessage(CMF_SYSTEM, "/animate <animationname>")
                 end
-            elseif firstWord == "/equip" then
+            elseif firstWord == "/equipbase" then
                 if secondWord ~= nil then
-                  local equipThisItem = secondWord
+                    local equipThisItem = secondWord
                     if secondWord:sub(1,1) == "|" then
                       equipThisItem = secondWord:match("i(%d+),")
                     end
                     modelViewer:EquipItem(tonumber(equipThisItem))
+                    modelViewer:PlayAnimation(RELAX_ANIMATION_NAME, true)
+                else
+                    X2Chat:DispatchChatMessage(CMF_SYSTEM, "/equipbase <itemid>")
+                end
+            elseif firstWord == "/equip" then
+                if secondWord ~= nil then
+                    local linkText = secondWord:match(".*,([^,;]+);")
+                    local itemInfo = X2Item:InfoFromLink(linkText, "auction")
+                    local alembicSkin = itemInfo.lookType
+                    modelViewer:EquipItem(tonumber(alembicSkin))
                     modelViewer:PlayAnimation(RELAX_ANIMATION_NAME, true)
                 else
                     X2Chat:DispatchChatMessage(CMF_SYSTEM, "/equip <itemid>")
