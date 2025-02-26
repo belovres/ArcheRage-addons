@@ -186,6 +186,8 @@ local chatAggroEventListenerEvents = {
                     if secondWord:sub(1,1) == "|" then
                       equipThisItem = secondWord:match("i(%d+),")
                     end
+                    dressUpWindow:Show(true)
+                    modelViewer:Init("player", true)
                     modelViewer:EquipItem(tonumber(equipThisItem))
                     modelViewer:PlayAnimation(RELAX_ANIMATION_NAME, true)
                 else
@@ -196,6 +198,8 @@ local chatAggroEventListenerEvents = {
                     local linkText = secondWord:match(".*,([^,;]+);")
                     local itemInfo = X2Item:InfoFromLink(linkText, "auction")
                     local alembicSkin = itemInfo.lookType
+                    dressUpWindow:Show(true)
+                    modelViewer:Init("player", true)
                     modelViewer:EquipItem(tonumber(alembicSkin))
                     modelViewer:PlayAnimation(RELAX_ANIMATION_NAME, true)
                 else
