@@ -84,17 +84,18 @@ local function StartCast(spellName, castingTime, caster, castingUseable)
    
     --isDancing = true
 end
-local function StopCast(spellName, castingTime, caster, castingUseable)
+local function StopCast(caster)
 
-    --X2Chat:DispatchChatMessage(CMF_SYSTEM, "Dancing end")
-    if isDancing then
+    --X2Chat:DispatchChatMessage(CMF_SYSTEM, "Dancing end".. caster)
+    if isDancing and caster == "player" then
         isDancing = false
         danceEnded = true
     end
 
 end
-local function EndCast(spellName, castingTime, caster, castingUseable)
-    if isDancing then
+local function EndCast(caster)
+    --X2Chat:DispatchChatMessage(CMF_SYSTEM, "Dancing end" .. caster)
+    if isDancing and caster == "player" then
         isDancing = false
         danceEnded = true
     end
