@@ -1,0 +1,122 @@
+-------------- Original Author: Strawberry --------------
+----------------- Discord: exec_noir --------------------
+ADDON:ImportObject(OBJECT_TYPE.TEXT_STYLE)
+ADDON:ImportObject(OBJECT_TYPE.BUTTON)
+ADDON:ImportObject(OBJECT_TYPE.DRAWABLE)
+ADDON:ImportObject(OBJECT_TYPE.NINE_PART_DRAWABLE)
+ADDON:ImportObject(OBJECT_TYPE.COLOR_DRAWABLE)
+ADDON:ImportObject(OBJECT_TYPE.WINDOW)
+ADDON:ImportObject(OBJECT_TYPE.LABEL)
+ADDON:ImportObject(OBJECT_TYPE.ICON_DRAWABLE)
+ADDON:ImportObject(OBJECT_TYPE.IMAGE_DRAWABLE)
+
+ADDON:ImportAPI(API_TYPE.OPTION.id)
+ADDON:ImportAPI(API_TYPE.CHAT.id)
+ADDON:ImportAPI(API_TYPE.ACHIEVEMENT.id)
+ADDON:ImportAPI(API_TYPE.UNIT.id)
+ADDON:ImportAPI(API_TYPE.LOCALE.id)
+ADDON:ImportAPI(API_TYPE.TEAM.id)
+
+local classnumber = {
+    ["Mage"] = 0,
+    ["Tank"] = 1,
+    ["Songer"] = 1,
+    ["Dancer"] = 1,
+    ["Healer"] = 2,
+    ["Gunner"] = 3,
+    ["Archer"] = 3,
+    ["Melee"] = 3,
+    ["Swiftblade"] = 3,
+    ["unknown"] = 0
+}
+local spellDanceNames = {
+    ["[Dance] Dance of Sacrifice"] = true,
+    ["[舞蹈]牺牲之舞"] = true,
+    ["Танец Наимы"] = true,
+    ["[Danse] Danse du sacrifice"] = true
+}
+local refreshForcer = CreateEmptyWindow("refreshForcer", "UIParent")
+refreshForcer:Show(true)
+local defaultRole = 0
+local discoRole = 0  
+local counter = 0
+local isDancing = false
+local danceEnded = false
+function refreshForcer:OnUpdate(dt)
+    --X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring(counter))
+    if counter > 510 then
+        if isDancing == true then
+            X2Team:SetRole(discoRole)
+            discoRole = (discoRole + 1) % 4  
+        end
+        if danceEnded then
+            X2Team:SetRole(defaultRole)
+        end
+        counter = 0
+    end
+    counter = counter + dt
+--    counter = counter + 1
+end
+
+local function getCurrentRole()
+    local templates = X2Unit:GetTargetAbilityTemplates("player")
+    local indices = {
+      templates[1].index,
+      templates[2].index,
+      templates[3].index
+    }
+    table.sort(indices)
+    local keyStr = string.format("name_%d_%d_%d", indices[1], indices[2], indices[3])
+    --X2Chat:DispatchChatMessage(CMF_SYSTEM, keyStr)
+    fakeClassName = nameMappings[keyStr] or "unknown"
+    if fakeClassName == "unknown" then
+        X2Chat:DispatchChatMessage(CMF_SYSTEM, "Your class " .. keyStr .. " is not known, please add it to globals/classmappings.lua.")
+    end
+    X2Chat:DispatchChatMessage(CMF_SYSTEM, fakeClassName .. classnumber[fakeClassName])
+    return classnumber[fakeClassName]
+end
+
+local function StartCast(spellName, castingTime, caster, castingUseable)
+    if spellDanceNames[spellName] and caster == "player" then
+        X2Chat:DispatchChatMessage(CMF_SYSTEM, "Dancing " .. spellName .. tostring(castingTime) .. caster)
+        isDancing = true
+    end
+   
+    --isDancing = true
+end
+local function StopCast(spellName, castingTime, caster, castingUseable)
+
+    --X2Chat:DispatchChatMessage(CMF_SYSTEM, "Dancing end")
+    if isDancing then
+        isDancing = false
+        danceEnded = true
+    end
+
+end
+local function EndCast(spellName, castingTime, caster, castingUseable)
+    if isDancing then
+        isDancing = false
+        danceEnded = true
+    end
+end
+
+local function ChangeClass()
+    defaultRole = getCurrentRole()
+    X2Team:SetRole(defaultRole)
+end
+local function JoinedRaid(reason)
+    if reason == "joined_by_self" then
+        defaultRole = getCurrentRole()
+        X2Team:SetRole(defaultRole)
+    end
+end
+
+UIParent:SetEventHandler(UIEVENT_TYPE.ABILITY_SET_CHANGED, ChangeClass)
+UIParent:SetEventHandler(UIEVENT_TYPE.ABILITY_CHANGED, ChangeClass)
+UIParent:SetEventHandler(UIEVENT_TYPE.TEAM_MEMBERS_CHANGED, JoinedRaid)
+
+UIParent:SetEventHandler(UIEVENT_TYPE.SPELLCAST_START, StartCast)
+UIParent:SetEventHandler(UIEVENT_TYPE.SPELLCAST_STOP, StopCast)
+UIParent:SetEventHandler(UIEVENT_TYPE.SPELLCAST_SUCCEEDED, EndCast)
+
+refreshForcer:SetHandler("OnUpdate", refreshForcer.OnUpdate)
