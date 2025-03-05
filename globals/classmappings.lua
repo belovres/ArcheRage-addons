@@ -56,6 +56,7 @@ nameMappings = {
     ["name_9_10_14"] = "Dancer", -- Glamorous Savior
     ["name_8_10_14"] = "Dancer", -- Darkness Savior
     ["name_2_10_14"] = "Dancer", -- Fear Savior
+    ["name_1_3_14"] = "Dancer", -- Seal resolver
     ["name_8_9_14"] = "Dancer", -- Bloody Dancer
     ["name_3_9_14"] = "Dancer", -- Leaddancer
     ["name_3_10_14"] = "Healer", -- Comedian
