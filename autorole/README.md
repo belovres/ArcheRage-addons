@@ -1,5 +1,5 @@
 # Autorole
-Sets your role when you join a raid.
+Sets your role when you join a raid, as well as when you change class (either through the skill guy or skill saver, both are handled).
 
 Also makes your role disco-dance when you are casting dance of sacrifice.
 
