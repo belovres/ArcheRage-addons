@@ -72,13 +72,13 @@ local function getCurrentRole()
     if fakeClassName == "unknown" then
         X2Chat:DispatchChatMessage(CMF_SYSTEM, "Your class " .. keyStr .. " is not known, please add it to globals/classmappings.lua.")
     end
-    X2Chat:DispatchChatMessage(CMF_SYSTEM, fakeClassName .. classnumber[fakeClassName])
+    --X2Chat:DispatchChatMessage(CMF_SYSTEM, fakeClassName .. classnumber[fakeClassName])
     return classnumber[fakeClassName]
 end
 
 local function StartCast(spellName, castingTime, caster, castingUseable)
     if spellDanceNames[spellName] and caster == "player" then
-        X2Chat:DispatchChatMessage(CMF_SYSTEM, "Dancing " .. spellName .. tostring(castingTime) .. caster)
+        --X2Chat:DispatchChatMessage(CMF_SYSTEM, "Dancing " .. spellName .. tostring(castingTime) .. caster)
         isDancing = true
     end
    
