@@ -4757,6 +4757,8 @@ MAX_COMMUNITY_SUMMON
 
 Allowed functions
 ----------------------------------------------------------------------------------------
+GetRole(teamIndex, memberIndex)
+SetRole(role)
 ----------------------------------------------------------------------------------------
 
 Available/not allowed functions
@@ -4800,8 +4802,6 @@ GetLootingRule()
 GetMaxMembers()
 GetMaxParties()
 GetMaxPartyMembers()
-GetRole(teamIndex, memberIndex)
-SetRole(role)
 SetPartyVisible(teamIndex, party, visible)
 GetPartyVisible(teamIndex, party)
 SetRefuseAreaInvitation(refuse)

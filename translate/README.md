@@ -5,7 +5,7 @@ It supports translation to and from all languages supported by Google Translate 
 
 Change `local target_language = "en"` to change your target language (ru, zh, ...)
 
-At the moment, the tool spawns command windows, which may cause FPS drops. It serves as a promising proof of concept but is still very much a **work in progress**.
+The command window has to remain open to maintain translations.
 
 Contributions are welcome!
 
