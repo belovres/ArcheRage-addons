@@ -112,6 +112,8 @@ local function JoinedRaid(reason)
     end
 end
 
+defaultRole = getCurrentRole()
+
 UIParent:SetEventHandler(UIEVENT_TYPE.ABILITY_SET_CHANGED, ChangeClass)
 UIParent:SetEventHandler(UIEVENT_TYPE.ABILITY_CHANGED, ChangeClass)
 UIParent:SetEventHandler(UIEVENT_TYPE.TEAM_MEMBERS_CHANGED, JoinedRaid)
