@@ -18,6 +18,7 @@ ADDON:ImportAPI(API_TYPE.TIME.id)
 -- + and - buttons to extend amount shown
 -- gameEvents should be a different color (beige?)
 -- add event duration for each event and maintain it at the top in green as "in progress"
+-- add duration for gameevents
 
 local color = {}
     color.normal    = UIParent:GetFontColor("btn_df")
@@ -139,51 +140,52 @@ end
 
 
 local gameEvents = {
-    ["GR"] = { startHour = 11, startMinute = 59, isAM = false },
-    ["CR"] = { startHour = 11, startMinute = 59, isAM = true },
-    ["SG CR"] = { startHour = 5, startMinute = 59, isAM = false },
-    ["JMG"] = { startHour = 5, startMinute = 59, isAM = true }
+    ["GR"] = { startHour = 11, startMinute = 59, isAM = false, duration = 10 },
+    ["CR"] = { startHour = 11, startMinute = 59, isAM = true, duration = 10 },
+    ["SG CR"] = { startHour = 5, startMinute = 59, isAM = false, duration = 10 },
+    ["JMG"] = { startHour = 5, startMinute = 59, isAM = true, duration = 10 }
 }
 
 local serverEvents = {
-    ["Lusca"] = { times = {{hour = 12, minute = 20}}, days = {1, 2, 3, 4, 5, 6, 7} },
+    ["Lusca"] = { times = {{hour = 12, minute = 20, duration = 30}}, days = {1, 2, 3, 4, 5, 6, 7} },
     ["BD"] = {
-        { times = {{hour = 21, minute = 20}}, days = {3, 5} },
-        { times = {{hour = 18, minute = 20}}, days = {7} }
+        { times = {{hour = 21, minute = 20, duration = 60}}, days = {3, 5} },
+        { times = {{hour = 18, minute = 20, duration = 60}}, days = {7} }
     },
     ["Kraken"] = {
-        { times = {{hour = 22, minute = 20}}, days = {3, 5} },
-        { times = {{hour = 19, minute = 20}}, days = {7} }
+        { times = {{hour = 22, minute = 20, duration = 60}}, days = {3, 5} },
+        { times = {{hour = 19, minute = 20, duration = 60}}, days = {7} }
     },
     ["Leviathan"] = {
-        { times = {{hour = 19, minute = 49}}, days = {3, 5} },
-        { times = {{hour = 16, minute = 49}}, days = {7} }
+        { times = {{hour = 19, minute = 49, duration = 60}}, days = {3, 5} },
+        { times = {{hour = 16, minute = 49, duration = 60}}, days = {7} }
     },
     ["Charybdis"] = {
-        { times = {{hour = 21, minute = 20}}, days = {1, 5} }
+        { times = {{hour = 21, minute = 20, duration = 60}}, days = {1, 5} }
     },
     ["Anthalon (G)"] = {
-        { times = {{hour = 21, minute = 20}}, days = {1, 2, 6} }
+        { times = {{hour = 21, minute = 20, duration = 45}}, days = {1, 2, 6} }
     },
     ["Halcy"] = {
-        { times = {{hour = 1, minute = 20}, {hour = 10, minute = 49}, {hour = 20, minute = 20}}, days = {1, 2, 3, 4, 5, 6, 7} }
+        { times = {{hour = 1, minute = 20, duration = 30}, {hour = 10, minute = 49, duration = 10}, {hour = 20, minute = 20, duration = 10}}, days = {1, 2, 3, 4, 5, 6, 7} }
     },
     ["RD"] = {
-        { times = {{hour = 1, minute = 49}, {hour = 10, minute = 20}, {hour = 19, minute = 49}}, days = {1, 2, 4, 6} }
+        { times = {{hour = 1, minute = 49, duration = 20}, {hour = 10, minute = 20, duration = 10}, {hour = 19, minute = 49, duration = 10}}, days = {1, 2, 4, 6} }
     },
     ["Abyssal Atk"] = {
-        { times = {{hour = 11, minute = 49}, {hour = 21, minute = 20}}, days = {3, 5, 7} }
+        { times = {{hour = 11, minute = 49, duration = 30}, {hour = 21, minute = 20, duration = 10}}, days = {3, 5, 7} }
     },
     ["Hasla"] = {
-        { times = {{hour = 18, minute = 49}, {hour = 20, minute = 49}}, days = {1, 2, 3, 4} }
+        { times = {{hour = 18, minute = 49, duration = 15}, {hour = 20, minute = 49, duration = 10}}, days = {1, 2, 3, 4} }
     },
     ["Akasch"] = {
-        { times = {{hour = 14, minute = 49}, {hour = 18, minute = 20}, {hour = 21, minute = 20}, {hour = 21, minute = 49}}, days = {6} }
+        { times = {{hour = 14, minute = 49, duration = 20}, {hour = 18, minute = 20, duration = 10}, {hour = 21, minute = 20, duration = 10}, {hour = 21, minute = 49, duration = 10}}, days = {6} }
     },
     ["Prairie"] = {
-        { times = {{hour = 8, minute = 49}, {hour = 21, minute = 49}}, days = {6, 7} }
+        { times = {{hour = 8, minute = 49, duration = 20}, {hour = 21, minute = 49, duration = 10}}, days = {6, 7} }
     }
 }
+
 
 
 local function calculateDayOfWeek(year, month, day)
@@ -276,13 +278,43 @@ function timerAnchor:OnUpdate(dt)
                 end
             end
         end
-        table.sort(sortedEvents, function(a, b) return a.minutes < b.minutes end)
+        table.sort(sortedEvents, function(a, b)
+            local aDuration = a.isServerEvent and serverEvents[a.name][1].times[1].duration or gameEvents[a.name].duration
+            local bDuration = b.isServerEvent and serverEvents[b.name][1].times[1].duration or gameEvents[b.name].duration
+
+            local aIsActive = a.minutes < aDuration
+            local bIsActive = b.minutes < bDuration
+
+            if aIsActive and not bIsActive then
+                return true
+            elseif not aIsActive and bIsActive then
+                return false
+            end
+
+            return a.minutes < b.minutes
+        end)
+
         for i, event in ipairs(sortedEvents) do
             if eventLabels[i] then
                 eventLabels[i]:SetText(event.name)
-                local hours = math.floor(event.minutes / 60)
-                local minutes = event.minutes % 60
-                timerLabels[i]:SetText(string.format("%02d:%02d", hours, minutes))
+                if gameEvents[event.name] ~= nil then
+                    eventLabels[i].style:SetColor(0.1, 0.5, 0.1, 255)
+                    timerLabels[i].style:SetColor(0.1, 0.5, 0.1, 255)
+                else
+                    eventLabels[i].style:SetColor(255, 255, 255, 255)
+                    timerLabels[i].style:SetColor(255, 255, 255, 255)
+                end
+                local eventDuration = event.isServerEvent and serverEvents[event.name][1].times[1].duration or gameEvents[event.name].duration
+                if event.minutes < eventDuration then
+                    timerLabels[i]:SetText("00:00")
+                    eventLabels[i].style:SetColor(255, 0, 0, 255)
+                    timerLabels[i].style:SetColor(255, 0, 0, 255)
+                else
+                    local hours = math.floor(event.minutes / 60)
+                    local minutes = event.minutes % 60
+                    timerLabels[i]:SetText(string.format("%02d:%02d", hours, minutes))
+                end
+
             end
         end
     end
