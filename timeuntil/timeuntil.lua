@@ -148,40 +148,40 @@ local gameEvents = {
 local serverEvents = {
     ["Lusca"] = { times = {{hour = 12, minute = 20, duration = 30}}, days = {1, 2, 3, 4, 5, 6, 7} },
     ["BD"] = {
-        { times = {{hour = 21, minute = 20, duration = 60}}, days = {3, 5} },
-        { times = {{hour = 18, minute = 20, duration = 60}}, days = {7} }
+        { times = {{hour = 21, minute = 30, duration = 60}}, days = {3, 5} },
+        { times = {{hour = 18, minute = 30, duration = 60}}, days = {7} }
     },
     ["Kraken"] = {
-        { times = {{hour = 22, minute = 20, duration = 60}}, days = {3, 5} },
-        { times = {{hour = 19, minute = 20, duration = 60}}, days = {7} }
+        { times = {{hour = 22, minute = 30, duration = 60}}, days = {3, 5} },
+        { times = {{hour = 19, minute = 30, duration = 60}}, days = {7} }
     },
     ["Leviathan"] = {
-        { times = {{hour = 19, minute = 49, duration = 60}}, days = {3, 5} },
-        { times = {{hour = 16, minute = 49, duration = 60}}, days = {7} }
+        { times = {{hour = 20, minute = 05, duration = 60}}, days = {3, 5} },
+        { times = {{hour = 17, minute = 05, duration = 60}}, days = {7} }
     },
     ["Charybdis"] = {
-        { times = {{hour = 21, minute = 20, duration = 60}}, days = {1, 5} }
+        { times = {{hour = 21, minute = 30, duration = 60}}, days = {1, 5} }
     },
     ["Anthalon (G)"] = {
-        { times = {{hour = 21, minute = 20, duration = 45}}, days = {1, 2, 6} }
+        { times = {{hour = 21, minute = 30, duration = 45}}, days = {1, 2, 6} }
     },
     ["Halcy"] = {
-        { times = {{hour = 1, minute = 20, duration = 30}, {hour = 10, minute = 49, duration = 10}, {hour = 20, minute = 20, duration = 10}}, days = {1, 2, 3, 4, 5, 6, 7} }
+        { times = {{hour = 1, minute = 30, duration = 30}, {hour = 11, minute = 00, duration = 10}, {hour = 20, minute = 30, duration = 10}}, days = {1, 2, 3, 4, 5, 6, 7} }
     },
     ["RD"] = {
-        { times = {{hour = 1, minute = 49, duration = 20}, {hour = 10, minute = 20, duration = 10}, {hour = 19, minute = 49, duration = 10}}, days = {1, 2, 4, 6} }
+        { times = {{hour = 2, minute = 00, duration = 15}, {hour = 10, minute = 30, duration = 15}, {hour = 20, minute = 00, duration = 15}}, days = {1, 2, 4, 6} }
     },
     ["Abyssal Atk"] = {
-        { times = {{hour = 11, minute = 49, duration = 30}, {hour = 21, minute = 20, duration = 10}}, days = {3, 5, 7} }
+        { times = {{hour = 12, minute = 00, duration = 30}, {hour = 22, minute = 30, duration = 30}}, days = {3, 5, 7} }
     },
     ["Hasla"] = {
         { times = {{hour = 18, minute = 49, duration = 15}, {hour = 20, minute = 49, duration = 10}}, days = {1, 2, 3, 4} }
     },
     ["Akasch"] = {
-        { times = {{hour = 14, minute = 49, duration = 20}, {hour = 18, minute = 20, duration = 10}, {hour = 21, minute = 20, duration = 10}, {hour = 21, minute = 49, duration = 10}}, days = {6} }
+        { times = {{hour = 15, minute = 00, duration = 20}, {hour = 18, minute = 30, duration = 20}, {hour = 21, minute = 30, duration = 20}}, days = {6, 7} }
     },
     ["Prairie"] = {
-        { times = {{hour = 8, minute = 49, duration = 20}, {hour = 21, minute = 49, duration = 10}}, days = {6, 7} }
+        { times = {{hour = 9, minute = 00, duration = 20}, {hour = 22, minute = 00, duration = 20}}, days = {6, 7} }
     }
 }
 
@@ -304,16 +304,24 @@ function timerAnchor:OnUpdate(dt)
                     timerLabels[i].style:SetColor(255, 255, 255, 255)
                 end
                 local eventDuration = event.isServerEvent and serverEvents[event.name][1].times[1].duration or gameEvents[event.name].duration
-                if event.minutes < eventDuration then
-                    timerLabels[i]:SetText("00:00")
-                    eventLabels[i].style:SetColor(255, 0, 0, 255)
-                    timerLabels[i].style:SetColor(255, 0, 0, 255)
+                if event.minutes <= 0 then
+                    local timeLeft = math.abs(event.minutes)
+                    if timeLeft < eventDuration then
+                        eventLabels[i].style:SetColor(255, 0, 0, 255)
+                        timerLabels[i].style:SetColor(255, 0, 0, 255)
+                        local hours = math.floor(timeLeft / 60)
+                        local minutes = timeLeft % 60
+                        timerLabels[i]:SetText(string.format("In Progress (%02d:%02d)", hours, minutes))
+                    else
+                        eventLabels[i].style:SetColor(255, 255, 255, 255)
+                        timerLabels[i].style:SetColor(255, 255, 255, 255)
+                        timerLabels[i]:SetText("00:00")
+                    end
                 else
                     local hours = math.floor(event.minutes / 60)
                     local minutes = event.minutes % 60
                     timerLabels[i]:SetText(string.format("%02d:%02d", hours, minutes))
                 end
-
             end
         end
     end
