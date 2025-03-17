@@ -16,8 +16,7 @@ ADDON:ImportAPI(API_TYPE.TIME.id)
 
 --TODO:
 -- + and - buttons to extend amount shown
--- gameEvents should be a different color (beige?)
--- add event duration for each event and maintain it at the top in green as "in progress"
+-- add event duration for each event and maintain it at the top in green as "in progress" (done for serverevents, needs testing)
 -- add duration for gameevents
 
 local color = {}
