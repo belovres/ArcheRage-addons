@@ -351,6 +351,7 @@ ClearUIBound(key)
 GetPermission(category)
 InitFontSize()
 GetId()
+GetServerTimeTable()
 ----------------------------------------------------------------------------------------
 
 Available/not allowed functions
@@ -364,7 +365,6 @@ Error()
 SetUIStamp(key, stamp)
 SetAccountUITimeStamp(key)
 SetCharacterTodayPlayedTimeStamp()
-GetServerTimeTable()
 CheckTextureToolFileOpen()
 GetSmoothPing()
 ----------------------------------------------------------------------------------------
@@ -3464,6 +3464,7 @@ FILTER_STRUCTURE
 
 Allowed functions
 ----------------------------------------------------------------------------------------
+GetZoneStateInfoByZoneId(zoneId)
 ----------------------------------------------------------------------------------------
 
 Available/not allowed functions
@@ -3483,7 +3484,6 @@ GetMapIconCoord(symbolType)
 GetTelescopeUnitHealth(id)
 GetMySlaveHealth()
 GetMapIconText(index)
-GetZoneStateInfoByZoneId(zoneId)
 GetZoneListByWorldId(worldId)
 IsCheckedMapFilter(symbolType)
 GetZoneGroupOfCity(zoneId)
@@ -4469,6 +4469,8 @@ Global variables
 
 Allowed functions
 ----------------------------------------------------------------------------------------
+GetVehicleInfo()
+GetSlaveCustomizingType()
 ----------------------------------------------------------------------------------------
 
 Available/not allowed functions
@@ -4478,9 +4480,7 @@ IsTargetMySiegeWeapon()
 GetSiegeWeaponSpeed()
 GetSiegeWeaponTurnSpeed()
 GetMountedSiegeWeaponInfo()
-GetVehicleInfo()
 GetShipInfo()
-GetSlaveCustomizingType()
 GetSlaveEquipSlotInfo(equipSlot)
 GetSlaveEquipSlotUIInfo()
 PickEquipSlotOfSlave(equipSlot)
@@ -4503,11 +4503,11 @@ SIK_DESCRIPTION
 
 Allowed functions
 ----------------------------------------------------------------------------------------
+GetSkillTooltip(skillId, itemType)
 ----------------------------------------------------------------------------------------
 
 Available/not allowed functions
 ----------------------------------------------------------------------------------------
-GetSkillTooltip(skillId, itemType)
 Info(skillId)
 ----------------------------------------------------------------------------------------
 
@@ -4551,15 +4551,15 @@ Global variables
 
 Allowed functions
 ----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-
-Available/not allowed functions
-----------------------------------------------------------------------------------------
 PlayUISound(soundPackItemName)
 IsPlaying(soundId)
 StopSound(soundId)
 PlayMusic(soundPackItemName)
 StopMusic()
+----------------------------------------------------------------------------------------
+
+Available/not allowed functions
+----------------------------------------------------------------------------------------
 SetSiegePeriod(enable)
 ----------------------------------------------------------------------------------------
 
@@ -4875,6 +4875,8 @@ ShowRaidWindowSettings()
 
 Global variables
 ----------------------------------------------------------------------------------------
+GetGameTime()
+GetServerTime()
 ----------------------------------------------------------------------------------------
 
 Allowed functions
@@ -4885,8 +4887,6 @@ Available/not allowed functions
 ----------------------------------------------------------------------------------------
 GetLocalTime()
 GetLocalDate()
-GetGameTime()
-GetServerTime()
 CompareTime(l, r)
 TimeToDate(timeString)
 PeriodTimeToDate(fromTimeString, toTimeString)
