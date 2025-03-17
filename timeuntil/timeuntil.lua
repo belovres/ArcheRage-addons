@@ -15,9 +15,8 @@ ADDON:ImportAPI(API_TYPE.CHAT.id)
 ADDON:ImportAPI(API_TYPE.TIME.id)
 
 --TODO:
--- + and - buttons to extend amount shown
--- add event duration for each event and maintain it at the top in green as "in progress" (done for serverevents, needs testing)
--- add duration for gameevents
+-- fix "in progress"
+-- save length of window
 
 local color = {}
     color.normal    = UIParent:GetFontColor("btn_df")
@@ -47,15 +46,51 @@ local timerAnchor = CreateEmptyWindow("timerAnchor", "UIParent")
 local background = timerAnchor:CreateColorDrawable(0, 0, 0, 0.5, "background")
 background:AddAnchor("TOPLEFT", timerAnchor, 0, 0)
 background:AddAnchor("BOTTOMRIGHT", timerAnchor, 0, 0)
+local amountOfTimers = 10
+local eventLabels = {}
+local timerLabels = {}
+function updateTimers()
+    for i, lbl in ipairs(eventLabels) do
+        lbl:Show(false)
+    end
+    for i, lbl in ipairs(timerLabels) do
+        lbl:Show(false)
+    end
+    eventLabels = {}
+    timerLabels = {}
+    timerAnchor:SetExtent(150, amountOfTimers * 25)
 
+    for i = 1, amountOfTimers do
+        --names
+        local lblEventName = timerAnchor:CreateChildWidget("label", "timerLabelEvent" .. i, 0, false)
+        lblEventName:SetHeight(20)
+        lblEventName.style:SetFontSize(16)
+        lblEventName:AddAnchor("TOPLEFT", timerAnchor, 0, (i - 1) * 25)
+        lblEventName.style:SetAlign(ALIGN_LEFT)
+        lblEventName.style:SetColor(255, 255, 255, 255)
+        lblEventName:SetText("")
+        eventLabels[i] = lblEventName
+
+        --timers
+        local lblTimer = timerAnchor:CreateChildWidget("label", "timerLabelTime" .. i, 0, false)
+        lblTimer:SetHeight(20)
+        lblTimer.style:SetFontSize(16)
+        lblTimer:AddAnchor("TOPRIGHT", timerAnchor, 0, (i - 1) * 25)
+        lblTimer.style:SetAlign(ALIGN_RIGHT)
+        lblTimer.style:SetColor(255, 255, 255, 255)
+        lblTimer:SetText("")
+        timerLabels[i] = lblTimer
+    end
+end
+updateTimers()
 local moreEntries = timerAnchor:CreateChildWidget("button", "moreEntries", 0, true)
       moreEntries:AddAnchor("TOPLEFT", timerAnchor, -5, -25)
       ApplyButtonSkin(moreEntries, buttonskin)
       moreEntries:SetExtent(35,25)
       moreEntries:SetText("+")
       function moreEntries:OnClick(arg)
-        X2Chat:DispatchChatMessage(CMF_SYSTEM, "TODO: increase entries")
-          --dressUpWindow:Show(false)
+        amountOfTimers = amountOfTimers + 1
+        updateTimers()
       end
       moreEntries:SetHandler("OnClick", moreEntries.OnClick)
 local lessEntries = timerAnchor:CreateChildWidget("button", "lessEntries", 0, true)
@@ -64,8 +99,8 @@ local lessEntries = timerAnchor:CreateChildWidget("button", "lessEntries", 0, tr
       lessEntries:SetExtent(35,25)
       lessEntries:SetText("-")
       function lessEntries:OnClick(arg)
-        X2Chat:DispatchChatMessage(CMF_SYSTEM, "TODO: decrease entries")
-          --dressUpWindow:Show(false)
+        amountOfTimers = amountOfTimers - 1
+        updateTimers()
       end
       lessEntries:SetHandler("OnClick", lessEntries.OnClick)
 
@@ -109,34 +144,34 @@ timerAnchor:SetHandler("OnDragStop", timerAnchor.OnDragStop)
 local savedWindowX, savedWindowY = LoadSavedPosition()
 timerAnchor:AddAnchor("TOPLEFT", "UIParent", tonumber(savedWindowX), tonumber(savedWindowY))
 ------ end of draggable window --------
-local eventLabels = {}
-local timerLabels = {}
-
-local amountOfTimers = 10
-timerAnchor:SetExtent(150, amountOfTimers * 25)
-
-for i = 1, amountOfTimers do
-    --names
-    local lblEventName = timerAnchor:CreateChildWidget("label", "timerLabelEvent" .. i, 0, false)
-    lblEventName:SetHeight(20)
-    lblEventName.style:SetFontSize(16)
-    lblEventName:AddAnchor("TOPLEFT", timerAnchor, 0, (i - 1) * 25)
-    lblEventName.style:SetAlign(ALIGN_LEFT)
-    lblEventName.style:SetColor(255, 255, 255, 255)
-    lblEventName:SetText("")
-    eventLabels[i] = lblEventName
-
-    --timers
-    local lblTimer = timerAnchor:CreateChildWidget("label", "timerLabelTime" .. i, 0, false)
-    lblTimer:SetHeight(20)
-    lblTimer.style:SetFontSize(16)
-    lblTimer:AddAnchor("TOPRIGHT", timerAnchor, 0, (i - 1) * 25)
-    lblTimer.style:SetAlign(ALIGN_RIGHT)
-    lblTimer.style:SetColor(255, 255, 255, 255)
-    lblTimer:SetText("")
-    timerLabels[i] = lblTimer
-end
-
+--local eventLabels = {}
+--local timerLabels = {}
+--------------------------
+-------local amountOfTimers = 10
+-------timerAnchor:SetExtent(150, amountOfTimers * 25)
+-------
+-------for i = 1, amountOfTimers do
+-------    --names
+-------    local lblEventName = timerAnchor:CreateChildWidget("label", "timerLabelEvent" .. i, 0, false)
+-------    lblEventName:SetHeight(20)
+-------    lblEventName.style:SetFontSize(16)
+-------    lblEventName:AddAnchor("TOPLEFT", timerAnchor, 0, (i - 1) * 25)
+-------    lblEventName.style:SetAlign(ALIGN_LEFT)
+-------    lblEventName.style:SetColor(255, 255, 255, 255)
+-------    lblEventName:SetText("")
+-------    eventLabels[i] = lblEventName
+-------
+-------    --timers
+-------    local lblTimer = timerAnchor:CreateChildWidget("label", "timerLabelTime" .. i, 0, false)
+-------    lblTimer:SetHeight(20)
+-------    lblTimer.style:SetFontSize(16)
+-------    lblTimer:AddAnchor("TOPRIGHT", timerAnchor, 0, (i - 1) * 25)
+-------    lblTimer.style:SetAlign(ALIGN_RIGHT)
+-------    lblTimer.style:SetColor(255, 255, 255, 255)
+-------    lblTimer:SetText("")
+-------    timerLabels[i] = lblTimer
+-------end
+-----------------------------
 
 local gameEvents = {
     ["GR"] = { startHour = 11, startMinute = 59, isAM = false, duration = 10 },
@@ -311,7 +346,7 @@ function timerAnchor:OnUpdate(dt)
                         timerLabels[i].style:SetColor(255, 0, 0, 255)
                         local hours = math.floor(timeLeft / 60)
                         local minutes = timeLeft % 60
-                        timerLabels[i]:SetText(string.format("In Progress (%02d:%02d)", hours, minutes))
+                        timerLabels[i]:SetText(string.format("Now (%02d:%02d)", hours, minutes))
                     else
                         eventLabels[i].style:SetColor(255, 255, 255, 255)
                         timerLabels[i].style:SetColor(255, 255, 255, 255)
