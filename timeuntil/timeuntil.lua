@@ -346,7 +346,7 @@ function timerAnchor:OnUpdate(dt)
                         timerLabels[i].style:SetColor(255, 0, 0, 255)
                         local hours = math.floor(timeLeft / 60)
                         local minutes = timeLeft % 60
-                        timerLabels[i]:SetText(string.format("Now (%02d:%02d)", hours, minutes))
+                        timerLabels[i]:SetText(string.format("%02d:%02d", hours, minutes))
                     else
                         eventLabels[i].style:SetColor(255, 255, 255, 255)
                         timerLabels[i].style:SetColor(255, 255, 255, 255)
