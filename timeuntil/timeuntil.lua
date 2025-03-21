@@ -143,44 +143,52 @@ end
 timerAnchor:SetHandler("OnDragStop", timerAnchor.OnDragStop)
 local savedWindowX, savedWindowY = LoadSavedPosition()
 timerAnchor:AddAnchor("TOPLEFT", "UIParent", tonumber(savedWindowX), tonumber(savedWindowY))
------- end of draggable window --------
---local eventLabels = {}
---local timerLabels = {}
---------------------------
--------local amountOfTimers = 10
--------timerAnchor:SetExtent(150, amountOfTimers * 25)
--------
--------for i = 1, amountOfTimers do
--------    --names
--------    local lblEventName = timerAnchor:CreateChildWidget("label", "timerLabelEvent" .. i, 0, false)
--------    lblEventName:SetHeight(20)
--------    lblEventName.style:SetFontSize(16)
--------    lblEventName:AddAnchor("TOPLEFT", timerAnchor, 0, (i - 1) * 25)
--------    lblEventName.style:SetAlign(ALIGN_LEFT)
--------    lblEventName.style:SetColor(255, 255, 255, 255)
--------    lblEventName:SetText("")
--------    eventLabels[i] = lblEventName
--------
--------    --timers
--------    local lblTimer = timerAnchor:CreateChildWidget("label", "timerLabelTime" .. i, 0, false)
--------    lblTimer:SetHeight(20)
--------    lblTimer.style:SetFontSize(16)
--------    lblTimer:AddAnchor("TOPRIGHT", timerAnchor, 0, (i - 1) * 25)
--------    lblTimer.style:SetAlign(ALIGN_RIGHT)
--------    lblTimer.style:SetColor(255, 255, 255, 255)
--------    lblTimer:SetText("")
--------    timerLabels[i] = lblTimer
--------end
------------------------------
-
-local gameEvents = {
-    ["GR"] = { startHour = 11, startMinute = 59, isAM = false, duration = 10 },
-    ["CR"] = { startHour = 11, startMinute = 59, isAM = true, duration = 10 },
-    ["SG CR"] = { startHour = 5, startMinute = 59, isAM = false, duration = 10 },
-    ["JMG"] = { startHour = 5, startMinute = 59, isAM = true, duration = 10 }
-}
 
 local serverEvents = {
+    ["GR"] = {
+       { times = {
+            {hour = 2, minute = 20, duration = 10},
+            {hour = 6, minute = 20, duration = 10},
+            {hour = 10, minute = 20, duration = 10},
+            {hour = 14, minute = 20, duration = 10},
+            {hour = 18, minute = 20, duration = 10},
+            {hour = 22, minute = 20, duration = 10}
+        },
+        days = {1, 2, 3, 4, 5, 6, 7}
+    }},
+    ["CR"] = {
+       { times = {
+            {hour = 0, minute = 20, duration = 10},
+            {hour = 4, minute = 20, duration = 10},
+            {hour = 8, minute = 20, duration = 10},
+            {hour = 12, minute = 20, duration = 10},
+            {hour = 16, minute = 20, duration = 10},
+            {hour = 20, minute = 20, duration = 10}
+        },
+        days = {1, 2, 3, 4, 5, 6, 7}
+    } },
+    ["SG CR"] = {
+    {    times = {
+            {hour = 1, minute = 20, duration = 10},
+            {hour = 5, minute = 20, duration = 10},
+            {hour = 9, minute = 20, duration = 10},
+            {hour = 13, minute = 20, duration = 10},
+            {hour = 17, minute = 20, duration = 10},
+            {hour = 21, minute = 20, duration = 10}
+        },
+        days = {1, 2, 3, 4, 5, 6, 7}
+    } },
+    ["JMG"] = {
+       { times = {
+            {hour = 3, minute = 20, duration = 10},
+            {hour = 7, minute = 20, duration = 10},
+            {hour = 11, minute = 20, duration = 10},
+            {hour = 15, minute = 20, duration = 10},
+            {hour = 19, minute = 20, duration = 10},
+            {hour = 23, minute = 20, duration = 10}
+        },
+        days = {1, 2, 3, 4, 5, 6, 7}
+    } },
     ["Lusca"] = { times = {{hour = 12, minute = 20, duration = 30}}, days = {1, 2, 3, 4, 5, 6, 7} },
     ["BD"] = {
         { times = {{hour = 21, minute = 30, duration = 60}}, days = {3, 5} },
@@ -233,16 +241,6 @@ local function calculateDayOfWeek(year, month, day)
     return (dayOfWeek + 6) % 7 + 1
 end
 
-local function minutesSinceMidnight(isAM, cHour, cMinute)
-    local retMinutesSinceMidnight = 0
-    cMinute = math.floor(cMinute)
-    retMinutesSinceMidnight = (cHour * 60) + cMinute
-    if not isAM then
-        retMinutesSinceMidnight = retMinutesSinceMidnight + 720
-    end
-    return retMinutesSinceMidnight
-end
-
 local function serverMinutesSinceMidnight(serverTimeTable)
     if not serverTimeTable then return nil end
     return (serverTimeTable.hour * 60) + serverTimeTable.minute
@@ -285,7 +283,6 @@ function timerAnchor:OnUpdate(dt)
         timer = 0
 
         local isAM, currentHour, currentMinute = X2Time:GetGameTime()
-        local currentGameMinutes = minutesSinceMidnight(isAM, currentHour, currentMinute)
 
         local serverTimeTable = UIParent:GetServerTimeTable()
         local currentServerMinutes = serverMinutesSinceMidnight(serverTimeTable)
@@ -294,27 +291,28 @@ function timerAnchor:OnUpdate(dt)
 
         local sortedEvents = {}
 
-        for name, data in pairs(gameEvents) do
-            local minutes = minutesSinceMidnight(data.isAM, data.startHour, data.startMinute)
-            minutes = (minutes - currentGameMinutes) / 6
-            if minutes < 0 then
-                minutes = minutes + 240 
-            end
-            table.insert(sortedEvents, { name = name, minutes = minutes, isServerEvent = false })
-        end
         for name, eventList in pairs(serverEvents) do
             for _, eventData in ipairs(eventList) do
                 local minutesList = getServerEventMinutes(eventData.times, eventData.days, currentServerMinutes, dayOfWeek)
-                for _, minutesAway in ipairs(minutesList) do
+                
+                for i, minutesAway in ipairs(minutesList) do
                     if minutesAway then
-                        table.insert(sortedEvents, { name = name, minutes = minutesAway, isServerEvent = true })
+                        local eventDuration = eventData.times[i] and eventData.times[i].duration or 0
+
+                        table.insert(sortedEvents, {
+                            name = name,
+                            minutes = minutesAway,
+                            duration = eventDuration, 
+                            isServerEvent = true
+                        })
                     end
                 end
             end
         end
+
         table.sort(sortedEvents, function(a, b)
-            local aDuration = a.isServerEvent and serverEvents[a.name][1].times[1].duration or gameEvents[a.name].duration
-            local bDuration = b.isServerEvent and serverEvents[b.name][1].times[1].duration or gameEvents[b.name].duration
+            local aDuration = a.isServerEvent and serverEvents[a.name][1].times[1].duration
+            local bDuration = b.isServerEvent and serverEvents[b.name][1].times[1].duration
 
             local aIsActive = a.minutes < aDuration
             local bIsActive = b.minutes < bDuration
@@ -331,14 +329,9 @@ function timerAnchor:OnUpdate(dt)
         for i, event in ipairs(sortedEvents) do
             if eventLabels[i] then
                 eventLabels[i]:SetText(event.name)
-                if gameEvents[event.name] ~= nil then
-                    eventLabels[i].style:SetColor(0.1, 0.5, 0.1, 255)
-                    timerLabels[i].style:SetColor(0.1, 0.5, 0.1, 255)
-                else
-                    eventLabels[i].style:SetColor(255, 255, 255, 255)
-                    timerLabels[i].style:SetColor(255, 255, 255, 255)
-                end
-                local eventDuration = event.isServerEvent and serverEvents[event.name][1].times[1].duration or gameEvents[event.name].duration
+                eventLabels[i].style:SetColor(255, 255, 255, 255)
+                timerLabels[i].style:SetColor(255, 255, 255, 255)
+                local eventDuration = event.isServerEvent and serverEvents[event.name][1].times[1].duration
                 if event.minutes <= 0 then
                     local timeLeft = math.abs(event.minutes)
                     if timeLeft < eventDuration then
