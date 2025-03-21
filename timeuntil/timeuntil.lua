@@ -13,6 +13,7 @@ ADDON:ImportObject(OBJECT_TYPE.IMAGE_DRAWABLE)
 
 ADDON:ImportAPI(API_TYPE.CHAT.id)
 ADDON:ImportAPI(API_TYPE.TIME.id)
+ADDON:ImportAPI(API_TYPE.MAP.id)
 
 --TODO:
 -- fix "in progress"
@@ -144,6 +145,9 @@ timerAnchor:SetHandler("OnDragStop", timerAnchor.OnDragStop)
 local savedWindowX, savedWindowY = LoadSavedPosition()
 timerAnchor:AddAnchor("TOPLEFT", "UIParent", tonumber(savedWindowX), tonumber(savedWindowY))
 
+local whaleConflict = false
+local aegConflict = true
+
 local serverEvents = {
     ["GR"] = {
        { times = {
@@ -221,7 +225,8 @@ local serverEvents = {
         { times = {{hour = 18, minute = 49, duration = 15}, {hour = 20, minute = 49, duration = 15}}, days = {1, 2, 3, 4} }
     },
     ["Akasch"] = {
-        { times = {{hour = 15, minute = 00, duration = 20}, {hour = 18, minute = 30, duration = 20}, {hour = 21, minute = 30, duration = 20}}, days = {6, 7} }
+        { times = {{hour = 15, minute = 00, duration = 20}, {hour = 18, minute = 30, duration = 20}, {hour = 21, minute = 30, duration = 20}}, days = {7} },
+        { times = {{hour = 15, minute = 00, duration = 20}, {hour = 18, minute = 30, duration = 20}, {hour = 22, minute = 00, duration = 20}}, days = {6} }
     },
     ["Prairie"] = {
         { times = {{hour = 9, minute = 00, duration = 20}, {hour = 22, minute = 00, duration = 20}}, days = {6, 7} }
@@ -318,7 +323,7 @@ function timerAnchor:OnUpdate(dt)
         for i, event in ipairs(sortedEvents) do
             --X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring(event.minutes))
             if (event.minutes + event.duration) > 0 then
-                iWithSkip = i - skipCounter
+                local iWithSkip = i - skipCounter
                 if eventLabels[iWithSkip] then
                     eventLabels[iWithSkip]:SetText(event.name)
                     local hours = math.floor(event.minutes / 60)
@@ -327,7 +332,7 @@ function timerAnchor:OnUpdate(dt)
                         eventLabels[iWithSkip].style:SetColor(255, 0, 0, 255)
                         timerLabels[iWithSkip].style:SetColor(255, 0, 0, 255)
                         local timeEventIsActive = event.duration + event.minutes
-                        timerLabels[iWithSkip]:SetText(string.format("%02d", timeEventIsActive))
+                        timerLabels[iWithSkip]:SetText(string.format("Ends in %02d", timeEventIsActive))
                     else
                         eventLabels[iWithSkip].style:SetColor(255, 255, 255, 255)
                         timerLabels[iWithSkip].style:SetColor(255, 255, 255, 255)
@@ -347,3 +352,45 @@ function timerAnchor:OnUpdate(dt)
 end
 
 timerAnchor:SetHandler("OnUpdate", timerAnchor.OnUpdate)
+
+
+--- war event handler 
+function dump(o)
+ if type(o) == 'table' then
+  local s = '{ '
+  for k,v in pairs(o) do
+    if type(k) ~= 'number' then k = '"'..k..'"' end
+    s = s .. '['..k..'] = ' .. dump(v) .. ','
+  end
+  return s .. '} '
+ else
+  return tostring(o)
+ end
+end
+
+
+local events = {
+  "HPW_ZONE_STATE_CHANGE"
+}
+
+local function GenericEventHandler(eventName)
+    return function(info1)
+        if info1 == 102 or info1 == 103 then
+            local zoneInfo = X2Map:GetZoneStateInfoByZoneId(info1)
+            if zoneInfo.conflictState == 5 then
+                --X2Chat:DispatchChatMessage(CMF_SYSTEM, "Whale/Aeg in conflict")
+                if info == 102 then
+                    aegConflict = true
+                elseif info == 103 then
+                    whaleConflict = true
+                end
+            end
+        end
+    end
+end
+
+for _, event in ipairs(events) do
+    UIParent:SetEventHandler(UIEVENT_TYPE[event], GenericEventHandler(event))
+end
+
+---
