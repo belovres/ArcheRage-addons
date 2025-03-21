@@ -332,7 +332,7 @@ function timerAnchor:OnUpdate(dt)
                         eventLabels[iWithSkip].style:SetColor(255, 0, 0, 255)
                         timerLabels[iWithSkip].style:SetColor(255, 0, 0, 255)
                         local timeEventIsActive = event.duration + event.minutes
-                        timerLabels[iWithSkip]:SetText(string.format("Ends in %02d", timeEventIsActive))
+                        timerLabels[iWithSkip]:SetText(string.format("Ends %02d", timeEventIsActive))
                     else
                         eventLabels[iWithSkip].style:SetColor(255, 255, 255, 255)
                         timerLabels[iWithSkip].style:SetColor(255, 255, 255, 255)
