@@ -147,12 +147,12 @@ timerAnchor:AddAnchor("TOPLEFT", "UIParent", tonumber(savedWindowX), tonumber(sa
 local serverEvents = {
     ["GR"] = {
        { times = {
-            {hour = 2, minute = 20, duration = 10},
-            {hour = 6, minute = 20, duration = 10},
-            {hour = 10, minute = 20, duration = 10},
-            {hour = 14, minute = 20, duration = 10},
-            {hour = 18, minute = 20, duration = 10},
-            {hour = 22, minute = 20, duration = 10}
+            {hour = 2, minute = 20, duration = 20},
+            {hour = 6, minute = 20, duration = 20},
+            {hour = 10, minute = 20, duration = 20},
+            {hour = 14, minute = 20, duration = 20},
+            {hour = 18, minute = 20, duration = 20},
+            {hour = 22, minute = 20, duration = 20}
         },
         days = {1, 2, 3, 4, 5, 6, 7}
     }},
@@ -180,12 +180,12 @@ local serverEvents = {
     } },
     ["JMG"] = {
        { times = {
-            {hour = 3, minute = 20, duration = 10},
-            {hour = 7, minute = 20, duration = 10},
-            {hour = 11, minute = 20, duration = 10},
-            {hour = 15, minute = 20, duration = 10},
-            {hour = 19, minute = 20, duration = 10},
-            {hour = 23, minute = 20, duration = 10}
+            {hour = 3, minute = 20, duration = 15},
+            {hour = 7, minute = 20, duration = 15},
+            {hour = 11, minute = 20, duration = 15},
+            {hour = 15, minute = 20, duration = 15},
+            {hour = 19, minute = 20, duration = 15},
+            {hour = 23, minute = 20, duration = 15}
         },
         days = {1, 2, 3, 4, 5, 6, 7}
     } },
@@ -218,7 +218,7 @@ local serverEvents = {
         { times = {{hour = 12, minute = 00, duration = 30}, {hour = 22, minute = 30, duration = 30}}, days = {3, 5, 7} }
     },
     ["Hasla"] = {
-        { times = {{hour = 18, minute = 49, duration = 15}, {hour = 20, minute = 49, duration = 10}}, days = {1, 2, 3, 4} }
+        { times = {{hour = 18, minute = 49, duration = 15}, {hour = 20, minute = 49, duration = 15}}, days = {1, 2, 3, 4} }
     },
     ["Akasch"] = {
         { times = {{hour = 15, minute = 00, duration = 20}, {hour = 18, minute = 30, duration = 20}, {hour = 21, minute = 30, duration = 20}}, days = {6, 7} }
@@ -265,7 +265,7 @@ local function getServerEventMinutes(eventTimes, eventDays, currentServerMinutes
 
         local minutesAway = eventMinutes - currentServerMinutes + (dayOffset * 1440)
         if minutesAway < 0 then
-            minutesAway = minutesAway + 1440
+            --minutesAway = minutesAway + 1440
         end
 
         table.insert(eventMinutesList, minutesAway)
@@ -290,15 +290,15 @@ function timerAnchor:OnUpdate(dt)
 
 
         local sortedEvents = {}
-
         for name, eventList in pairs(serverEvents) do
             for _, eventData in ipairs(eventList) do
                 local minutesList = getServerEventMinutes(eventData.times, eventData.days, currentServerMinutes, dayOfWeek)
                 
                 for i, minutesAway in ipairs(minutesList) do
                     if minutesAway then
+                        --X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring(minutesAway) .. " - " .. eventData.times[i].duration)
+                        --X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring(eventDuration) .. " times: " .. eventData.times[i] .. " duration: " .. eventData.times[i].duration)
                         local eventDuration = eventData.times[i] and eventData.times[i].duration or 0
-
                         table.insert(sortedEvents, {
                             name = name,
                             minutes = minutesAway,
@@ -311,45 +311,36 @@ function timerAnchor:OnUpdate(dt)
         end
 
         table.sort(sortedEvents, function(a, b)
-            local aDuration = a.isServerEvent and serverEvents[a.name][1].times[1].duration
-            local bDuration = b.isServerEvent and serverEvents[b.name][1].times[1].duration
-
-            local aIsActive = a.minutes < aDuration
-            local bIsActive = b.minutes < bDuration
-
-            if aIsActive and not bIsActive then
-                return true
-            elseif not aIsActive and bIsActive then
-                return false
-            end
-
             return a.minutes < b.minutes
         end)
 
+        local skipCounter = 0
         for i, event in ipairs(sortedEvents) do
-            if eventLabels[i] then
-                eventLabels[i]:SetText(event.name)
-                eventLabels[i].style:SetColor(255, 255, 255, 255)
-                timerLabels[i].style:SetColor(255, 255, 255, 255)
-                local eventDuration = event.isServerEvent and serverEvents[event.name][1].times[1].duration
-                if event.minutes <= 0 then
-                    local timeLeft = math.abs(event.minutes)
-                    if timeLeft < eventDuration then
-                        eventLabels[i].style:SetColor(255, 0, 0, 255)
-                        timerLabels[i].style:SetColor(255, 0, 0, 255)
-                        local hours = math.floor(timeLeft / 60)
-                        local minutes = timeLeft % 60
-                        timerLabels[i]:SetText(string.format("%02d:%02d", hours, minutes))
-                    else
-                        eventLabels[i].style:SetColor(255, 255, 255, 255)
-                        timerLabels[i].style:SetColor(255, 255, 255, 255)
-                        timerLabels[i]:SetText("00:00")
-                    end
-                else
+            --X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring(event.minutes))
+            if (event.minutes + event.duration) > 0 then
+                iWithSkip = i - skipCounter
+                if eventLabels[iWithSkip] then
+                    eventLabels[iWithSkip]:SetText(event.name)
                     local hours = math.floor(event.minutes / 60)
                     local minutes = event.minutes % 60
-                    timerLabels[i]:SetText(string.format("%02d:%02d", hours, minutes))
+                    if event.minutes <= 0 then
+                        eventLabels[iWithSkip].style:SetColor(255, 0, 0, 255)
+                        timerLabels[iWithSkip].style:SetColor(255, 0, 0, 255)
+                        local timeEventIsActive = event.duration + event.minutes
+                        timerLabels[iWithSkip]:SetText(string.format("%02d", timeEventIsActive))
+                    else
+                        eventLabels[iWithSkip].style:SetColor(255, 255, 255, 255)
+                        timerLabels[iWithSkip].style:SetColor(255, 255, 255, 255)
+                        if hours == 0 then
+                            timerLabels[iWithSkip]:SetText(string.format("%02d", minutes))
+                        else
+                            timerLabels[iWithSkip]:SetText(string.format("%02d:%02d", hours, minutes))
+                        end
+                    end
+
                 end
+            else
+                skipCounter = skipCounter + 1
             end
         end
     end
