@@ -2,17 +2,26 @@
 #--------------- Extra thanks to otu  -------------------
 #---------------- Discord: exec_noir --------------------
 param (
-    [string]$lang = "en" #default is english
+    [string]$lang = "en", #default is english
+	[string]$targLang = "auto" #default is auto
 )
 
 Add-Type -AssemblyName "System.Web"
 
 $logFilePath = ".\ChatTranslationOutput_1.log"
 
+function Contains-Chinese {
+    param (
+        [string]$text
+    )
+    return $text -match "[\u4E00-\u9FFF]"
+}
+
 function TranslateAndLog {
     param (
         [string]$lang,
-        [string]$text
+        [string]$text,
+		[string]$target
     )
 
     $fields = $text -split ";"
@@ -27,19 +36,26 @@ function TranslateAndLog {
 		return
 	}
 
+    #Write-Host "$target - $text" -ForegroundColor White
+	if ($target -eq "zh" -and !(Contains-Chinese $cleanMessage)) {
+		#Write-Host "Message is not chinese: $cleanMessage" -ForegroundColor White
+		return
+	}
+
 	$encodedMessage = [System.Web.HttpUtility]::UrlEncode($cleanMessage)
 
 	function translateThisGoogle {
 		param (
 			[string]$translate,
-			[string]$text
+			[string]$text,
+			[string]$target
 		)
-		$Uri = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=$translate&dt=t&q=$text"
+		$Uri = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=$target&tl=$translate&dt=t&q=$text"
 		$Response = Invoke-RestMethod -Uri $Uri -Method Get
 		return $Response[0].SyncRoot | ForEach-Object { $_[0] }
 	}
 
-	$translation = translateThisGoogle -translate $lang -text $encodedMessage
+	$translation = translateThisGoogle -translate $lang -text $encodedMessage -target $targLang
 	$translation = [System.Web.HttpUtility]::UrlDecode($translation)
 
 	if ($translation.Trim() -eq ($cleanMessage -replace "\+" , " ").Trim()) {
@@ -62,7 +78,7 @@ function ProcessChatLog {
     if (Test-Path $pathFile) {
         Get-Content -Path $pathFile -Wait -Tail 0 -Encoding UTF8 | ForEach-Object {
             if ($_ -ne "") {
-                TranslateAndLog -lang $lang -text $_
+                TranslateAndLog -lang $lang -text $_ -target $targLang
             }
         }
     } else {
