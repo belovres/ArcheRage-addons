@@ -14,6 +14,7 @@ ADDON:ImportObject(OBJECT_TYPE.MODEL_VIEW)
 ADDON:ImportAPI(API_TYPE.CHAT.id)
 ADDON:ImportAPI(API_TYPE.UNIT.id)
 ADDON:ImportAPI(API_TYPE.ITEM.id)
+ADDON:ImportAPI(API_TYPE.EQUIPMENT.id)
 
 local dressUpModelViewerX = 600
 local dressUpModelViewerY = 800
@@ -24,6 +25,7 @@ local turnRight = false
 local zoomOutBool = false
 local zoomInBool = false
 local fov = 30
+local RELAX_ANIMATION_NAME = "fist_ba_relaxed_rand_idle"
 
 local color = {}
     color.normal    = UIParent:GetFontColor("btn_df")
@@ -65,87 +67,91 @@ local modelViewer = nil
 local background = modelViewer:CreateColorDrawable(0, 0, 0, 0.1, "background")
       background:AddAnchor("TOPLEFT", modelViewer, 0, 0)
       background:AddAnchor("BOTTOMRIGHT", modelViewer, 0, 0)
-local rotateRight = modelViewer:CreateChildWidget("button", "rotateRight", 0, true)
-      rotateRight:AddAnchor("LEFT", modelViewer, 5, controlBarYOffset)
-      ApplyButtonSkin(rotateRight, buttonskin)
-      rotateRight:SetExtent(35,35)
-      rotateRight:SetText("L")
-      function rotateRight:OnMouseDown(arg)
-          turnRight = true
-      end
-      rotateRight:SetHandler("OnMouseDown", rotateRight.OnMouseDown)
-      function rotateRight:OnMouseUp(arg)
-          turnRight = false
-      end
-      rotateRight:SetHandler("OnMouseUp", rotateRight.OnMouseUp)
-      function rotateRight:OnLeave(arg)
-          turnRight = false
-      end
-      rotateRight:SetHandler("OnLeave", rotateRight.OnLeave)
-local rotateLeft = modelViewer:CreateChildWidget("button", "rotateLeft", 0, true)
-      rotateLeft:AddAnchor("RIGHT", modelViewer, -5, controlBarYOffset)
-      ApplyButtonSkin(rotateLeft, buttonskin)
-      rotateLeft:SetExtent(35,35)
-      rotateLeft:SetText("R")
-      function rotateLeft:OnMouseDown(arg)
-          turnLeft = true
-      end
-      rotateLeft:SetHandler("OnMouseDown", rotateLeft.OnMouseDown)
-      function rotateLeft:OnMouseUp(arg)
-          turnLeft = false
-      end
-      rotateLeft:SetHandler("OnMouseUp", rotateLeft.OnMouseUp)
-      function rotateLeft:OnLeave(arg)
-          turnLeft = false
-      end
-      rotateLeft:SetHandler("OnLeave", rotateLeft.OnLeave)
-local ZoomInButt = modelViewer:CreateChildWidget("button", "ZoomInButt", 0, true)
-      ZoomInButt:AddAnchor("LEFT", modelViewer, 5, controlBarYOffset - 170)
-      ApplyButtonSkin(ZoomInButt, buttonskin)
-      ZoomInButt:SetExtent(35,35)
-      ZoomInButt:SetText("+")
-      function ZoomInButt:OnMouseDown(arg)
-          zoomInBool = true
-      end
-      ZoomInButt:SetHandler("OnMouseDown", ZoomInButt.OnMouseDown)
-      function ZoomInButt:OnMouseUp(arg)
-          zoomInBool = false
-      end
-      ZoomInButt:SetHandler("OnMouseUp", ZoomInButt.OnMouseUp)
-      function ZoomInButt:OnLeave(arg)
-          zoomInBool = false
-      end
-      ZoomInButt:SetHandler("OnLeave", ZoomInButt.OnLeave)
-local ZoomOutButt = modelViewer:CreateChildWidget("button", "ZoomOutButt", 0, true)
-      ZoomOutButt:AddAnchor("LEFT", modelViewer, 5, controlBarYOffset - 135)
-      ApplyButtonSkin(ZoomOutButt, buttonskin)
-      ZoomOutButt:SetExtent(35,35)
-      ZoomOutButt:SetText("-")
-      function ZoomOutButt:OnMouseDown(arg)
-          zoomOutBool = true
-      end
-      ZoomOutButt:SetHandler("OnMouseDown", ZoomOutButt.OnMouseDown)
-      function ZoomOutButt:OnMouseUp(arg)
-          zoomOutBool = false
-      end
-      ZoomOutButt:SetHandler("OnMouseUp", ZoomOutButt.OnMouseUp)
-      function ZoomOutButt:OnLeave(arg)
-          zoomOutBool = false
-      end
-      ZoomOutButt:SetHandler("OnLeave", ZoomOutButt.OnLeave)
-local closeViewer = modelViewer:CreateChildWidget("button", "rotateLeft", 0, true)
-      closeViewer:AddAnchor("TOPRIGHT", modelViewer, -5, controlBarYOffset)
-      ApplyButtonSkin(closeViewer, buttonskin)
-      closeViewer:SetExtent(35,35)
-      closeViewer:SetText("X")
-      function closeViewer:OnClick(arg)
-          dressUpWindow:Show(false)
-      end
-      closeViewer:SetHandler("OnClick", closeViewer.OnClick)
+local function CreateButton(parent, name, anchor, xOffset, yOffset, text, onMouseDown, onMouseUp, onLeave, onClick)
+    local button = parent:CreateChildWidget("button", name, 0, true)
+    button:AddAnchor(anchor, parent, xOffset, yOffset)
+    ApplyButtonSkin(button, buttonskin)
+    button:SetExtent(35, 35)
+    button:SetText(text)
+    if onMouseDown then
+        function button:OnMouseDown(arg)
+            onMouseDown()
+        end
+        button:SetHandler("OnMouseDown", button.OnMouseDown)
+    end
+    if onMouseUp then
+        function button:OnMouseUp(arg)
+            onMouseUp()
+        end
+        button:SetHandler("OnMouseUp", button.OnMouseUp)
+    end
+    if onLeave then
+        function button:OnLeave(arg)
+            onLeave()
+        end
+        button:SetHandler("OnLeave", button.OnLeave)
+    end
+    if onClick then
+        function button:OnClick(arg)
+            onClick()
+        end
+        button:SetHandler("OnClick", button.OnClick)
+    end
+    return button
+end
+
+local showCostume = false
+
+local rotateRight = CreateButton(modelViewer, "rotateRight", "LEFT", 5, controlBarYOffset, "L",
+    function() turnRight = true end,
+    function() turnRight = false end,
+    function() turnRight = false end)
+
+local rotateLeft = CreateButton(modelViewer, "rotateLeft", "RIGHT", -5, controlBarYOffset, "R",
+    function() turnLeft = true end,
+    function() turnLeft = false end,
+    function() turnLeft = false end)
+
+local ZoomInButt = CreateButton(modelViewer, "ZoomInButt", "LEFT", 5, controlBarYOffset - 170, "+",
+    function() zoomInBool = true end,
+    function() zoomInBool = false end,
+    function() zoomInBool = false end)
+
+local ZoomOutButt = CreateButton(modelViewer, "ZoomOutButt", "LEFT", 5, controlBarYOffset - 135, "-",
+    function() zoomOutBool = true end,
+    function() zoomOutBool = false end,
+    function() zoomOutBool = false end)
+
+local closeViewer = CreateButton(modelViewer, "closeViewer", "TOPRIGHT", -5, controlBarYOffset, "X",
+    nil, nil, nil,
+    function() dressUpWindow:Show(false) end)
+
+--local resetButton = CreateButton(modelViewer, "resetButton", "TOPLEFT", 5, controlBarYOffset + 15, "Reset",
+--    nil, nil, nil,
+--    function() 
+--      modelViewer:ApplyModel() 
+--    end)
+
+--local showHelm = CreateButton(modelViewer, "showHelm", "TOPLEFT", 5, controlBarYOffset + 50, "Helm",
+--    nil, nil, nil,
+--    function() modelViewer:ApplyModel() end)
+--
+--local alt = CreateButton(modelViewer, "alt", "TOPLEFT", 5, controlBarYOffset + 85, "alt",
+--    nil, nil, nil,
+--    function() 
+--      modelViewer:SetSmile(true)
+--      X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring("blu")) 
+--    end)
+
+local costume = CreateButton(modelViewer, "costume", "TOPLEFT", 5, controlBarYOffset + 120, "cos",
+    nil, nil, nil,
+    function() 
+      modelViewer:ToggleCosplayEquipped(showCostume)
+      showCostume = not showCostume
+    end)
 
 
 
-local RELAX_ANIMATION_NAME = "fist_ba_relaxed_rand_idle"
 
 local function IniitalizeDressup()
     modelViewer:SetExtent(dressUpModelViewerX, dressUpModelViewerY)
