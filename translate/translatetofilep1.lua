@@ -41,12 +41,13 @@ local saySpace = ""
 --chat listener
 local chatAggroEventListenerEvents = {
     CHAT_MESSAGE = function(channel, relation, name, message, info)
+    --X2Chat:DispatchChatMessage(CMF_SYSTEM, "Message: " .. tostring(channel) .. "-" .. tostring(message) .. tostring(info["isUserChat"]))
         if os.time() - lastDeleteTime >= deleteInterval then
             os.remove(logFilePath)
             resetLogFile()
             lastDeleteTime = os.time()
         end
-        if info["isUserChat"] == true and channel ~= -3 then -- false for npc chat
+        if info["isUserChat"] == true and channel ~= -4 then -- false for npc chat
 			local logMessage = table.concat({tostring(channel), 
 										     tostring(relation),
 										     tostring(name),

@@ -18,7 +18,7 @@ local option = {
 }
 
 local channelName = {
-        [-4] = CMF_WHISPER,
+        [-3] = CMF_WHISPER,
         [0]  = CMF_SAY,
         [1]  = CMF_ZONE,
         [2]  = CMF_TRADE,
