@@ -209,6 +209,26 @@ local serverEvents = {
     ["Charybdis"] = {
         { times = {{hour = 21, minute = 30, duration = 60}}, days = {1, 5} }
     },
+    ["Small Titan"] = {
+        { times = {
+        	{hour = 0, minute = 00, duration = 15}, 
+        	{hour = 3, minute = 00, duration = 15}, 
+        	{hour = 6, minute = 00, duration = 15}, 
+        	{hour = 9, minute = 00, duration = 15}, 
+        	{hour = 12, minute = 00, duration = 15}, 
+        	{hour = 15, minute = 00, duration = 15}, 
+        	{hour = 18, minute = 00, duration = 15}, 
+        	{hour = 21, minute = 00, duration = 15}
+        }, 
+        days = {3, 6} }
+    },
+    ["Big Titan"] = {
+        { times = {
+        	{hour = 14, minute = 00, duration = 15}, 
+        	{hour = 21, minute = 00, duration = 15}
+        }, 
+        days = {4, 7} }
+    },
     ["Anthalon (G)"] = {
         { times = {{hour = 21, minute = 30, duration = 45}}, days = {1, 2, 6} }
     },
@@ -336,6 +356,10 @@ function timerAnchor:OnUpdate(dt)
                     else
                         eventLabels[iWithSkip].style:SetColor(255, 255, 255, 255)
                         timerLabels[iWithSkip].style:SetColor(255, 255, 255, 255)
+                        if event.name == "Big Titan" or event.name == "Small Titan" then
+                        	eventLabels[iWithSkip].style:SetColor(0.3, 0.7, 1, 255)
+                            timerLabels[iWithSkip].style:SetColor(0.3, 0.7, 1, 255)
+                        end
                         if hours == 0 then
                             timerLabels[iWithSkip]:SetText(string.format("%02d", minutes))
                         else
