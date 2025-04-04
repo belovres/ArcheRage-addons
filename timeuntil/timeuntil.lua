@@ -211,14 +211,13 @@ local serverEvents = {
     },
     ["Small Titan"] = {
         { times = {
-        	{hour = 0, minute = 00, duration = 15}, 
-        	{hour = 3, minute = 00, duration = 15}, 
-        	{hour = 6, minute = 00, duration = 15}, 
-        	{hour = 9, minute = 00, duration = 15}, 
-        	{hour = 12, minute = 00, duration = 15}, 
-        	{hour = 15, minute = 00, duration = 15}, 
-        	{hour = 18, minute = 00, duration = 15}, 
-        	{hour = 21, minute = 00, duration = 15}
+            {hour = 4, minute = 00, duration = 15},
+            {hour = 7, minute = 00, duration = 15},
+            {hour = 10, minute = 00, duration = 15},
+            {hour = 13, minute = 00, duration = 15},
+            {hour = 16, minute = 00, duration = 15},
+            {hour = 19, minute = 00, duration = 15},
+            {hour = 22, minute = 00, duration = 15}
         }, 
         days = {3, 6} }
     },
