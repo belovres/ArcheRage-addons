@@ -16,7 +16,7 @@ ADDON:ImportAPI(API_TYPE.TIME.id)
 ADDON:ImportAPI(API_TYPE.MAP.id)
 
 --TODO:
--- fix "in progress"
+-- add whale/aeg
 -- save length of window
 
 local color = {}
