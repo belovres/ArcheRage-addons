@@ -16,7 +16,6 @@ ADDON:ImportAPI(API_TYPE.TIME.id)
 ADDON:ImportAPI(API_TYPE.MAP.id)
 
 --TODO:
--- add whale/aeg
 -- save length of window
 
 local color = {}
@@ -40,10 +39,10 @@ local buttonskin = {
     }
 
 local timerAnchor = CreateEmptyWindow("timerAnchor", "UIParent")
-      timerAnchor:Show(true)
-      timerAnchor:AddAnchor("TOPLEFT", "UIParent", 100, 100)
-      timerAnchor:SetExtent(150, 50)
-      timerAnchor:EnableDrag(true)
+timerAnchor:Show(true)
+timerAnchor:AddAnchor("TOPLEFT", "UIParent", 100, 100)
+timerAnchor:SetExtent(150, 50)
+timerAnchor:EnableDrag(true)
 local background = timerAnchor:CreateColorDrawable(0, 0, 0, 0.5, "background")
 background:AddAnchor("TOPLEFT", timerAnchor, 0, 0)
 background:AddAnchor("BOTTOMRIGHT", timerAnchor, 0, 0)
@@ -51,12 +50,8 @@ local amountOfTimers = 10
 local eventLabels = {}
 local timerLabels = {}
 function updateTimers()
-    for i, lbl in ipairs(eventLabels) do
-        lbl:Show(false)
-    end
-    for i, lbl in ipairs(timerLabels) do
-        lbl:Show(false)
-    end
+    for i, lbl in ipairs(eventLabels) do lbl:Show(false) end
+    for i, lbl in ipairs(timerLabels) do lbl:Show(false) end
     eventLabels = {}
     timerLabels = {}
     timerAnchor:SetExtent(150, amountOfTimers * 25)
@@ -85,28 +80,21 @@ function updateTimers()
 end
 updateTimers()
 local moreEntries = timerAnchor:CreateChildWidget("button", "moreEntries", 0, true)
-      moreEntries:AddAnchor("TOPLEFT", timerAnchor, -5, -25)
-      ApplyButtonSkin(moreEntries, buttonskin)
-      moreEntries:SetExtent(35,25)
-      moreEntries:SetText("+")
-      function moreEntries:OnClick(arg)
-        amountOfTimers = amountOfTimers + 1
-        updateTimers()
-      end
-      moreEntries:SetHandler("OnClick", moreEntries.OnClick)
+moreEntries:AddAnchor("TOPLEFT", timerAnchor, -5, -25)
+ApplyButtonSkin(moreEntries, buttonskin)
+moreEntries:SetExtent(35,25)
+moreEntries:SetText("+")
+function moreEntries:OnClick(arg) amountOfTimers = amountOfTimers + 1 updateTimers() end
+moreEntries:SetHandler("OnClick", moreEntries.OnClick)
 local lessEntries = timerAnchor:CreateChildWidget("button", "lessEntries", 0, true)
-      lessEntries:AddAnchor("TOPLEFT", timerAnchor, 25, -25)
-      ApplyButtonSkin(lessEntries, buttonskin)
-      lessEntries:SetExtent(35,25)
-      lessEntries:SetText("-")
-      function lessEntries:OnClick(arg)
-        amountOfTimers = amountOfTimers - 1
-        updateTimers()
-      end
-      lessEntries:SetHandler("OnClick", lessEntries.OnClick)
+lessEntries:AddAnchor("TOPLEFT", timerAnchor, 25, -25)
+ApplyButtonSkin(lessEntries, buttonskin)
+lessEntries:SetExtent(35,25)
+lessEntries:SetText("-")
+function lessEntries:OnClick(arg) amountOfTimers = amountOfTimers - 1 updateTimers() end
+lessEntries:SetHandler("OnClick", lessEntries.OnClick)
 
 ----- save draggable window ----------
-
 local filePath = "TimeUntilWindowPos.txt"
 local function SaveWindowPosition(x, y)
     local file = io.open(filePath, "w")
@@ -115,22 +103,13 @@ local function SaveWindowPosition(x, y)
 end
 local function LoadSavedPosition()
     local file = io.open(filePath, "r")
-    if not file then
-        return 0, 0
-    end
+    if not file then return 0, 0 end
     local line = file:read("*line") 
     file:close()
     local x,y = line:match("(%d+),(%d+)")
-    if x and y then
-        return x,y
-    else
-        return 0,0
-    end
+    if x and y then return x,y else return 0,0 end
 end
-function timerAnchor:OnDragStart()
-    self:StartMoving()
-    self.moving = true
-end
+function timerAnchor:OnDragStart() self:StartMoving() self.moving = true end
 timerAnchor:SetHandler("OnDragStart", timerAnchor.OnDragStart)
 function timerAnchor:OnDragStop()
     self:StopMovingOrSizing()
@@ -147,6 +126,7 @@ timerAnchor:AddAnchor("TOPLEFT", "UIParent", tonumber(savedWindowX), tonumber(sa
 
 local whaleConflict = false
 local aegConflict = true
+local dynamicEvents = {}
 
 local serverEvents = {
     ["GR"] = {
@@ -305,19 +285,14 @@ function timerAnchor:OnUpdate(dt)
     timer = timer + dt
     if timer > 1000 then
         timer = 0
-
         local isAM, currentHour, currentMinute = X2Time:GetGameTime()
-
         local serverTimeTable = UIParent:GetServerTimeTable()
         local currentServerMinutes = serverMinutesSinceMidnight(serverTimeTable)
         local dayOfWeek = calculateDayOfWeek(serverTimeTable.year, serverTimeTable.month, serverTimeTable.day)
-
-
         local sortedEvents = {}
         for name, eventList in pairs(serverEvents) do
             for _, eventData in ipairs(eventList) do
                 local minutesList = getServerEventMinutes(eventData.times, eventData.days, currentServerMinutes, dayOfWeek)
-                
                 for i, minutesAway in ipairs(minutesList) do
                     if minutesAway then
                         --X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring(minutesAway) .. " - " .. eventData.times[i].duration)
@@ -334,10 +309,24 @@ function timerAnchor:OnUpdate(dt)
             end
         end
 
-        table.sort(sortedEvents, function(a, b)
-            return a.minutes < b.minutes
-        end)
+        for i = #dynamicEvents, 1, -1 do
+            local ev = dynamicEvents[i]
+            local minutesLeftUntilStart = ev.endTime - currentServerMinutes - ev.duration
+            if currentServerMinutes > ev.endTime then
+                table.remove(dynamicEvents, i)
+            else
+                local remainingDuration = ev.endTime - currentServerMinutes
+                local showMinutes = (minutesLeftUntilStart > 0) and minutesLeftUntilStart or 0
+                table.insert(sortedEvents, {
+                    name = ev.name,
+                    minutes = showMinutes,
+                    duration = remainingDuration,
+                    isServerEvent = false
+                })
+            end
+        end
 
+        table.sort(sortedEvents, function(a, b) return a.minutes < b.minutes end)
         local skipCounter = 0
         for i, event in ipairs(sortedEvents) do
             --X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring(event.minutes))
@@ -356,8 +345,12 @@ function timerAnchor:OnUpdate(dt)
                         eventLabels[iWithSkip].style:SetColor(255, 255, 255, 255)
                         timerLabels[iWithSkip].style:SetColor(255, 255, 255, 255)
                         if event.name == "Big Titan" or event.name == "Small Titan" then
-                        	eventLabels[iWithSkip].style:SetColor(0.3, 0.7, 1, 255)
+                            eventLabels[iWithSkip].style:SetColor(0.3, 0.7, 1, 255)
                             timerLabels[iWithSkip].style:SetColor(0.3, 0.7, 1, 255)
+                        end
+                        if event.name == "Whalesong" or event.name == "Aegis" then
+                            eventLabels[iWithSkip].style:SetColor(1, 0.6, 0.1, 255)
+                            timerLabels[iWithSkip].style:SetColor(1, 0.6, 0.1, 255)
                         end
                         if hours == 0 then
                             timerLabels[iWithSkip]:SetText(string.format("%02d", minutes))
@@ -365,7 +358,6 @@ function timerAnchor:OnUpdate(dt)
                             timerLabels[iWithSkip]:SetText(string.format("%02d:%02d", hours, minutes))
                         end
                     end
-
                 end
             else
                 skipCounter = skipCounter + 1
@@ -373,47 +365,34 @@ function timerAnchor:OnUpdate(dt)
         end
     end
 end
-
 timerAnchor:SetHandler("OnUpdate", timerAnchor.OnUpdate)
 
-
---- war event handler 
-function dump(o)
- if type(o) == 'table' then
-  local s = '{ '
-  for k,v in pairs(o) do
-    if type(k) ~= 'number' then k = '"'..k..'"' end
-    s = s .. '['..k..'] = ' .. dump(v) .. ','
-  end
-  return s .. '} '
- else
-  return tostring(o)
- end
-end
-
-
-local events = {
-  "HPW_ZONE_STATE_CHANGE"
-}
-
+local events = { "HPW_ZONE_STATE_CHANGE" }
 local function GenericEventHandler(eventName)
     return function(info1)
         if info1 == 102 or info1 == 103 then
             local zoneInfo = X2Map:GetZoneStateInfoByZoneId(info1)
             if zoneInfo.conflictState == 5 then
-                --X2Chat:DispatchChatMessage(CMF_SYSTEM, "Whale/Aeg in conflict")
-                if info == 102 then
-                    aegConflict = true
-                elseif info == 103 then
-                    whaleConflict = true
+                local serverTime = UIParent:GetServerTimeTable()
+                local now = serverMinutesSinceMidnight(serverTime)
+                local name = (info1 == 102) and "Aegis" or "Whalesong"
+                local startIn = 15
+                local duration = 15
+                local endTime = now + startIn + duration
+                for _, e in ipairs(dynamicEvents) do
+                    if e.name == name and now < e.endTime then return end
                 end
+                table.insert(dynamicEvents, {
+                    name = name,
+                    minutes = startIn,
+                    duration = duration,
+                    isServerEvent = false,
+                    endTime = endTime
+                })
             end
         end
     end
 end
-
 for _, event in ipairs(events) do
     UIParent:SetEventHandler(UIEVENT_TYPE[event], GenericEventHandler(event))
 end
-
----
