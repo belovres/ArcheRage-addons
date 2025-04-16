@@ -5,3 +5,4 @@ enemy.lua
 self.lua
 enemyhidden.lua
 selfhidden.lua
+tracktarget.lua
