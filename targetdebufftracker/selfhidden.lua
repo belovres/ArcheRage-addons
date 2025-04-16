@@ -159,4 +159,4 @@ function buffAnchor:OnUpdate(dt)
     end
 
 end
---buffAnchor:SetHandler("OnUpdate", buffAnchor.OnUpdate)
+buffAnchor:SetHandler("OnUpdate", buffAnchor.OnUpdate)
