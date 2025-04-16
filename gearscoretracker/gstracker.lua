@@ -20,7 +20,7 @@ local lblDuration = labelAnchor:CreateChildWidget("label", "lblDuration", 0, tru
 lblDuration:Show(true)
 lblDuration:EnablePick(false)
 lblDuration.style:SetColor(1, 1, 1, 1.0)
-lblDuration.style:SetFontSize(20)
+lblDuration.style:SetFontSize(15)
 lblDuration.style:SetOutline(true)
 lblDuration.style:SetAlign(ALIGN_LEFT)
 lblDuration:AddAnchor("LEFT",labelAnchor,0,0)
