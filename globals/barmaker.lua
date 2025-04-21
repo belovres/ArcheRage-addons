@@ -1,7 +1,7 @@
 
 local hudTexture = "ui/common/hud.dds"
 
-local SetViewOfCastingBar = function(id, parent)
+local SetViewOfCastingBar = function(id, parent, name)
   local frame = CreateEmptyWindow("frame", "UIParent")
   frame:SetExtent(500, 30)
   frame:AddAnchor("CENTER", "UIParent", 0, 5000)
@@ -9,7 +9,7 @@ local SetViewOfCastingBar = function(id, parent)
   bg:AddAnchor("TOPLEFT", frame, 0, 0)
   bg:AddAnchor("BOTTOMRIGHT", frame, 0, 0)
   --frame.bg = bg
-  local statusBar = UIParent:CreateWidget("statusbar", "statusBar", frame)
+  local statusBar = UIParent:CreateWidget("statusbar", name, frame)
   statusBar:AddAnchor("TOPLEFT", frame, 4, 1)
   statusBar:AddAnchor("BOTTOMRIGHT", frame, -5, -2)
 
@@ -41,17 +41,20 @@ function CreateCastingBar(id, parent, unit, xCoord, yCoord, sizeX, sizeY)
   frame.eventProc = nil
   frame.castingUseable = nil
   --X2Chat:DispatchChatMessage(CMF_SYSTEM, xCoord)
-  frame:AddAnchor("CENTER", "UIParent", xCoord, yCoord)
+  frame:AddAnchor("TOPLEFT", "UIParent", xCoord, yCoord)
   frame:SetExtent(sizeX, sizeY)
+  function frame:SetColor(r, g, b, o)
+    frame.statusBar:SetBarColor(r, g, b, o)
+  end
   function frame:ShowAll()
     frame.statusBar:Show(true)
     frame.text:Show(true)
     frame:Show(true)
   end
   function frame:HideAll(force, isSucceed)
-    frame.statusBar:Show(false, fadeOutTime)
-    frame.text:Show(false, fadeOutTime)
-    frame:Show(false, fadeOutTime)
+    frame.statusBar:Show(false, 0)
+    frame.text:Show(false, 0)
+    frame:Show(false, 0)
   end
   return frame
 end
