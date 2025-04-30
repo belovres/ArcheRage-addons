@@ -189,25 +189,25 @@ local serverEvents = {
     ["Charybdis"] = {
         { times = {{hour = 21, minute = 30, duration = 60}}, days = {1, 5} }
     },
-    ["Small Titan"] = {
-        { times = {
-            {hour = 4, minute = 00, duration = 15},
-            {hour = 7, minute = 00, duration = 15},
-            {hour = 10, minute = 00, duration = 15},
-            {hour = 13, minute = 00, duration = 15},
-            {hour = 16, minute = 00, duration = 15},
-            {hour = 19, minute = 00, duration = 15},
-            {hour = 22, minute = 00, duration = 15}
-        }, 
-        days = {3, 6} }
-    },
-    ["Big Titan"] = {
-        { times = {
-        	{hour = 14, minute = 00, duration = 15}, 
-        	{hour = 21, minute = 00, duration = 15}
-        }, 
-        days = {4, 7} }
-    },
+    --["Small Titan"] = {
+    --    { times = {
+    --        {hour = 4, minute = 00, duration = 15},
+    --        {hour = 7, minute = 00, duration = 15},
+    --        {hour = 10, minute = 00, duration = 15},
+    --        {hour = 13, minute = 00, duration = 15},
+    --        {hour = 16, minute = 00, duration = 15},
+    --        {hour = 19, minute = 00, duration = 15},
+    --        {hour = 22, minute = 00, duration = 15}
+    --    }, 
+    --    days = {3, 6} }
+    --},
+    --["Big Titan"] = {
+    --    { times = {
+    --    	{hour = 14, minute = 00, duration = 15}, 
+    --    	{hour = 21, minute = 00, duration = 15}
+    --    }, 
+    --    days = {4, 7} }
+    --},
     ["Anthalon (G)"] = {
         { times = {{hour = 21, minute = 30, duration = 45}}, days = {1, 2, 6} }
     },
