@@ -168,14 +168,14 @@ end
 
 function modelViewer:OnWheelDown()
     --X2Chat:DispatchChatMessage(CMF_SYSTEM, "down")
-    fov = fov + 2
+    fov = fov + 3
     modelViewer:SetFov(fov)
     --modelViewer:ZoomInOutBeautyShop(1)
 end
 modelViewer:SetHandler("OnWheelDown", modelViewer.OnWheelDown)
 function modelViewer:OnWheelUp()
     --X2Chat:DispatchChatMessage(CMF_SYSTEM, "up")
-    fov = fov - 2
+    fov = fov - 3
     modelViewer:SetFov(fov)
     --modelViewer:ZoomInOutBeautyShop(-1)
 end
