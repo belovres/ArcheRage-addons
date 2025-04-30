@@ -67,6 +67,8 @@ local modelViewer = nil
 local background = modelViewer:CreateColorDrawable(0, 0, 0, 0.1, "background")
       background:AddAnchor("TOPLEFT", modelViewer, 0, 0)
       background:AddAnchor("BOTTOMRIGHT", modelViewer, 0, 0)
+
+
 local function CreateButton(parent, name, anchor, xOffset, yOffset, text, onMouseDown, onMouseUp, onLeave, onClick)
     local button = parent:CreateChildWidget("button", name, 0, true)
     button:AddAnchor(anchor, parent, xOffset, yOffset)
@@ -163,6 +165,21 @@ local function IniitalizeDressup()
     modelViewer:AdjustCameraPos(0, 0, 0)
     dressUpWindow:Show(false)
 end
+
+function modelViewer:OnWheelDown()
+    --X2Chat:DispatchChatMessage(CMF_SYSTEM, "down")
+    fov = fov + 2
+    modelViewer:SetFov(fov)
+    --modelViewer:ZoomInOutBeautyShop(1)
+end
+modelViewer:SetHandler("OnWheelDown", modelViewer.OnWheelDown)
+function modelViewer:OnWheelUp()
+    --X2Chat:DispatchChatMessage(CMF_SYSTEM, "up")
+    fov = fov - 2
+    modelViewer:SetFov(fov)
+    --modelViewer:ZoomInOutBeautyShop(-1)
+end
+modelViewer:SetHandler("OnWheelUp", modelViewer.OnWheelUp)
 
 IniitalizeDressup()
 
