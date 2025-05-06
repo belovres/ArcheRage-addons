@@ -1,6 +1,11 @@
 -------------- Original Author: Strawberry --------------
---- Extra thanks to Tamaki, Nidoran, Ingram & 우와앙  ---
 ----------------- Discord: exec_noir --------------------
+if API_TYPE == nil then
+    ADDON:ImportAPI(8)
+    X2Chat:DispatchChatMessage(CMF_SYSTEM, "Globals folder not found. Please install it at https://github.com/Schiz-n/ArcheRage-addons/tree/master/globals")
+    return
+end
+--- Extra thanks to Tamaki, Nidoran, Ingram & 우와앙  ---
 ADDON:ImportObject(OBJECT_TYPE.TEXT_STYLE)
 ADDON:ImportObject(OBJECT_TYPE.BUTTON)
 ADDON:ImportObject(OBJECT_TYPE.DRAWABLE)

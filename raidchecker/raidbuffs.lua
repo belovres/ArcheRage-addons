@@ -3,6 +3,11 @@
 --drum, goblet, food (max rank, table rank, max-1 rank), resi/toughness book
 -------------- Original Author: Strawberry --------------
 ----------------- Discord: exec_noir --------------------
+if API_TYPE == nil then
+    ADDON:ImportAPI(8)
+    X2Chat:DispatchChatMessage(CMF_SYSTEM, "Globals folder not found. Please install it at https://github.com/Schiz-n/ArcheRage-addons/tree/master/globals")
+    return
+end
 ADDON:ImportObject(OBJECT_TYPE.TEXT_STYLE)
 ADDON:ImportObject(OBJECT_TYPE.BUTTON)
 ADDON:ImportObject(OBJECT_TYPE.DRAWABLE)
