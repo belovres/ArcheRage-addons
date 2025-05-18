@@ -1,3 +1,16 @@
+function dump(o)
+ if type(o) == 'table' then
+  local s = '{ '
+  for k,v in pairs(o) do
+    if type(k) ~= 'number' then k = '"'..k..'"' end
+    s = s .. '['..k..'] = ' .. dump(v) .. ','
+  end
+  return s .. '} '
+ else
+  return tostring(o)
+ end
+end
+
 API_TYPE = {
     CONSOLE = { id = 2, apiname = "X2Console"},
     ABILITY = { id = 3, apiname = "X2Ability"},
