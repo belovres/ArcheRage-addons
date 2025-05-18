@@ -21,10 +21,9 @@ ADDON:ImportAPI(API_TYPE.UNIT.id)
 ADDON:ImportAPI(API_TYPE.ITEM.id)
 ADDON:ImportAPI(API_TYPE.EQUIPMENT.id)
 
-local dressUpModelViewerX = 600
-local dressUpModelViewerY = 800
+
 local dressUpWindow = CreateEmptyWindow("dressUpWindow", "UIParent")
-      dressUpWindow:AddAnchor("RIGHT", -920,0)
+      dressUpWindow:AddAnchor("RIGHT", -1000,0)
 local turnLeft = false
 local turnRight = false
 local zoomOutBool = false
@@ -133,6 +132,25 @@ local closeViewer = CreateButton(modelViewer, "closeViewer", "TOPRIGHT", -5, con
     nil, nil, nil,
     function() dressUpWindow:Show(false) end)
 
+local GoUp = CreateButton(modelViewer, "GoUp", "TOPRIGHT", -90, controlBarYOffset, "^",
+    nil, nil, nil,
+    function() modelViewer:AdjustCameraPos(0, 0, -0.1) end)
+
+local GoDown = CreateButton(modelViewer, "GoDown", "TOPRIGHT", -90, controlBarYOffset+60, "v",
+    nil, nil, nil,
+    function() modelViewer:AdjustCameraPos(0, 0, 0.1) end)
+
+local Zoomer2 = CreateButton(modelViewer, "Zoomer2", "TOPRIGHT", -60, controlBarYOffset+30, ">",
+    nil, nil, nil,
+    function() modelViewer:ZoomInOut(0.1) end)
+
+local Zoomer3 = CreateButton(modelViewer, "Zoomer3", "TOPRIGHT", -120, controlBarYOffset+30, "<",
+    nil, nil, nil,
+    function() modelViewer:ZoomInOut(-0.1) end)
+
+local StopButton = CreateButton(modelViewer, "StopButton", "TOPRIGHT", -220, controlBarYOffset, "S",
+    nil, nil, nil,
+    function() modelViewer:StopAnimation() end)
 --local resetButton = CreateButton(modelViewer, "resetButton", "TOPLEFT", 5, controlBarYOffset + 15, "Reset",
 --    nil, nil, nil,
 --    function() 
@@ -159,17 +177,19 @@ local costume = CreateButton(modelViewer, "costume", "TOPLEFT", 5, controlBarYOf
 
 
 
-
+local dressUpModelViewerX = 800
+local dressUpModelViewerY = 800
 local function IniitalizeDressup()
     modelViewer:SetExtent(dressUpModelViewerX, dressUpModelViewerY)
-    modelViewer:SetTextureSize(512, 512)
-    local width = dressUpModelViewerX * 512 / dressUpModelViewerY
-    modelViewer:SetModelViewExtent(width, 512)
-    modelViewer:SetModelViewCoords((512 - width) / 2, 0, width, 512)
+    modelViewer:SetTextureSize(4096, 4096)
+    local width = dressUpModelViewerX * 4096 / dressUpModelViewerY
+    modelViewer:SetModelViewExtent(width, 4096)
+    modelViewer:SetModelViewCoords((4096 - width) / 8, 0, width/4, 4096/4)
     modelViewer:AddAnchor("LEFT", dressUpWindow, 5, 20)
     modelViewer:AdjustCameraPos(0, 0, 0)
     dressUpWindow:Show(false)
 end
+
 
 function modelViewer:OnWheelDown()
     --X2Chat:DispatchChatMessage(CMF_SYSTEM, "down")
