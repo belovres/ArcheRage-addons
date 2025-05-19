@@ -20,9 +20,6 @@ ADDON:ImportAPI(API_TYPE.CHAT.id)
 ADDON:ImportAPI(API_TYPE.TIME.id)
 ADDON:ImportAPI(API_TYPE.MAP.id)
 
---TODO:
--- save length of window
-
 local color = {}
     color.normal    = UIParent:GetFontColor("btn_df")
     color.highlight = UIParent:GetFontColor("btn_ov")
@@ -43,6 +40,26 @@ local buttonskin = {
         },
     }
 
+--window length saved
+local countFilePath = "TimeUntilWindowCount.txt"
+
+local function SaveTimerCount(count)
+    local file = io.open(countFilePath, "w")
+    file:write(tostring(count))
+    file:close()
+end
+
+local function LoadTimerCount()
+    local file = io.open(countFilePath, "r")
+    if not file then return 10 end
+    local line = file:read("*line")
+    file:close()
+    local num = tonumber(line)
+    if num then return num else return 10 end
+end
+
+---
+
 local timerAnchor = CreateEmptyWindow("timerAnchor", "UIParent")
 timerAnchor:Show(true)
 timerAnchor:AddAnchor("TOPLEFT", "UIParent", 100, 100)
@@ -51,7 +68,7 @@ timerAnchor:EnableDrag(true)
 local background = timerAnchor:CreateColorDrawable(0, 0, 0, 0.5, "background")
 background:AddAnchor("TOPLEFT", timerAnchor, 0, 0)
 background:AddAnchor("BOTTOMRIGHT", timerAnchor, 0, 0)
-local amountOfTimers = 10
+local amountOfTimers =  LoadTimerCount()
 local eventLabels = {}
 local timerLabels = {}
 function updateTimers()
@@ -89,14 +106,24 @@ moreEntries:AddAnchor("TOPLEFT", timerAnchor, -5, -25)
 ApplyButtonSkin(moreEntries, buttonskin)
 moreEntries:SetExtent(35,25)
 moreEntries:SetText("+")
-function moreEntries:OnClick(arg) amountOfTimers = amountOfTimers + 1 updateTimers() end
+function moreEntries:OnClick(arg) 
+    amountOfTimers = amountOfTimers + 1 
+    updateTimers() 
+    SaveTimerCount(amountOfTimers)
+end
 moreEntries:SetHandler("OnClick", moreEntries.OnClick)
 local lessEntries = timerAnchor:CreateChildWidget("button", "lessEntries", 0, true)
 lessEntries:AddAnchor("TOPLEFT", timerAnchor, 25, -25)
 ApplyButtonSkin(lessEntries, buttonskin)
 lessEntries:SetExtent(35,25)
 lessEntries:SetText("-")
-function lessEntries:OnClick(arg) amountOfTimers = amountOfTimers - 1 updateTimers() end
+function lessEntries:OnClick(arg) 
+    if amountOfTimers > 1 then
+        amountOfTimers = amountOfTimers - 1 
+        updateTimers() 
+        SaveTimerCount(amountOfTimers)
+    end
+end
 lessEntries:SetHandler("OnClick", lessEntries.OnClick)
 
 ----- save draggable window ----------
@@ -128,6 +155,8 @@ end
 timerAnchor:SetHandler("OnDragStop", timerAnchor.OnDragStop)
 local savedWindowX, savedWindowY = LoadSavedPosition()
 timerAnchor:AddAnchor("TOPLEFT", "UIParent", tonumber(savedWindowX), tonumber(savedWindowY))
+
+
 
 local whaleConflict = false
 local aegConflict = true
