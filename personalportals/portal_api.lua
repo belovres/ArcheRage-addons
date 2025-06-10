@@ -27,22 +27,15 @@ local function CreateButton(portalOption)
 
     okButton = UIParent:CreateWidget("button", "exampleButton", "UIParent", "")
     okButton:SetText("Portal")
+    okButton:SetStyle("text_default")
 
-    local color = {}
-    color.normal    = UIParent:GetFontColor("red")
-    color.highlight = UIParent:GetFontColor("red")
-    color.pushed    = UIParent:GetFontColor("red")
-    color.disabled  = UIParent:GetFontColor("btn_dis")
+    SetButtonFontOneColor(okButton, {0.9, 0.333, 0.333, 1})
     if portalOption == 0 then
-        color.normal    = UIParent:GetFontColor("green")
-        color.highlight = UIParent:GetFontColor("green")
-        color.pushed    = UIParent:GetFontColor("green")
+        SetButtonFontOneColor(okButton,  {0.348, 0.609, 0.370, 1})
         X2Chat:DispatchChatMessage(CMF_SYSTEM, "Using all portals.")
     else
         X2Chat:DispatchChatMessage(CMF_SYSTEM, "Using only your portals.")
     end
-
-    okButton:SetStyle("text_default")
     -- okButton:SetUILayer("game")
     okButton:AddAnchor("BOTTOM", "UIParent", 700, -300)
     okButton:Show(true)
@@ -61,19 +54,15 @@ local function CreateButton(portalOption)
     okButton:SetHandler("OnDragStop", okButton.OnDragStop)
 
     function okButton:OnClick()
-        local portalOption = X2Option:GetOptionItemValue(OPTION_ITEM_USE_ONLY_MY_PORTAL)
+        local portalOption = X2Option:GetOptionItemValue(OIT_AUTO_USE_ONLY_MY_PORTAL)
         if portalOption == 1 then
-            color.normal = UIParent:GetFontColor("green")
-            color.highlight = UIParent:GetFontColor("green")
-            color.pushed = UIParent:GetFontColor("green")
+            SetButtonFontOneColor(okButton,  {0.348, 0.609, 0.370, 1})
             X2Chat:DispatchChatMessage(CMF_SYSTEM, "Using ALL portals.")
-            X2Option:SetItemFloatValue(OPTION_ITEM_USE_ONLY_MY_PORTAL, 0)
+            X2Option:SetItemFloatValue(OIT_AUTO_USE_ONLY_MY_PORTAL, 0)
         else
-            color.normal = UIParent:GetFontColor("red")
-            color.highlight = UIParent:GetFontColor("red")
-            color.pushed = UIParent:GetFontColor("red")
+            SetButtonFontOneColor(okButton, {0.9, 0.333, 0.333, 1})
             X2Chat:DispatchChatMessage(CMF_SYSTEM, "Using ONLY YOUR portals.")
-            X2Option:SetItemFloatValue(OPTION_ITEM_USE_ONLY_MY_PORTAL, 1)
+            X2Option:SetItemFloatValue(OIT_AUTO_USE_ONLY_MY_PORTAL, 1)
         end
         --ApplyButt-onSkin(okButton, buttonskin) fuck
     end
@@ -81,15 +70,8 @@ local function CreateButton(portalOption)
 
 end
 
-local function EnteredWorld()
-    --optional: force to 1 on login
-    --X2Option:SetItemFloatValue(OPTION_ITEM_USE_ONLY_MY_PORTAL, 1)
-    local portalOption = X2Option:GetOptionItemValue(OPTION_ITEM_USE_ONLY_MY_PORTAL)
-    CreateButton(portalOption)
-end
-for k, v in pairs(okButton) do
-    X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring(k))
-    X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring(v))
-end
 
-UIParent:SetEventHandler(UIEVENT_TYPE.ENTERED_WORLD, EnteredWorld)
+--optional: force to 1 on login
+--X2Option:SetItemFloatValue(OPTION_ITEM_USE_ONLY_MY_PORTAL, 1)
+local portalOption = X2Option:GetOptionItemValue(OIT_AUTO_USE_ONLY_MY_PORTAL)
+CreateButton(portalOption)

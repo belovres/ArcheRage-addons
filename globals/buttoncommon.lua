@@ -12,6 +12,12 @@ function dump(o)
  end
 end
 -------------------------------------------------------------------------------------------
+function SetButtonFontOneColor(button, color)
+  button:SetTextColor(color[1], color[2], color[3], color[4])
+  button:SetPushedTextColor(color[1], color[2], color[3], color[4])
+  button:SetHighlightTextColor(color[1], color[2], color[3], color[4])
+  button:SetDisabledTextColor(color[1], color[2], color[3], color[4])
+end
 function SetBGPushed(self, on, color)
     if (on == true) then
         self.bgs[BUTTON_STATE.NORMAL]:SetVisible(false)

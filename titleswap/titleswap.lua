@@ -173,8 +173,10 @@ local function createTitleList()
 
         if id == currentTitleId then
             titleButton:SetStyle("text_default")--ApplyButtonSkin(titleButton, buttonskin_selected)
+            SetButtonFontOneColor(titleButton, {0.348, 0.609, 0.370, 1})
         else
             titleButton:SetStyle("text_default")--ApplyButtonSkin(titleButton, buttonskin)
+            SetButtonFontOneColor(titleButton, {0.2, 0.2, 0.2, 1})
         end
 
         titleButton:SetExtent(xSize, ySize)
@@ -183,10 +185,12 @@ local function createTitleList()
             if titleCheck == true then
                 -- set to green and others to normal
                 titleButton:SetStyle("text_default")--ApplyButtonSkin(titleButton, buttonskin_selected)
+                SetButtonFontOneColor(titleButton, {0.348, 0.609, 0.370, 1})
                 titleButton:SetExtent(xSize, ySize)
                 for _, otherButton in ipairs(titleWidgets) do
                     if otherButton ~= titleButton then
                         otherButton:SetStyle("text_default")--ApplyButtonSkin(otherButton, buttonskin)
+                        SetButtonFontOneColor(otherButton, {0.2, 0.2, 0.2, 1})
                         otherButton:SetExtent(xSize, ySize)
                     end
                 end
@@ -310,7 +314,7 @@ end
 titleListWindow:SetHandler("OnDragStop", titleListWindow.OnDragStop)
 
 
---X2Chat:DispatchChatMessage(CMF_SYSTEM, "Initializing Titleswap.")
+X2Chat:DispatchChatMessage(CMF_SYSTEM, "Initializing Titleswap.")
 initializeTitles()
 createTitleList()
 X2Chat:DispatchChatMessage(CMF_SYSTEM, "Titleswap loaded successfully.")
