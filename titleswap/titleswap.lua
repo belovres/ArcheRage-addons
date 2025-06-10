@@ -172,9 +172,9 @@ local function createTitleList()
         titleButton:SetText(data.name)
 
         if id == currentTitleId then
-            ApplyButtonSkin(titleButton, buttonskin_selected)
+            titleButton:SetStyle("text_default")--ApplyButtonSkin(titleButton, buttonskin_selected)
         else
-            ApplyButtonSkin(titleButton, buttonskin)
+            titleButton:SetStyle("text_default")--ApplyButtonSkin(titleButton, buttonskin)
         end
 
         titleButton:SetExtent(xSize, ySize)
@@ -182,11 +182,11 @@ local function createTitleList()
             local titleCheck = setTitle(id)
             if titleCheck == true then
                 -- set to green and others to normal
-                ApplyButtonSkin(titleButton, buttonskin_selected)
+                titleButton:SetStyle("text_default")--ApplyButtonSkin(titleButton, buttonskin_selected)
                 titleButton:SetExtent(xSize, ySize)
                 for _, otherButton in ipairs(titleWidgets) do
                     if otherButton ~= titleButton then
-                        ApplyButtonSkin(otherButton, buttonskin)
+                        otherButton:SetStyle("text_default")--ApplyButtonSkin(otherButton, buttonskin)
                         otherButton:SetExtent(xSize, ySize)
                     end
                 end

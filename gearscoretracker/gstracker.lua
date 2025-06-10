@@ -15,6 +15,7 @@ ADDON:ImportObject(OBJECT_TYPE.LABEL)
 ADDON:ImportObject(OBJECT_TYPE.ICON_DRAWABLE)
 ADDON:ImportObject(OBJECT_TYPE.IMAGE_DRAWABLE)
 
+ADDON:ImportAPI(API_TYPE.CHAT.id)
 ADDON:ImportAPI(API_TYPE.UNIT.id)
 
 -- Create a basic invisible window to attach icons to
@@ -51,6 +52,7 @@ function labelAnchor:OnUpdate(dt)
             return
         end
         skipIter = 1
+        X2Chat:DispatchChatMessage(CMF_SYSTEM, "gs: " .. tostring(X2Unit:UnitGearScore("target")))
        local targetGearScore = X2Unit:UnitGearScore("target")
        targetGearScore = tonumber(targetGearScore)
 

@@ -27,27 +27,7 @@ local function CreateButton()
 
     okButton = UIParent:CreateWidget("button", "exampleButton", "UIParent", "")
     okButton:SetText("Board")
-
-    local color = {}
-    color.normal    = UIParent:GetFontColor("btn_df")
-    color.highlight = UIParent:GetFontColor("btn_ov")
-    color.pushed    = UIParent:GetFontColor("btn_on")
-    color.disabled  = UIParent:GetFontColor("btn_dis")
-
-    local buttonskin = {
-        drawableType = "ninePart",
-        path = "ui/common/default.dds",
-        coordsKey = "btn",
-        autoResize = true,
-        fontColor = color,
-        fontInset = {
-            left = 11,
-            right = 11,
-            top = 0,
-            bottom = 0,
-        },
-    }
-    ApplyButtonSkin(okButton, buttonskin)
+    okButton:SetStyle("text_default")
     okButton:AddAnchor("BOTTOM", "UIParent", 700, -180)
     okButton:Show(true)
     okButton:EnableDrag(true)

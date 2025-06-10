@@ -42,20 +42,7 @@ local function CreateButton(portalOption)
         X2Chat:DispatchChatMessage(CMF_SYSTEM, "Using only your portals.")
     end
 
-    local buttonskin = {
-        drawableType = "ninePart",
-        path = "ui/common/default.dds",
-        coordsKey = "btn",
-        autoResize = true,
-        fontColor =  color,
-        fontInset = {
-            left = 11,
-            right = 11,
-            top = 0,
-            bottom = 0,
-        },
-    }
-    ApplyButtonSkin(okButton, buttonskin)
+    okButton:SetStyle("text_default")
     -- okButton:SetUILayer("game")
     okButton:AddAnchor("BOTTOM", "UIParent", 700, -300)
     okButton:Show(true)
@@ -88,7 +75,7 @@ local function CreateButton(portalOption)
             X2Chat:DispatchChatMessage(CMF_SYSTEM, "Using ONLY YOUR portals.")
             X2Option:SetItemFloatValue(OPTION_ITEM_USE_ONLY_MY_PORTAL, 1)
         end
-        ApplyButtonSkin(okButton, buttonskin)
+        --ApplyButt-onSkin(okButton, buttonskin) fuck
     end
     okButton:SetHandler("OnClick", okButton.OnClick)
 
@@ -100,4 +87,9 @@ local function EnteredWorld()
     local portalOption = X2Option:GetOptionItemValue(OPTION_ITEM_USE_ONLY_MY_PORTAL)
     CreateButton(portalOption)
 end
+for k, v in pairs(okButton) do
+    X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring(k))
+    X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring(v))
+end
+
 UIParent:SetEventHandler(UIEVENT_TYPE.ENTERED_WORLD, EnteredWorld)

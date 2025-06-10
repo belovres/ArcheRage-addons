@@ -76,7 +76,8 @@ local background = modelViewer:CreateColorDrawable(0, 0, 0, 0.1, "background")
 local function CreateButton(parent, name, anchor, xOffset, yOffset, text, onMouseDown, onMouseUp, onLeave, onClick)
     local button = parent:CreateChildWidget("button", name, 0, true)
     button:AddAnchor(anchor, parent, xOffset, yOffset)
-    ApplyButtonSkin(button, buttonskin)
+    button:SetStyle("text_default")
+    --A-pplyButtonSkin(button, buttonskin)
     button:SetExtent(35, 35)
     button:SetText(text)
     if onMouseDown then
@@ -151,6 +152,18 @@ local Zoomer3 = CreateButton(modelViewer, "Zoomer3", "TOPRIGHT", -120, controlBa
 local StopButton = CreateButton(modelViewer, "StopButton", "TOPRIGHT", -220, controlBarYOffset, "S",
     nil, nil, nil,
     function() modelViewer:StopAnimation() end)
+
+local Cookbutton = CreateButton(modelViewer, "Cookbutton", "TOPRIGHT", -280, controlBarYOffset, "1",
+    nil, nil, nil,
+    function() modelViewer:SetBeautyShopMode(true) end)
+local Cookbutton2 = CreateButton(modelViewer, "Cookbutton2", "TOPRIGHT", -320, controlBarYOffset, "2",
+    nil, nil, nil,
+    function() modelViewer:SetIngameShopMode(true) end)
+local Cookbutton3 = CreateButton(modelViewer, "Cookbutton3", "TOPRIGHT", -360, controlBarYOffset, "3",
+    nil, nil, nil,
+    function() modelViewer:SetDisableColorGrading(true) end)
+
+
 --local resetButton = CreateButton(modelViewer, "resetButton", "TOPLEFT", 5, controlBarYOffset + 15, "Reset",
 --    nil, nil, nil,
 --    function() 
@@ -179,12 +192,13 @@ local costume = CreateButton(modelViewer, "costume", "TOPLEFT", 5, controlBarYOf
 
 local dressUpModelViewerX = 800
 local dressUpModelViewerY = 800
+local thenumber = 4096
 local function IniitalizeDressup()
     modelViewer:SetExtent(dressUpModelViewerX, dressUpModelViewerY)
-    modelViewer:SetTextureSize(4096, 4096)
-    local width = dressUpModelViewerX * 4096 / dressUpModelViewerY
-    modelViewer:SetModelViewExtent(width, 4096)
-    modelViewer:SetModelViewCoords((4096 - width) / 8, 0, width/4, 4096/4)
+    modelViewer:SetTextureSize(thenumber, thenumber)
+    local width = dressUpModelViewerX * thenumber / dressUpModelViewerY
+    modelViewer:SetModelViewExtent(width, thenumber)
+    modelViewer:SetModelViewCoords((thenumber - width) / 8, 0, width/4, thenumber/4)
     modelViewer:AddAnchor("LEFT", dressUpWindow, 5, 20)
     modelViewer:AdjustCameraPos(0, 0, 0)
     dressUpWindow:Show(false)
@@ -216,14 +230,14 @@ local chatAggroEventListenerEvents = {
             local secondWord = string.match(message, "/[%w_]+%s+([^%s]+)")
             if firstWord == "/dressup" then
                 dressUpWindow:Show(true)
-                modelViewer:Init("player", true)
+                modelViewer:Init("target", true)
                 modelViewer:PlayAnimation(RELAX_ANIMATION_NAME, true)
             elseif firstWord == "/closedressup" then
                 dressUpWindow:Show(false)
             elseif firstWord == "/animate" then
                 if secondWord ~= nil then
                     X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring(secondWord))
-                    modelViewer:Init("player", true)
+                    modelViewer:Init("target", true)
                     modelViewer:PlayAnimation(tostring(secondWord), true)
                 else
                     X2Chat:DispatchChatMessage(CMF_SYSTEM, "/animate <animationname>")
@@ -235,7 +249,7 @@ local chatAggroEventListenerEvents = {
                       equipThisItem = secondWord:match("i(%d+),")
                     end
                     dressUpWindow:Show(true)
-                    modelViewer:Init("player", true)
+                    modelViewer:Init("target", true)
                     modelViewer:EquipItem(tonumber(equipThisItem))
                     modelViewer:PlayAnimation(RELAX_ANIMATION_NAME, true)
                 else
@@ -247,7 +261,7 @@ local chatAggroEventListenerEvents = {
                     local itemInfo = X2Item:InfoFromLink(linkText, "auction")
                     local alembicSkin = itemInfo.lookType
                     dressUpWindow:Show(true)
-                    modelViewer:Init("player", true)
+                    modelViewer:Init("target", true)
                     modelViewer:EquipItem(tonumber(alembicSkin))
                     modelViewer:PlayAnimation(RELAX_ANIMATION_NAME, true)
                 else
