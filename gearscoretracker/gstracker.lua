@@ -52,8 +52,8 @@ function labelAnchor:OnUpdate(dt)
             return
         end
         skipIter = 1
-        X2Chat:DispatchChatMessage(CMF_SYSTEM, "gs: " .. tostring(X2Unit:UnitGearScore("target")))
-       local targetGearScore = X2Unit:UnitGearScore("target")
+        --X2Chat:DispatchChatMessage(CMF_SYSTEM, "gs: " .. tostring(X2Unit:UnitGearScore("target", true)))
+       local targetGearScore = X2Unit:UnitGearScore("target", true)
        targetGearScore = tonumber(targetGearScore)
 
         if targetGearScore <= 10000 then
