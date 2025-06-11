@@ -84,12 +84,17 @@ titleListWindow:SetExtent(0, 0)
 --titleListWindow:AddAnchor("RIGHT", "UIParent", -100, -200)
 titleListWindow:EnableDrag(true)
 titleListWindow:Show(true)
-
+local function GetUIScaleFactor()
+    return UIParent:GetUIScale() or 1.0
+end
 
 local titleWidgets = {}
 
 local filePath = "TitleWindowPos.txt"
 local function SaveWindowPosition(x, y)
+    local uiScale = GetUIScaleFactor()
+    x = math.floor(x / uiScale)
+    y = math.floor(y / uiScale)
     local file = io.open(filePath, "w")
     file:write(string.format("%d,%d", x, y))
     file:close()
