@@ -57,6 +57,32 @@ local function dump(o)
  end
 end
 
+--i love global variables mmmmm who needs scoping anyway
+local filePath = "buffIconInfo.txt"
+local function LoadSetting()
+    local file = io.open(filePath, "r")
+    if not file then
+        --X2Chat:DispatchChatMessage(CMF_SYSTEM, "No file found.")
+        return 25, 0, 0, 0, 0
+    end
+    local line = file:read("*line") 
+    file:close()
+    local iconExtent, buffX, buffY, debuffX, debuffY = line:match("(%-?%d+),(%-?%d+),(%-?%d+),(%-?%d+),(%-?%d+)")
+    if iconExtent and buffX and buffY and debuffX and debuffY then
+         --X2Chat:DispatchChatMessage(CMF_SYSTEM, "Loading correct settings.")
+        return tonumber(iconExtent), tonumber(buffX), tonumber(buffY), tonumber(debuffX), tonumber(debuffY)
+    else
+         --X2Chat:DispatchChatMessage(CMF_SYSTEM, "Invalid settings, defaulting.")
+        return 25,0,0,0,0
+    end
+end
+local iconSize, buffsX, buffsY, debuffsX, debuffsY = LoadSetting()
+local function SaveSettings()
+    local file = io.open(filePath, "w")
+     --X2Chat:DispatchChatMessage(CMF_SYSTEM, "Saving: " .. tostring(iconSize) .. tostring(buffsX) .. tostring(buffsY) .. tostring(debuffsX) .. tostring(debuffsY))
+    file:write(string.format("%d,%d,%d,%d,%d", iconSize, buffsX, buffsY, debuffsX, debuffsY))
+    file:close()
+end
 ------------------------ Icon drawing function ------------------------
 local function drawIcon(w, iconPath, id, xOffset, yOffset, duration, stacks)
     stacks = (stacks == "1") and "" or stacks
@@ -68,6 +94,7 @@ local function drawIcon(w, iconPath, id, xOffset, yOffset, duration, stacks)
             drawableNmyLabels_stacks[id]:Show(true)
         end
         drawableNmyIcons[id]:AddAnchor("LEFT", w, xOffset, yOffset) 
+        drawableNmyIcons[id]:SetExtent(iconSize, iconSize)
         drawableNmyLabels[id]:AddAnchor("LEFT", w, xOffset, yOffset) 
         drawableNmyLabels[id]:SetText(duration)
         drawableNmyLabels_stacks[id]:AddAnchor("LEFT", w, xOffset+5, yOffset-10) 
@@ -76,7 +103,7 @@ local function drawIcon(w, iconPath, id, xOffset, yOffset, duration, stacks)
     end
     -- Create an icon using iconPath
     local drawableIcon = w:CreateIconDrawable("artwork")
-    drawableIcon:SetExtent(25,25) -- Width, height
+    drawableIcon:SetExtent(iconSize,iconSize) -- Width, height
     drawableIcon:ClearAllTextures() -- Every other usage of AddTexture called this first 🤷
     drawableIcon:AddTexture(iconPath) -- path to dds texture to load
     drawableIcon:SetVisible(true)
@@ -131,7 +158,7 @@ function buffAnchor:OnUpdate(dt)
                 iconPath = buffExtra["path"]
                 local duration = buff["timeLeft"] and tostring(math.floor(buff["timeLeft"]/1000)) or ""
                 local stacks = tostring(buff["stack"] or "")
-                drawIcon(buffAnchor, iconPath, buff["name"], 30 * buffCounter, 0, duration, stacks)
+                drawIcon(buffAnchor, iconPath, buff["name"], buffsX + ((iconSize+5) * buffCounter), buffsY + 0, duration, stacks)
                 buffCounter = buffCounter + 1
             end
             buffAllString = buffAllString .. buff["name"]  .. " - " .. strBuffId .. "\n"       
@@ -149,7 +176,7 @@ function buffAnchor:OnUpdate(dt)
                 iconPath = debuffExtra["path"]
                 local duration = debuff["timeLeft"] and tostring(math.floor(debuff["timeLeft"]/1000)) or ""
                 local stacks = tostring(debuff["stack"] or "")
-                drawIcon(buffAnchor, iconPath, debuff["name"], 30 * debuffCounter, 35, duration, stacks)
+                drawIcon(buffAnchor, iconPath, debuff["name"], debuffsX + ((iconSize+5) * debuffCounter), debuffsY + 35, duration, stacks)
                 debuffCounter = debuffCounter + 1
             end
             debuffAllString = debuffAllString .. debuff["name"] .. " - " .. strdeBuffId .. "\n"
@@ -180,7 +207,7 @@ buffAnchor:SetHandler("OnUpdate", buffAnchor.OnUpdate)
 ---------------------- Settings handler --------------------------------
 local languageSetting = "English"
 --language strings
-local BUFFADDGUIDE = " showall/list/add/remove [buffid] [comment(optional)]"
+local BUFFADDGUIDE = " bigger/smaller/left/right/up/down \n showall/list/add/remove [buffid] [comment(optional)]"
 local INVALIDCOMMAND = "Invalid command. !debuff / !buff / !showids / !import / !export \n Self commands: !sdebuff / !sbuff / !sshowids / !simport / !sexport"
 local BUFFLOADSUCCESS = "Buffs loaded successfully."
 local TABLE_EMPTY = "buffs.lua not found. Starting with an empty buffs table."
@@ -199,7 +226,7 @@ local LOADSUCCESS = "Succesfully loaded debuff plugin. Author: Strawberry"
 languageSetting = X2Locale:GetLocale()
 
 if languageSetting == "zh_cn" then
-    BUFFADDGUIDE = " showall/list/add/remove [buffid] [备注（可选]"
+    BUFFADDGUIDE = " bigger/smaller/left/right/up/down \n showall/list/add/remove [buffid] [备注（可选]"
     INVALIDCOMMAND = "无效的指令。  !debuff / !buff / !showids / !import / !export \n 自身指令: !sdebuff / !sbuff / !sshowids / !simport / !sexport"
     BUFFLOADSUCCESS = "增益效果加载成功。"
     TABLE_EMPTY = "未找到 buffs.lua。将从空的增益效果表开始。"
@@ -215,7 +242,7 @@ if languageSetting == "zh_cn" then
     SHOWING_ALL = "切换显示所有 "
     LOADSUCCESS = "成功加载了 debuff 插件。作者: Strawberry"
 elseif languageSetting == "ru" then
-    BUFFADDGUIDE = " showall/list/add/remove [buffid] [комментарий (необязательно)]"
+    BUFFADDGUIDE = " bigger/smaller/left/right/up/down \n showall/list/add/remove [buffid] [комментарий (необязательно)]"
     INVALIDCOMMAND = "Неверная команда.  !debuff / !buff / !showids / !import / !export \n Команды для себя: !sdebuff / !sbuff / !sshowids / !simport / !sexport"
     BUFFLOADSUCCESS = "Бафы успешно загружены."
     TABLE_EMPTY = "Файл buffs.lua не найден. Начинаем с пустой таблицы бафов."
@@ -342,6 +369,8 @@ local chatAggroEventListenerEvents = {
                 local thirdWord = string.match(message, "!%w+%s+%w+%s+(%w+)") 
                 local fourthWord = string.match(message, "!%w+%s+%w+%s+%w+%s+(%w+)") 
 
+
+
                 if firstWord == "!buff" or firstWord == "!debuff" then
                     local effectType = firstWord:sub(2)  -- Get "buff" or "debuff"
                     if secondWord == "add" and thirdWord then
@@ -358,9 +387,48 @@ local chatAggroEventListenerEvents = {
                             showAllDebuffs = not showAllDebuffs
                             X2Chat:DispatchChatMessage(CMF_SYSTEM, SHOWING_ALL .. firstWord:sub(2))
                         end
+                    elseif secondWord == "bigger" then
+                        X2Chat:DispatchChatMessage(CMF_SYSTEM, "Icon size: " .. tostring(iconSize))
+                        iconSize = iconSize + 5
+                    elseif secondWord == "smaller" then
+                        X2Chat:DispatchChatMessage(CMF_SYSTEM, "Icon size: " .. tostring(iconSize))
+                        iconSize = iconSize - 5
+                    elseif secondWord == "up" then
+                        if effectType == "buff" then
+                            buffsY = buffsY - 5
+                            X2Chat:DispatchChatMessage(CMF_SYSTEM, "Buff Y Offset: " .. tostring(buffsY))
+                        elseif effectType == "debuff"then
+                            debuffsY = debuffsY - 5
+                            X2Chat:DispatchChatMessage(CMF_SYSTEM, "Debuff Y Offset: " .. tostring(debuffsY))
+                        end
+                    elseif secondWord == "down" then
+                        if effectType == "buff" then
+                            buffsY = buffsY + 5
+                            X2Chat:DispatchChatMessage(CMF_SYSTEM, "Buff Y Offset: " .. tostring(buffsY))
+                        elseif effectType == "debuff"then
+                            debuffsY = debuffsY + 5
+                            X2Chat:DispatchChatMessage(CMF_SYSTEM, "Debuff Y Offset: " .. tostring(debuffsY))
+                        end
+                    elseif secondWord == "left" then
+                        if effectType == "buff" then
+                            buffsX = buffsX - 5
+                            X2Chat:DispatchChatMessage(CMF_SYSTEM, "Buff X Offset: " .. tostring(buffsX))
+                        elseif effectType == "debuff"then
+                            debuffsX = debuffsX - 5
+                            X2Chat:DispatchChatMessage(CMF_SYSTEM, "Debuff X Offset: " .. tostring(debuffsX))
+                        end
+                    elseif secondWord == "right" then
+                        if effectType == "buff" then
+                            buffsX = buffsX + 5
+                            X2Chat:DispatchChatMessage(CMF_SYSTEM, "Buff X Offset: " .. tostring(buffsX))
+                        elseif effectType == "debuff"then
+                            debuffsX = debuffsX + 5
+                            X2Chat:DispatchChatMessage(CMF_SYSTEM, "Debuff X Offset: " .. tostring(debuffsX))
+                        end
                     else
                         X2Chat:DispatchChatMessage(CMF_SYSTEM, firstWord:sub(2):lower() .. BUFFADDGUIDE)
                     end
+                    SaveSettings()
                 elseif firstWord == "!showids" or firstWord == "!buffids" then
                     target_buffDebugMessages = not target_buffDebugMessages
                     target_debuffDebugMessages = not target_debuffDebugMessages
