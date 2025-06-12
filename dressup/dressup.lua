@@ -230,14 +230,14 @@ local chatAggroEventListenerEvents = {
             local secondWord = string.match(message, "/[%w_]+%s+([^%s]+)")
             if firstWord == "/dressup" then
                 dressUpWindow:Show(true)
-                modelViewer:Init("target", true)
+                modelViewer:Init("player", true)
                 modelViewer:PlayAnimation(RELAX_ANIMATION_NAME, true)
             elseif firstWord == "/closedressup" then
                 dressUpWindow:Show(false)
             elseif firstWord == "/animate" then
                 if secondWord ~= nil then
                     X2Chat:DispatchChatMessage(CMF_SYSTEM, tostring(secondWord))
-                    modelViewer:Init("target", true)
+                    modelViewer:Init("player", true)
                     modelViewer:PlayAnimation(tostring(secondWord), true)
                 else
                     X2Chat:DispatchChatMessage(CMF_SYSTEM, "/animate <animationname>")
@@ -249,7 +249,7 @@ local chatAggroEventListenerEvents = {
                       equipThisItem = secondWord:match("i(%d+),")
                     end
                     dressUpWindow:Show(true)
-                    modelViewer:Init("target", true)
+                    modelViewer:Init("player", true)
                     modelViewer:EquipItem(tonumber(equipThisItem))
                     modelViewer:PlayAnimation(RELAX_ANIMATION_NAME, true)
                 else
@@ -261,7 +261,7 @@ local chatAggroEventListenerEvents = {
                     local itemInfo = X2Item:InfoFromLink(linkText, "auction")
                     local alembicSkin = itemInfo.lookType
                     dressUpWindow:Show(true)
-                    modelViewer:Init("target", true)
+                    modelViewer:Init("player", true)
                     modelViewer:EquipItem(tonumber(alembicSkin))
                     modelViewer:PlayAnimation(RELAX_ANIMATION_NAME, true)
                 else
