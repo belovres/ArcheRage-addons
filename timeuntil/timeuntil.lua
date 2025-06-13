@@ -187,6 +187,17 @@ local serverEvents = {
         },
         days = {1, 2, 3, 4, 5, 6, 7}
     } },
+    ["HR"] = {
+       { times = {
+            {hour = 1, minute = 30, duration = 20},
+            {hour = 5, minute = 30, duration = 20},
+            {hour = 9, minute = 30, duration = 20},
+            {hour = 13, minute = 30, duration = 20},
+            {hour = 17, minute = 30, duration = 20},
+            {hour = 21, minute = 30, duration = 20}
+        },
+        days = {1, 2, 3, 4, 5, 6, 7}
+    } },
     ["SG CR"] = {
     {    times = {
             {hour = 1, minute = 20, duration = 10},
@@ -265,7 +276,14 @@ local serverEvents = {
     },
     ["Prairie"] = {
         { times = {{hour = 9, minute = 00, duration = 20}, {hour = 22, minute = 00, duration = 20}}, days = {6, 7} }
-    }
+    },
+    ["Wonderland"] = {
+       { times = {
+            {hour = 11, minute = 00, duration = 5},
+            {hour = 19, minute = 00, duration = 5}
+        },
+        days = {1, 2, 3, 4, 5, 6, 7}
+    } }
 }
 
 
