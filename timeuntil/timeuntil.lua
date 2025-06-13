@@ -114,7 +114,7 @@ function moreEntries:OnClick(arg)
 end
 moreEntries:SetHandler("OnClick", moreEntries.OnClick)
 local lessEntries = timerAnchor:CreateChildWidget("button", "lessEntries", 0, true)
-lessEntries:AddAnchor("TOPLEFT", timerAnchor, 25, -25)
+lessEntries:AddAnchor("TOPRIGHT", timerAnchor, 5, -25)
 lessEntries:SetStyle("text_default")
 --ApplyButtonSkin(lessEntries, buttonskin)
 lessEntries:SetExtent(35,25)
@@ -187,7 +187,7 @@ local serverEvents = {
         },
         days = {1, 2, 3, 4, 5, 6, 7}
     } },
-    ["HR"] = {
+    ["Hiram t6"] = {
        { times = {
             {hour = 1, minute = 50, duration = 40},
             {hour = 5, minute = 50, duration = 40},
