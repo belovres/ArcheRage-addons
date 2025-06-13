@@ -80,6 +80,7 @@ local function CreateButton(parent, name, anchor, xOffset, yOffset, text, onMous
     --A-pplyButtonSkin(button, buttonskin)
     button:SetExtent(35, 35)
     button:SetText(text)
+    button:SetWidth(35)
     if onMouseDown then
         function button:OnMouseDown(arg)
             onMouseDown()

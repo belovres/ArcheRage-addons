@@ -106,7 +106,10 @@ moreEntries:AddAnchor("TOPLEFT", timerAnchor, -5, -25)
 moreEntries:SetStyle("text_default")
 --ApplyButtonSkin(moreEntries, buttonskin)
 moreEntries:SetExtent(35,25)
+--moreEntries:SetWidth(25)
 moreEntries:SetText("+")
+
+moreEntries:SetWidth(25)
 function moreEntries:OnClick(arg) 
     amountOfTimers = amountOfTimers + 1 
     updateTimers() 
@@ -114,11 +117,12 @@ function moreEntries:OnClick(arg)
 end
 moreEntries:SetHandler("OnClick", moreEntries.OnClick)
 local lessEntries = timerAnchor:CreateChildWidget("button", "lessEntries", 0, true)
-lessEntries:AddAnchor("TOPRIGHT", timerAnchor, 5, -25)
+lessEntries:AddAnchor("TOPLEFT", timerAnchor, 20, -25)
 lessEntries:SetStyle("text_default")
 --ApplyButtonSkin(lessEntries, buttonskin)
 lessEntries:SetExtent(35,25)
 lessEntries:SetText("-")
+lessEntries:SetWidth(25)
 function lessEntries:OnClick(arg) 
     if amountOfTimers > 1 then
         amountOfTimers = amountOfTimers - 1 
@@ -450,3 +454,5 @@ end
 for _, event in ipairs(events) do
     UIParent:SetEventHandler(UIEVENT_TYPE[event], GenericEventHandler(event))
 end
+
+--moreEntries:SetWidth(25)
