@@ -189,12 +189,12 @@ local serverEvents = {
     } },
     ["HR"] = {
        { times = {
-            {hour = 1, minute = 30, duration = 20},
-            {hour = 5, minute = 30, duration = 20},
-            {hour = 9, minute = 30, duration = 20},
-            {hour = 13, minute = 30, duration = 20},
-            {hour = 17, minute = 30, duration = 20},
-            {hour = 21, minute = 30, duration = 20}
+            {hour = 1, minute = 50, duration = 40},
+            {hour = 5, minute = 50, duration = 40},
+            {hour = 9, minute = 50, duration = 40},
+            {hour = 13, minute = 50, duration = 40},
+            {hour = 17, minute = 50, duration = 40},
+            {hour = 21, minute = 50, duration = 40}
         },
         days = {1, 2, 3, 4, 5, 6, 7}
     } },
