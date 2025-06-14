@@ -152,11 +152,9 @@ local dynamicEvents = {}
 --Localization section
 
 local locale = X2Locale:GetLocale()
-local defaultLocale = "en_us"
-local supportedLocales = {"en_us", "ru", "zh_cn"}
 
-if not table.contains(supportedLocales, locale) then
-    locale = defaultLocale
+if locale~="en_us" and locale~="ru" and locale~="zh_cn" then
+    locale = "en_us"
 end
 
 local eventsName = {
