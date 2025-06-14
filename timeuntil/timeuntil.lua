@@ -152,7 +152,7 @@ local dynamicEvents = {}
 --Localization section
 
 local locale = X2Locale:GetLocale()
-if locale ~= "en_us" and locale ~= "ru" then locale = "en_us" end
+if locale ~= "en_us" and locale ~= "ru" and locale~="zh_cn" then locale = "en_us" end
 local eventsName = {
 	["ru"] = {
 				GR = "Призрачка",
@@ -193,9 +193,43 @@ local eventsName = {
 				Akasch = "Akasch",
 				Prairie = "Prairie",
 				Wonderland = "Wonderland"
-			}		
+			},
+	["zh_cn"] = {
+				GR = "迷雾",
+				CR = "征兆",
+				Hiram = "Hiram T6",
+				SG_CR = "安塔伦",
+				JMG = "JMG",
+				Lusca = "阿肯",
+				BD = "黑龙",
+				Kraken = "克拉肯",
+				Leviathan = "利维坦",
+				Charybdis = "卡里迪斯",
+				Anthalon_G = "庭院安塔伦",
+				Halcy = "黄金",
+				RD = "红龙",
+				Abyssal_Atk = "深渊",
+				Hasla = "翡翠谷征兆",
+				Akasch = "守山",
+				Prairie = "大草原",
+				Wonderland = "Wonderland"
+			}				
 }
 
+local dinamicEventsName = {
+	["ru"] = {
+				aegis = "Эфен",
+				whalesong = "Бухта"
+			},
+	["en_us"] = {
+			aegis = "Aegis",
+			whalesong = "Whalesong"
+		},
+	["zh_cn"] = {
+			aegis = "烛台",
+			whalesong = "鲸鱼"
+		}
+}
 --end Localization section
 
 local serverEvents = {
@@ -434,7 +468,7 @@ function timerAnchor:OnUpdate(dt)
                             eventLabels[iWithSkip].style:SetColor(0.3, 0.7, 1, 255)
                             timerLabels[iWithSkip].style:SetColor(0.3, 0.7, 1, 255)
                         end
-                        if event.name == "Whalesong" or event.name == "Aegis" then
+                        if event.name == dinamicEventsName[locale].whalesong or event.name == dinamicEventsName[locale].aegis then
                             eventLabels[iWithSkip].style:SetColor(1, 0.6, 0.1, 255)
                             timerLabels[iWithSkip].style:SetColor(1, 0.6, 0.1, 255)
                         end
@@ -461,7 +495,7 @@ local function GenericEventHandler(eventName)
             if zoneInfo.conflictState == 5 then
                 local serverTime = UIParent:GetServerTimeTable()
                 local now = serverMinutesSinceMidnight(serverTime)
-                local name = (info1 == 102) and "Aegis" or "Whalesong"
+                local name = (info1 == 102) and dinamicEventsName[locale].aegis or dinamicEventsName[locale].whalesong
                 local startIn = 15
                 local duration = 15
                 local endTime = now + startIn + duration
