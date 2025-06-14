@@ -44,7 +44,7 @@ end
 local timerAnchor = CreateEmptyWindow("timerAnchor", "UIParent")
 timerAnchor:Show(true)
 timerAnchor:AddAnchor("TOPLEFT", "UIParent", 100, 100)
-timerAnchor:SetExtent(175, 50)--more width to ru locale
+timerAnchor:SetExtent(150, 50)
 timerAnchor:EnableDrag(true)
 local background = timerAnchor:CreateColorDrawable(0, 0, 0, 0.5, "background")
 background:AddAnchor("TOPLEFT", timerAnchor, 0, 0)
@@ -57,7 +57,7 @@ function updateTimers()
     for i, lbl in ipairs(timerLabels) do lbl:Show(false) end
     eventLabels = {}
     timerLabels = {}
-    timerAnchor:SetExtent(175, amountOfTimers * 25)
+    timerAnchor:SetExtent(150, amountOfTimers * 25)
 
     for i = 1, amountOfTimers do
         --names
@@ -152,13 +152,19 @@ local dynamicEvents = {}
 --Localization section
 
 local locale = X2Locale:GetLocale()
-if locale ~= "en_us" and locale ~= "ru" and locale~="zh_cn" then locale = "en_us" end
+local defaultLocale = "en_us"
+local supportedLocales = {"en_us", "ru", "zh_cn"}
+
+if not table.contains(supportedLocales, locale) then
+    locale = defaultLocale
+end
+
 local eventsName = {
 	["ru"] = {
 				GR = "Призрачка",
 				CR = "Кровь",
 				Hiram = "Рамианский",
-				SG_CR = "Кровь(солнечкa)",
+				SG_CR = "Анталон",--rename other event name
 				JMG = "АГЛ",
 				Lusca = "Спруты",
 				BD = "Ксанатос",
@@ -188,7 +194,7 @@ local eventsName = {
 				Anthalon_G = "Anthalon(G)",
 				Halcy = "Halcyona",
 				RD = "RD",
-				Abyssal_Atk = "Abyssal Attack",
+				Abyssal_Atk = "Abyssal Atk",
 				Hasla = "Hasla",
 				Akasch = "Akasch",
 				Prairie = "Prairie",
@@ -216,11 +222,11 @@ local eventsName = {
 			}				
 }
 
-local dinamicEventsName = {
+local dynamicEventsName = {
 	["ru"] = {
-				aegis = "Эфен",
-				whalesong = "Бухта"
-			},
+			aegis = "Эфен",
+			whalesong = "Бухта"
+		},
 	["en_us"] = {
 			aegis = "Aegis",
 			whalesong = "Whalesong"
@@ -468,7 +474,7 @@ function timerAnchor:OnUpdate(dt)
                             eventLabels[iWithSkip].style:SetColor(0.3, 0.7, 1, 255)
                             timerLabels[iWithSkip].style:SetColor(0.3, 0.7, 1, 255)
                         end
-                        if event.name == dinamicEventsName[locale].whalesong or event.name == dinamicEventsName[locale].aegis then
+                        if event.name == dynamicEventsName[locale].whalesong or event.name == dynamicEventsName[locale].aegis then
                             eventLabels[iWithSkip].style:SetColor(1, 0.6, 0.1, 255)
                             timerLabels[iWithSkip].style:SetColor(1, 0.6, 0.1, 255)
                         end
@@ -495,7 +501,7 @@ local function GenericEventHandler(eventName)
             if zoneInfo.conflictState == 5 then
                 local serverTime = UIParent:GetServerTimeTable()
                 local now = serverMinutesSinceMidnight(serverTime)
-                local name = (info1 == 102) and dinamicEventsName[locale].aegis or dinamicEventsName[locale].whalesong
+                local name = (info1 == 102) and dynamicEventsName[locale].aegis or dynamicEventsName[locale].whalesong
                 local startIn = 15
                 local duration = 15
                 local endTime = now + startIn + duration
