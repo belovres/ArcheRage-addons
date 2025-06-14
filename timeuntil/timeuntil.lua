@@ -95,7 +95,6 @@ function moreEntries:OnClick(arg)
     amountOfTimers = amountOfTimers + 1 
     updateTimers() 
     SaveTimerCount(amountOfTimers)
-	dump(locale)
 end
 moreEntries:SetHandler("OnClick", moreEntries.OnClick)
 local lessEntries = timerAnchor:CreateChildWidget("button", "lessEntries", 0, true)
@@ -153,7 +152,6 @@ local dynamicEvents = {}
 --Localization section
 
 local locale = X2Locale:GetLocale()
-X2Chat:DispatchChatMessage(CMF_SYSTEM, dump(locale))
 if locale ~= "en_us" and locale ~= "ru" then locale = "en_us" end
 local eventsName = {
 	["ru"] = {
