@@ -19,26 +19,7 @@ ADDON:ImportObject(OBJECT_TYPE.IMAGE_DRAWABLE)
 ADDON:ImportAPI(API_TYPE.CHAT.id)
 ADDON:ImportAPI(API_TYPE.TIME.id)
 ADDON:ImportAPI(API_TYPE.MAP.id)
-
-local color = {}
-    color.normal    = UIParent:GetFontColor("btn_df")
-    color.highlight = UIParent:GetFontColor("btn_ov")
-    color.pushed    = UIParent:GetFontColor("btn_on")
-    color.disabled  = UIParent:GetFontColor("btn_dis")
-
-local buttonskin = {
-        drawableType = "ninePart",
-        path = "ui/common/default.dds",
-        coordsKey = "btn",
-        autoResize = true,
-        fontColor = color,
-        fontInset = {
-            left = 11,
-            right = 11,
-            top = 0,
-            bottom = 0,
-        },
-    }
+ADDON:ImportAPI(API_TYPE.LOCALE.id) --add to localization
 
 --window length saved
 local countFilePath = "TimeUntilWindowCount.txt"
@@ -63,7 +44,7 @@ end
 local timerAnchor = CreateEmptyWindow("timerAnchor", "UIParent")
 timerAnchor:Show(true)
 timerAnchor:AddAnchor("TOPLEFT", "UIParent", 100, 100)
-timerAnchor:SetExtent(150, 50)
+timerAnchor:SetExtent(175, 50)--more width to ru locale
 timerAnchor:EnableDrag(true)
 local background = timerAnchor:CreateColorDrawable(0, 0, 0, 0.5, "background")
 background:AddAnchor("TOPLEFT", timerAnchor, 0, 0)
@@ -76,7 +57,7 @@ function updateTimers()
     for i, lbl in ipairs(timerLabels) do lbl:Show(false) end
     eventLabels = {}
     timerLabels = {}
-    timerAnchor:SetExtent(150, amountOfTimers * 25)
+    timerAnchor:SetExtent(175, amountOfTimers * 25)
 
     for i = 1, amountOfTimers do
         --names
@@ -114,6 +95,7 @@ function moreEntries:OnClick(arg)
     amountOfTimers = amountOfTimers + 1 
     updateTimers() 
     SaveTimerCount(amountOfTimers)
+	dump(locale)
 end
 moreEntries:SetHandler("OnClick", moreEntries.OnClick)
 local lessEntries = timerAnchor:CreateChildWidget("button", "lessEntries", 0, true)
@@ -168,8 +150,58 @@ local whaleConflict = false
 local aegConflict = true
 local dynamicEvents = {}
 
+--Localization section
+
+local locale = X2Locale:GetLocale()
+X2Chat:DispatchChatMessage(CMF_SYSTEM, dump(locale))
+if locale ~= "en_us" and locale ~= "ru" then locale = "en_us" end
+local eventsName = {
+	["ru"] = {
+				GR = "Призрачка",
+				CR = "Кровь",
+				Hiram = "Рамианский",
+				SG_CR = "Кровь(солнечкa)",
+				JMG = "АГЛ",
+				Lusca = "Спруты",
+				BD = "Ксанатос",
+				Kraken = "Кракен",
+				Leviathan = "Левиафан",
+				Charybdis = "Калидис",
+				Anthalon_G = "Анталон(Сады)",
+				Halcy = "Даскшир",
+				RD = "Гартарейн",
+				Abyssal_Atk = "Спруты",
+				Hasla = "Зомби",
+				Akasch = "Ифнир",
+				Prairie = "Луг",
+				Wonderland = "Чудесариум"
+			},
+	["en_us"] = {
+				GR = "GR",
+				CR = "CR",
+				Hiram = "Hiram T6",
+				SG_CR = "SG CR",
+				JMG = "JMG",
+				Lusca = "Lusca",
+				BD = "BD",
+				Kraken = "Kraken",
+				Leviathan = "Leviathan",
+				Charybdis = "Charybdis",
+				Anthalon_G = "Anthalon(G)",
+				Halcy = "Halcyona",
+				RD = "RD",
+				Abyssal_Atk = "Abyssal Attack",
+				Hasla = "Hasla",
+				Akasch = "Akasch",
+				Prairie = "Prairie",
+				Wonderland = "Wonderland"
+			}		
+}
+
+--end Localization section
+
 local serverEvents = {
-    ["GR"] = {
+    [eventsName[locale].GR] = {
        { times = {
             {hour = 2, minute = 20, duration = 20},
             {hour = 6, minute = 20, duration = 20},
@@ -180,7 +212,7 @@ local serverEvents = {
         },
         days = {1, 2, 3, 4, 5, 6, 7}
     }},
-    ["CR"] = {
+    [eventsName[locale].CR] = {
        { times = {
             {hour = 0, minute = 20, duration = 10},
             {hour = 4, minute = 20, duration = 10},
@@ -191,7 +223,7 @@ local serverEvents = {
         },
         days = {1, 2, 3, 4, 5, 6, 7}
     } },
-    ["Hiram t6"] = {
+    [eventsName[locale].Hiram] = {
        { times = {
             {hour = 1, minute = 50, duration = 40},
             {hour = 5, minute = 50, duration = 40},
@@ -202,7 +234,7 @@ local serverEvents = {
         },
         days = {1, 2, 3, 4, 5, 6, 7}
     } },
-    ["SG CR"] = {
+    [eventsName[locale].SG_CR] = {
     {    times = {
             {hour = 1, minute = 20, duration = 10},
             {hour = 5, minute = 20, duration = 10},
@@ -213,7 +245,7 @@ local serverEvents = {
         },
         days = {1, 2, 3, 4, 5, 6, 7}
     } },
-    ["JMG"] = {
+    [eventsName[locale].JMG] = {
        { times = {
             {hour = 3, minute = 20, duration = 15},
             {hour = 7, minute = 20, duration = 15},
@@ -224,20 +256,20 @@ local serverEvents = {
         },
         days = {1, 2, 3, 4, 5, 6, 7}
     } },
-    ["Lusca"] = { times = {{hour = 12, minute = 20, duration = 30}}, days = {1, 2, 3, 4, 5, 6, 7} },
-    ["BD"] = {
+    [eventsName[locale].Lusca] = { times = {{hour = 12, minute = 20, duration = 30}}, days = {1, 2, 3, 4, 5, 6, 7} },
+    [eventsName[locale].BD] = {
         { times = {{hour = 21, minute = 30, duration = 60}}, days = {3, 5} },
         { times = {{hour = 18, minute = 30, duration = 60}}, days = {7} }
     },
-    ["Kraken"] = {
+    [eventsName[locale].Kraken] = {
         { times = {{hour = 22, minute = 30, duration = 60}}, days = {3, 5} },
         { times = {{hour = 19, minute = 30, duration = 60}}, days = {7} }
     },
-    ["Leviathan"] = {
+    [eventsName[locale].Leviathan] = {
         { times = {{hour = 20, minute = 05, duration = 60}}, days = {3, 5} },
         { times = {{hour = 17, minute = 05, duration = 60}}, days = {7} }
     },
-    ["Charybdis"] = {
+    [eventsName[locale].Charybdis] = {
         { times = {{hour = 21, minute = 30, duration = 60}}, days = {1, 5} }
     },
     --["Small Titan"] = {
@@ -259,29 +291,29 @@ local serverEvents = {
     --    }, 
     --    days = {4, 7} }
     --},
-    ["Anthalon (G)"] = {
+    [eventsName[locale].Anthalon_G] = {
         { times = {{hour = 21, minute = 30, duration = 45}}, days = {1, 2, 6} }
     },
-    ["Halcy"] = {
+    [eventsName[locale].Halcy] = {
         { times = {{hour = 1, minute = 30, duration = 30}, {hour = 11, minute = 00, duration = 10}, {hour = 20, minute = 30, duration = 10}}, days = {1, 2, 3, 4, 5, 6, 7} }
     },
-    ["RD"] = {
+    [eventsName[locale].RD] = {
         { times = {{hour = 2, minute = 00, duration = 15}, {hour = 10, minute = 30, duration = 15}, {hour = 20, minute = 00, duration = 15}}, days = {1, 2, 4, 6} }
     },
-    ["Abyssal Atk"] = {
+    [eventsName[locale].Abyssal_Atk] = {
         { times = {{hour = 12, minute = 00, duration = 30}, {hour = 22, minute = 30, duration = 30}}, days = {3, 5, 7} }
     },
-    ["Hasla"] = {
+    [eventsName[locale].Hasla] = {
         { times = {{hour = 18, minute = 49, duration = 15}, {hour = 20, minute = 49, duration = 15}}, days = {1, 2, 3, 4} }
     },
-    ["Akasch"] = {
+    [eventsName[locale].Akasch] = {
         { times = {{hour = 15, minute = 00, duration = 20}, {hour = 18, minute = 30, duration = 20}, {hour = 21, minute = 30, duration = 20}}, days = {7} },
         { times = {{hour = 15, minute = 00, duration = 20}, {hour = 18, minute = 30, duration = 20}, {hour = 22, minute = 00, duration = 20}}, days = {6} }
     },
-    ["Prairie"] = {
+    [eventsName[locale].Prairie] = {
         { times = {{hour = 9, minute = 00, duration = 20}, {hour = 22, minute = 00, duration = 20}}, days = {6, 7} }
     },
-    ["Wonderland"] = {
+    [eventsName[locale].Wonderland] = {
        { times = {
             {hour = 11, minute = 00, duration = 5},
             {hour = 19, minute = 00, duration = 5}
@@ -289,8 +321,6 @@ local serverEvents = {
         days = {1, 2, 3, 4, 5, 6, 7}
     } }
 }
-
-
 
 local function calculateDayOfWeek(year, month, day)
     if month < 3 then
