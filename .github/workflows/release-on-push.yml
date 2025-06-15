@@ -19,13 +19,13 @@ jobs:
 
       - name: Generate tag name
         id: generate_tag
-        run: echo "TAG=auto-$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+        run: echo "TAG=$(date +'%Y-%m-%d-%H-%M-%S')" >> $GITHUB_ENV
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ env.TAG }}
-          name: "Automated Release ${{ env.TAG }}"
+          name: "Addons${{ env.TAG }}"
           files: release.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
