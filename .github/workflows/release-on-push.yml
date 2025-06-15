@@ -10,18 +10,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Zip repository content
-      run: |
-        zip -r release.zip . -x "*.git*"
+      - name: Zip repository
+        run: |
+          zip -r release.zip . -x "*.git*"
 
-    - name: Create Release
-      uses: softprops/action-gh-release@v1
-      with:
-        tag_name: "auto-$(date +'%Y%m%d%H%M%S')"
-        name: "Automated Release $(date +'%Y-%m-%d %H:%M:%S')"
-        files: release.zip
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate tag name
+        id: generate_tag
+        run: echo "TAG=auto-$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.TAG }}
+          name: "Automated Release ${{ env.TAG }}"
+          files: release.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
