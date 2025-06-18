@@ -64,7 +64,7 @@ UIC_DROPDOWN_LIST
 UIC_SLAVE_EQUIPMENT
 UIC_TARGET_EQUIPMENT
 UIC_CHECK_BOT_WND
-UIC_HERO_RANK_WND
+UIC_HERO
 UIC_UI_AVI
 UIC_EVENT_CENTER
 UIC_ITEM_GUIDE
@@ -82,9 +82,10 @@ UIC_STORE
 UIC_RESIDENT_TOWNHALL
 UIC_SPECIALTY_BUY
 UIC_SPECIALTY_SELL
-UIC_SPECIALTY_INFORMATION
+UIC_TRADE_GOOD_PRICE_INFORMATION
 UIC_APPELLATION
 UIC_BLESS_UTHSTIN
+UIC_EQUIP_SLOT_REINFORCE_TAB
 UIC_LOOT_GACHA
 UIC_ENCHANT
 UIC_LOOK_CONVERT
@@ -95,7 +96,7 @@ UIC_INGAME_SHOP
 UIC_BEAUTY_SHOP
 UIC_PREMIUM
 UIC_SCHEDULE_ITEM
-UIC_REQUEST_BATTLEFILED
+UIC_REQUEST_BATTLEFIELD
 UIC_COMMERCIAL_MAIL
 UIC_MAIL
 UIC_ADDON
@@ -109,7 +110,7 @@ UIC_EXPAND_JOB
 UIC_SELECT_CHARACTER
 UIC_EXIT_GAME
 UIC_PLAYER_EQUIPMENT
-UIC_ACTABILIBY
+UIC_ACTABILITY
 UIC_FOLLOW
 UIC_REPORT_BAD_USER
 UIC_MARKET_PRICE
@@ -140,27 +141,32 @@ UIC_ROSTER_MANAGER_WND
 UIC_CHARACTER_INFO_VISUAL_RACE
 UIC_CHANGE_VISUAL_RACE
 UIC_STABLER
+UIC_COMMUNITY
+UIC_OPTIMIZATION
+UIC_ENTER_SECOND_PASSWORD
 ----------------------------------------------------------------------------------------
 
 Allowed functions
 ----------------------------------------------------------------------------------------
 ImportAPI(apiType)
 ImportObject(objectType)
-GetContent(uiCategory)
-ShowContent(uiCategory, arg)
-ToggleContent(uiCategory)
-ChatLog(logMessage)
-----------------------------------------------------------------------------------------
-
-Available/not allowed functions
-----------------------------------------------------------------------------------------
 RegisterContentWidget(uiCategory)
 RegisterContentTriggerFunc(uiCategory)
+GetContent(uiCategory)
+GetContentMainScriptPosVis(uiCategory)
+ShowContent(uiCategory, arg)
+ToggleContent(uiCategory)
 GetAddonInfos()
 SetAddonEnable(name, enable)
 SaveAddonInfos()
 FireAddon(name)
 ReloadAddon(name)
+ChatLog(logMessage)
+AddEscMenuButton(categoryId, uiContentType, iconKey, name)
+----------------------------------------------------------------------------------------
+
+Available/not allowed functions
+----------------------------------------------------------------------------------------
 GetFeatureset()
 ConnectToServer(serverIP, userId, password)
 ReturnToLoginStage()
@@ -255,6 +261,10 @@ GetImageTextCoords(fontSet, size, key)
 SetClipboardText(text)
 GetHpBarSplitColors()
 GetTipOfDays()
+GetRoadMapUiData()
+SetRoadMapUiData(isOpen)
+GetEscMenuCategories()
+GetHudRightIconMenus()
 ----------------------------------------------------------------------------------------
 
 
@@ -342,16 +352,17 @@ GetUIStamp(key)
 GetCurrentTimeStamp()
 GetAccountUITimeStamp(key)
 GetCharacterTodayPlayedTimeStamp()
+GetServerTimeTable()
 GetTextureKeyData(filename)
 GetTextureData(filename, infoKey)
 GetFontColor(key)
+GetEtcValue(key)
 GetUIBound(key)
 SetUIBound(key, table)
 ClearUIBound(key)
 GetPermission(category)
 InitFontSize()
 GetId()
-GetServerTimeTable()
 ----------------------------------------------------------------------------------------
 
 Available/not allowed functions
@@ -419,6 +430,8 @@ ABILITY_ACTIVATION_LEVEL_3
 
 Allowed functions
 ----------------------------------------------------------------------------------------
+GetBuffTooltip(buffType, itemLevel)
+GetAllMyActabilityInfos()
 ----------------------------------------------------------------------------------------
 
 Available/not allowed functions
@@ -450,10 +463,8 @@ GetRecommendAbility(activeAbil, category)
 CancelPlayerBuff(buffId)
 FindAbilityIndexForStr(abilityStr)
 IsAbilityChanger()
-GetBuffTooltip(buffType, itemLevel)
 GetRaceSkillCount(raceStr, genderStr)
 GetRaceSkillType(raceStr, genderStr, index)
-GetAllMyActabilityInfos()
 GetActabilityViewInfo()
 GetMyActabilityInfo(actAbilityGroupType)
 GetMinActabilityPoint(actAbilityGroupType)
@@ -570,6 +581,9 @@ Available/not allowed functions
 ----------------------------------------------------------------------------------------
 HandleClickTodayAssignment(todayType, index)
 ResetTodayAssignment(todayType, index)
+GetTodayAssignmentAllAcceptState()
+IsPossibleTodayAssignmentAllAccept(todayType)
+RequestTodayAssignmentAllAccept(todayType)
 ----------------------------------------------------------------------------------------
 
 
@@ -646,6 +660,7 @@ ResetTodayAssignment(todayType, index)
 IsPremiumItemTag(itemType)
 IsFull()
 NormalComplete()
+GetArchePassResetWeeklyDay()
 ----------------------------------------------------------------------------------------
 
 
@@ -665,14 +680,17 @@ ASK_ACCOUNT_BUFF
 
 Allowed functions
 ----------------------------------------------------------------------------------------
+SearchAuctionArticle(page, minLevel, maxLevel, grade, category, exactMatch, keywords, minDirectPriceStr, maxDirectPriceStr)
+GetSearchedItemPage()
+GetSearchedItemCount()
+GetSearchedItemTotalCount()
+GetSearchedItemInfo(idx)
 ----------------------------------------------------------------------------------------
 
 Available/not allowed functions
 ----------------------------------------------------------------------------------------
-IsAuctionNpc()
 ClearSearchCondition()
 AskAuctionArticle()
-SearchAuctionArticle(page, minLevel, maxLevel, grade, category, exactMatch, keywords, minDirectPriceStr, maxDirectPriceStr)
 SearchRefresh()
 SearchAuctionArticleByPage(page)
 SearchMyAuctionArticles(page)
@@ -685,11 +703,7 @@ SearchedListSort(sortKind)
 SetListSort(sortKind)
 SetCurTab(tab)
 GetSearchedSortInfo()
-GetSearchedItemPage()
-GetSearchedItemCount()
-GetSearchedItemTotalCount()
 GetSearchedItemMyTotalCount()
-GetSearchedItemInfo(idx)
 GetSearchedItemArticleId(idx)
 GetSearchedItemPrice(idx)
 AttachItemFromPick()
@@ -705,7 +719,6 @@ CalcDeposit(start, direct, duration)
 GetLowestPrice(itemType, itemGrade)
 HasPostAuthority()
 RequirePostAuthority()
-HasHudAuctionAuthority()
 IsShowDirectPriceRangeEdit()
 SetShowDirectPriceRangeEdit(show)
 SearchMyBidList(page)
@@ -915,16 +928,15 @@ IsPossiblePickBuff()
 GetMyKillstreakSkillsInfos()
 IsInInstantGame()
 RequestInstanceGame(instanceType)
-RequestResetVisitCountInstantGame(battleFieldType)
 CancelInstanceGame()
 GetGameMode()
-GetProgressEntireInfo()
+GetProgressEntireInfo(miniScoreboard)
 GetProgressTimeInfo()
-GetProgressScoreInfo()
+GetProgressScoreInfo(miniScoreboard)
+GetProgressTargetNpcInfo()
 GetProgressRankInfo()
 GetProgressVictoryConditionInfo()
 GetEndReasonInfo()
-GetMiniScoreBoardSectionInfos()
 GetScoreColumnInfo(miniScoreboard)
 GetVersusFactionInfo()
 EndKillStreakSound()
@@ -945,6 +957,7 @@ GetInstanceUiKindList()
 GetInstanceListByKind(kind)
 GetInstanceRewardMailInfo(instanceType, mailType)
 GetDetailInstanceInfo(instanceType)
+GetInstanceAvailableLevel(instanceType)
 GetVictoryInfo(instanceType)
 IsApplyInstance()
 GetApplyInstanceInfo()
@@ -1060,6 +1073,7 @@ REGISTER_TRACTOR_MODE()
 Available/not allowed functions
 ----------------------------------------------------------------------------------------
 GetButlerDesc()
+GetResetWeeklyDay()
 GetMyButlerInfo()
 GetBindInfo()
 GetEquipment(equipSlot)
@@ -1274,6 +1288,7 @@ LOCALE_FR
 LOCALE_TH
 LOCALE_IND
 LOCALE_EN_SG
+CIK_DEFAULT
 ----------------------------------------------------------------------------------------
 
 Allowed functions
@@ -1305,6 +1320,7 @@ AddQuestLinkToActiveChatInput(linkText)
 AddRaidRecruitLinkToActiveChatInput(linkText)
 AddSquadRecruitLinkToActiveChatInput(linkText)
 AddUrlLinkToActiveChatInput()
+AddCraftLinkToActiveChatInput(craftType)
 IsActivatedChatInput()
 ActivateWhisperChatInput(isWhispered)
 InitChatWindow()
@@ -1320,6 +1336,8 @@ SetMegaphoneWarningMsgState()
 GetUrlTextAddr()
 SetUrlTextAddr(text, addr)
 IsEnableChatChannel(chatType)
+GetChatIcon(chatIconKind)
+GetChatIconKind(charId, chatType)
 ----------------------------------------------------------------------------------------
 
 
@@ -1401,13 +1419,13 @@ CRU_DOUBLE_GAUGE_2
 
 Allowed functions
 ----------------------------------------------------------------------------------------
+GetCombatResourceInfo()
+GetCombatResourceInfoByGroupType(groupType)
+CheckCombatResourceMaxPointByGroupType(groupType)
 ----------------------------------------------------------------------------------------
 
 Available/not allowed functions
 ----------------------------------------------------------------------------------------
-GetCombatResourceInfo()
-GetCombatResourceInfoByGroupType(groupType)
-CheckCombatResourceMaxPointByGroupType(groupType)
 ----------------------------------------------------------------------------------------
 
 
@@ -1431,6 +1449,9 @@ COPT_INSTANT
 
 Allowed functions
 ----------------------------------------------------------------------------------------
+GetCraftBaseInfo(craftType)
+GetCraftMaterialInfo(craftType, doodadId)
+GetCraftProductInfo(craftType)
 ----------------------------------------------------------------------------------------
 
 Available/not allowed functions
@@ -1438,9 +1459,6 @@ Available/not allowed functions
 GetCraftingMaterialLimitCount()
 GetActabilityGroupInfoByGroupType(groupType)
 GetCraftName(craftType)
-GetCraftBaseInfo(craftType)
-GetCraftMaterialInfo(craftType, doodadId)
-GetCraftProductInfo(craftType)
 GetExecutableCraftCount(craftType)
 ExecuteBatchCraftByType(craftType, doodadId, count)
 StopBatchCrafting()
@@ -1842,6 +1860,13 @@ GetBundleEffectTopLevel()
 GetBundleEffectInfos()
 IsWorkingAddExp()
 StopCasting()
+ExpandPage()
+SelectPage(pageNumber)
+GetSelectCost()
+GetActivatedPageNumber()
+GetPageCount()
+GetMaxPageCount()
+GetExpandItemInfo()
 ----------------------------------------------------------------------------------------
 
 
@@ -1887,8 +1912,8 @@ EST_COSPLAY
 
 Allowed functions
 ----------------------------------------------------------------------------------------
-GetEquippedItemType(equipSlot)
 GetEquippedItemTooltipInfo(equipSlot, targetEquippedItem)
+GetEquippedItemType(equipSlot)
 ----------------------------------------------------------------------------------------
 
 Available/not allowed functions
@@ -1976,6 +2001,13 @@ EIMS_END
 VS_LOSE
 VS_DRAW
 VS_WIN
+EMSK_NAME
+EMSK_ROLE
+EMSK_LEVEL
+EMSK_JOB
+EMSK_CONTRIBUTION_POINT
+EMSK_WEEKLY_CONTRIBUTION_POINT
+EMSK_ONLINE
 EGFT_BANK
 EGFT_BUFF
 EGFT_SHOP
@@ -2020,7 +2052,7 @@ GetExpeditionMyRole()
 GetExpeditionLevelInfo(expeditionLevel)
 GetExpeditionMaxLevel()
 GetExpeditionMemberCount()
-RequestExpeditionMembers(allMember, startIndex)
+RequestExpeditionMembers(allMember, startIndex, sortKind, asc)
 GetExpeditionMembersPerPage()
 CanInviteExpedition()
 GetMyExpeditionContributionPoint()
@@ -2084,6 +2116,7 @@ TeleportExpeditionPortal(portalId)
 GetDisplayPortalTime()
 GetExpeditionPortalLimit()
 GetExpeditionInstanceHistoryMemberInfos(strHistoryId)
+GetExpeditionPublicQuestResetWeeklyDay()
 SetExpeditionMemo(memoContent)
 IsGuildFunctionsUnlocked()
 GetGuildFunctionStatus(guildFunction)
@@ -2123,6 +2156,7 @@ IsOwner()
 ChangeOwner(charIdStr)
 IsMyFamily(name)
 IsFamily()
+IsLimitFamily()
 GetInfo()
 UpdateTodayAssignment()
 GetEffect()
@@ -2139,6 +2173,7 @@ OpenIncreaseMember()
 ChangeName(familyName)
 GetRenameFamilyPeriod()
 GetFamilyGuideInfo()
+IsMaxFamily()
 ----------------------------------------------------------------------------------------
 
 
@@ -2163,7 +2198,7 @@ IsFriendListLoaded()
 IsMyFriend(charName)
 GetFriendCount()
 GetFriendList(allMember)
-RequestFriendList(allMember, startIndex)
+RequestFriendList(allMember)
 GetFriendsPerPage()
 DeleteFriend(charName)
 GetBlockList()
@@ -2180,112 +2215,6 @@ RejectFriend(targetId)
 AcceptReceiveList(listTable)
 RejectReceiveList(listTable)
 CancelRequestList(listTable)
-----------------------------------------------------------------------------------------
-
-
-----------------------------------------------------------------------------------------
--- X2Gm
-----------------------------------------------------------------------------------------
-
-Global variables
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-
-Allowed functions
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-
-Available/not allowed functions
-----------------------------------------------------------------------------------------
-SetHealth(unit, health)
-SetMana(unit, mana)
-SetAttribute(unit, attr, val)
-ClearAttribute(unit, attr)
-ResetSkillCooldown(unit)
-ChangeFaction(unit, faction)
-SpawnNpc(unit, npcType)
-SpawnSlave(unit, slaveType)
-SpawnMate(unit, npcType)
-SpawnDoodad(unit, doodadType)
-SpawnGimmick(unit, gimmickType, speedX)
-DumpChar(name)
-DumpCharBag(name)
-DumpCharBank(name)
-DumpCharEquipment(name)
-DumpCharParty(name)
-DumpCharQuests(name)
-DumpCharCompletedQuests(name)
-DumpInstantGame(info)
-InfoInstantApplier(battleFieldType)
-InfoInstantField(zoneId, instanceId)
-SetInstantExclusive(instanceId, battleFieldType)
-SetBattleRecordRating(unit, battleFieldType, eloRating)
-SetInstantGmEventMode(modeOn)
-ApplyInstantGameGmEvent(name, battleFieldType, corps)
-DumpGameRule(instanceId)
-GoTo(unit, target)
-WorldGoTo(x, y, z)
-ChangeMode(unit, gmMode, val)
-AddLaborPower(unit, laborPower)
-AddExp(unit, exp)
-SetExpFactor(unit, factor)
-AddMoney(unit, money)
-Return(unit, returnPointType)
-MoveCharRezPoint(name)
-GiveNewItem(unit, itemType, count)
-SetEmptyBag(unit)
-PlaySequence(unit, sequenceName, flag)
-SetHousePermission(unit, houseType, permission)
-UseSkill(unit, skillType)
-SetBuff(unit, buffType)
-ClearBuff(unit, buffType)
-ClearBuffs(unit)
-SetInvisible(unit, invisible)
-Summon(unit, name)
-Notice(notice)
-NoticeEx(notice)
-Kick(name)
-RecoverHouses()
-ResetHouses()
-DemolishHouse(unit)
-CheckZone()
-SetCongestion(race, dgree)
-DumpIndun()
-DebugLooting(characterId)
-Resurrect(unit)
-SetCrimeValue(unit, crimeValue)
-RemoveAllItems(unit)
-EndInstantGameJoined()
-EndInstantGame(instantId)
-DeleteDominion(unit, zoneGroup)
-EnablePirates(val)
-TowerDefList()
-TowerDefReload()
-TowerDefStart(towerDefId, zoneGroupType)
-TowerDefStop(towerDefId, zoneGroupType)
-ScheduleSiege(zoneGroup, declareMin, warmupMin, siegeMin, peaceMin, payMin)
-AddActionPoint(actionPoint, value)
-SetDoodadGrowth(doodadId, time)
-ExecuteConsoleCommand(command)
-LoadBookmarks()
-ConsoleCommandList()
-Attach(unit, attachPoint)
-Detach(unit)
-Freeze(name)
-UnFreeze(name)
-RemoveSlave(unit)
-ResendHouseTaxMail(unit)
-DelayTaxDueDate(unit)
-ReturnNpc(unit)
-RecoverDoodad(doodadId)
-CheckBotPlayer(name)
-UpdateLeadership(offset)
-UpdateHeroScore(offset)
-SetTradeStatus(status)
-GmOneAndOneChat(name)
-RemoveMate(unit)
-ShowTradeStatus()
-DailyResetReputation()
 ----------------------------------------------------------------------------------------
 
 
@@ -2708,6 +2637,7 @@ IsSearchMode()
 GetSortFilter()
 Sort(sortType)
 LeaveSort()
+ToggleCommercialMailBox()
 ----------------------------------------------------------------------------------------
 
 
@@ -2783,6 +2713,7 @@ ISUS_MISS_MATCH
 
 Allowed functions
 ----------------------------------------------------------------------------------------
+InfoFromLink(linkText)
 IIK_TYPE()
 IIK_NAME()
 IIK_GRADE()
@@ -2796,7 +2727,6 @@ IIK_SOCKET_MODIFIER()
 NORMAL_ITEM_GRADE()
 POOR_ITEM_GRADE()
 MAX_SET_ITEMS()
-InfoFromLink(linkText) --second param can be empty, auction, coffer or guildBank
 ----------------------------------------------------------------------------------------
 
 Available/not allowed functions
@@ -3016,7 +2946,6 @@ GetCategories()
 GetCategoryInfos(aCategory, bCategory, lootIndex, grade)
 GetSpecifiedItems(aCategory, bCategory, equipItemGuideType, grade)
 GetIndunPortalInfo(indunZoneKey)
-IsSmeltingResultItem(itemType)
 ----------------------------------------------------------------------------------------
 
 
@@ -3492,6 +3421,7 @@ GetZoneFactionCompetitionInfo()
 GetZoneFactionCompetitionRemainTime(zoneGroup)
 GetTowerDefAlarmInfo(zoneId)
 GetZoneDoodadText(zoneGroup)
+GetZoneStateTextInfo(state)
 ----------------------------------------------------------------------------------------
 
 
@@ -3663,143 +3593,157 @@ GetChatDataList()
 
 Global variables
 ----------------------------------------------------------------------------------------
-OPTION_ITEM_FULLSCREEN
-OPTION_ITEM_SCREEN_RESOLUTION_WIDTH
-OPTION_ITEM_SCREEN_RESOLUTION_HEIGHT
-OPTION_ITEM_GAMMA
-OPTION_ITEM_MAXFPS
-OPTION_ITEM_USE_LIMIT_FPS
-OPTION_ITEM_VSYNC
-OPTION_ITEM_RENDER_THREAD
-OPTION_ITEM_DIRECTX
-OPTION_ITEM_PIXELSYNC
-OPTION_ITEM_GRAPHIC_QUALITY
-OPTION_ITEM_SOUND_QUALITY
-OPTION_ITEM_BG_QUALITY
-OPTION_ITEM_CHAR_QUALITY
-OPTION_ITEM_VIEW_DST
-OPTION_ITEM_DETAIL_TERRAIN_VIEW_DST_Z
-OPTION_ITEM_DETAIL_TERRAIN_VIEW_DST_XY
-OPTION_ITEM_TERRAIN_LOD
-OPTION_ITEM_OBJECT_VIEW_DST_RATIO
-OPTION_ITEM_VEGETATION_VIEW_DST_RATIO
-OPTION_ITEM_CAHR_LOD
-OPTION_ITEM_ENABLE_SHADOW
-OPTION_ITEM_SHADOW_DIST
-OPTION_ITEM_SHADOW_CHAR_LOD
-OPTION_ITEM_SHADOW_BG_LOD
-OPTION_ITEM_SHADER_QUALITY
-OPTION_ITEM_VOLUMETRIC_EFFECT
-OPTION_ITEM_CLOUDS_EFFECT
-OPTION_ITEM_WEATHER_EFFECT
-OPTION_ITEM_ENHANCED_EFFECT
-OPTION_ITEM_GEM_EFFECT
-OPTION_ITEM_WEAPON_EFFECT
-OPTION_ITEM_EFFECT_QUALITY
-OPTION_ITEM_WATER_QUALITY
-OPTION_ITEM_WATER_REFLECTION_EFFECT
-OPTION_ITEM_HDR
-OPTION_ITEM_DOF
-OPTION_ITEM_ANTI_ALIASING
-OPTION_ITEM_SUNSHAFT
-OPTION_ITEM_NO_ZPASS
-OPTION_ITEM_EXPERIMENTAL_OPT
-OPTION_ITEM_ANIMATION_LOD
-OPTION_ITEM_SOUND_QUALITY
-OPTION_ITEM_MASTER_VOLUME
-OPTION_ITEM_BGM_VOLUME
-OPTION_ITEM_SFX_VOLUME
-OPTION_ITEM_USE_COMBAT_SOUND
-OPTION_ITEM_CINEMA_VOLUME
-OPTION_ITEM_USER_MUSIC_VOLUME
-OPTION_ITEM_USER_MUSIC_DISABLE_SELF
-OPTION_ITEM_USER_MUSIC_DISABLE_OTHERS
-OPTION_ITEM_SLAVE_MUSIC_VOLUME
-OPTION_ITEM_NAME_TAG_MODE
-OPTION_ITEM_SHOW_APPELLATION_NAME_TAG
-OPTION_ITEM_SHOW_FACTION_NAME_TAG
-OPTION_ITEM_SHOW_HP_NAME_TAG
-OPTION_ITEM_SHOW_PLAYER_NAME_TAG
-OPTION_ITEM_SHOW_PARTY_NAME_TAG
-OPTION_ITEM_SHOW_EXPEDITION_NAME_TAG
-OPTION_ITEM_SHOW_FRIENDLY_NAME_TAG
-OPTION_ITEM_SHOW_HOSTILE_NAME_TAG
-OPTION_ITEM_SHOW_MY_MATE_NAME_TAG
-OPTION_ITEM_SHOW_FRIENDLY_MATE_NAME_TAG
-OPTION_ITEM_SHOW_HOSTILE_MATE_NAME_TAG
-OPTION_ITEM_SHOW_NPC_NAME_TAG
-OPTION_ITEM_NAME_TAG_FACTION_SELECTION
-OPTION_ITEM_CLICK_TO_MOVE
-OPTION_ITEM_USE_CELERITY_WITH_DOUBLE_FORWARD
-OPTION_ITEM_USE_GLIDE_WITH_DOUBLE_JUMP
-OPTION_ITEM_USE_DOODAD_SMART_POSITIONING
-OPTION_ITEM_USE_DECORATION_SMART_POSITIONING
-OPTION_ITEM_SHOW_GUIDE_DECAL
-OPTION_ITEM_SHOW_GLIDER
-OPTION_ITEM_FIRE_ACTION_ON_BUTTON_DOWN
-OPTION_ITEM_AUTO_ENEMY_TARGETING
-OPTION_ITEM_USE_ONLY_MY_PORTAL
-OPTION_ITEM_SMART_GROUND_TARGETING
-OPTION_ITEM_USE_AUTO_REGIST_DISTRICT
-OPTION_ITEM_MOUNT_ONLY_MY_PET
-OPTION_ITEM_COMBAT_MSG_LEVEL
-OPTION_ITEM_COMBAT_MSG_VISIBILITY
-OPTION_ITEM_COMBAT_MSG_DISPLAY_SHIP_COLLISION
-OPTION_ITEM_CAMERA_FOV_SET
-OPTION_ITEM_CAMERA_USE_SHAKE
-OPTION_ITEM_MOUSE_SENSITIVITY
-OPTION_ITEM_MOUSE_INVERT_X_AXIS
-OPTION_ITEM_MOUSE_INVERT_Y_AXIS
-OPTION_ITEM_CURSOR_SIZE
-OPTION_ITEM_BASIC_CURSOR_SHAPE
-OPTION_ITEM_SKILL_SYNERGY_INFO_SHOW_TOOLTIP
-OPTION_ITEM_SKILL_DETAIL_DAMAGE_SHOW_TOOLTIP
-OPTION_ITEM_ITEM_MAKER_INFO_SHOW_TOOLTIP
-OPTION_ITEM_IGNORE_PARTY_INVITATION
-OPTION_ITEM_IGNORE_RAID_INVITATION
-OPTION_ITEM_IGNORE_RAID_JOINT
-OPTION_ITEM_IGNORE_SQUAD_INVITATION
-OPTION_ITEM_IGNORE_EXPEDITION_INVITATION
-OPTION_ITEM_IGNORE_FAMILY_INVITATION
-OPTION_ITEM_IGNORE_JURY_INVITATION
-OPTION_ITEM_IGNORE_TRADE_INVITATION
-OPTION_ITEM_IGNORE_WHISPER_INVITATION
-OPTION_ITEM_IGNORE_DUEL_INVITATION
-OPTION_ITEM_IGNORE_CHAT_FILTER
-OPTION_ITEM_USE_CHAT_TIME_STAMP
-OPTION_ITEM_ACTION_BAR_LOCK
-OPTION_ITEM_SLOT_COOLDOWN_VISIBLE
-OPTION_ITEM_HIDE_TUTORIAL
-OPTION_ITEM_SHOW_LOOT_WINDOW
-OPTION_ITEM_CUSTOM_CLONE_MODE
-OPTION_ITEM_CUSTOM_MAX_CLONE_MODEL
-OPTION_ITEM_CUSTOM_MAX_MODEL
-OPTION_ITEM_MAP_GIVEN_QUEST_DISTANCE
-OPTION_SKILL_ALERT_ENABLE
-OPTION_SKILL_ALERT_POSITION
-OPTION_ITEM_OPTIMIZATION_ENABLE
-OPTION_ITEM_HIDE_OPTIMIZATION_BUTTON
-OPTION_SHOW_COMBAT_RESOURCE_WINDOW
-OPTION_CHARACTER_PRIVACY_STATUS
-OPTION_ITEM_DISABLE_PRIVATE_MESSAGE_MUSIC
-OPTION_ITEM_USE_KR_FONTS
-OPTION_ITEM_ENABLE_COMBAT_CHAT_LOG
-OPTION_ITEM_ENABLE_MISC_CHAT_LOG
-OPTION_ITEM_SHOW_EXPEDITIONFAMILY_TAG
-OPTION_ITEM_SHOW_APPELATION_TAG
-OPTION_ITEM_CAMERA_FOV_LIMIT
-OPTION_ITEM_CAMERA_DIST_LIMIT
-OPTION_ITEM_HIDE_ENCHANT_BROADCAST
-OPTION_ITEM_OVERHEAD_MARKER_FIXED_SIZE
-OPTION_ITEM_HIDE_MOBILIZATION_ORDER
-OPTION_ITEM_HIDE_BLOODLUST_MODE
-OPTION_ITEM_CUSTOM_SKILL_QUEUE
-OPTION_ITEM_CUSTOM_ADDON_FONTS
-OPTION_ITEM_CUSTOM_ADDON_UI
-OPTION_ITEM_GAME_LOGS_LIFE_TIME
-OL_CHARACTER
-OL_SYSTEM
-OL_CHARACTER_MODE
+OIT_R_FULLSCREEN
+OIT_R_DESIREWIDTH
+OIT_R_DESIREHEIGHT
+OIT_R_GAMMA
+OIT_SYS_MAX_FPS
+OIT_SYS_USE_LIMIT_FPS
+OIT_R_VSYNC
+OIT_NEXT_R_MULTITHREADED
+OIT_NEXT_R_DRIVER
+OIT_R_PIXELSYNC
+OIT_UI_SCALE
+OIT_MASTERGRAHICQUALITY
+OIT_NEXT_SYS_SPEC_FULL
+OIT_OPTION_TEXTURE_BG
+OIT_OPTION_TEXTURE_CHARACTER
+OIT_OPTION_VIEW_DISTANCE
+OIT_OPTION_TERRAIN_DETAIL
+OIT_OPTION_TERRAIN_LOD
+OIT_OPTION_VIEW_DIST_RATIO
+OIT_OPTION_VIEW_DIST_RATIO_VEGETATION
+OIT_OPTION_CHARACTER_LOD
+OIT_OPTION_USE_SHADOW
+OIT_OPTION_SHADOW_DIST
+OIT_OPTION_SHADOW_VIEW_DIST_RATIO_CHARACTER
+OIT_OPTION_SHADOW_VIEW_DIST_RATIO
+OIT_OPTION_SHADER_QUALITY
+OIT_OPTION_VOLUMETRIC_EFFECT
+OIT_OPTION_USE_CLOUD
+OIT_E_ZONEWEATHEREFFECT
+OIT_OPTION_WEAPON_EFFECT
+OIT_OPTION_EFFECT
+OIT_OPTION_WATER
+OIT_OPTION_USE_WATER_REFLECTION
+OIT_OPTION_USE_HDR
+OIT_OPTION_USE_DOF
+OIT_OPTION_ANTI_ALIASING
+OIT_OPTION_ANIMATION
+OIT_NEXT_OPTION_SOUND
+OIT_S_GAMEMASTERVOLUME
+OIT_S_MUSICVOLUME
+OIT_S_SFXVOLUME
+OIT_SOUND_MOOD_COMBAT_ENABLE
+OIT_S_CINEMAVOLUME
+OIT_S_MIDIVOLUME
+OIT_USER_MUSIC_DISABLE_SELF
+OIT_USER_MUSIC_DISABLE_OTHERS
+OIT_S_VEHCLEMUSICVOLUME
+OIT_NAME_TAG_MODE
+OIT_NAME_TAG_APPELLATION_SHOW
+OIT_NAME_TAG_FACTION_SHOW
+OIT_NAME_TAG_HP_SHOW
+OIT_NAME_TAG_SELF_ENABLE
+OIT_NAME_TAG_PARTY_SHOW
+OIT_NAME_TAG_EXPEDITION_SHOW
+OIT_NAME_TAG_FRIENDLY_SHOW
+OIT_NAME_TAG_HOSTILE_SHOW
+OIT_NAME_TAG_MY_MATE_SHOW
+OIT_NAME_TAG_FRIENDLY_MATE_SHOW
+OIT_NAME_TAG_HOSTILE_MATE_SHOW
+OIT_NAME_TAG_NPC_SHOW
+OIT_NAME_TAG_FACTION_SELECTION
+OIT_SHOWHEATLTHNUMBER
+OIT_SHOWMAGICPOINTNUMBER
+OIT_SHOWBUFFDURATION
+OIT_SHOWTARGETCASTINGBAR
+OIT_SHOWTARGETTOTARGETCASTINGBAR
+OIT_VISIBLEMYEQUIPINFO
+OIT_FIXEDTOOLTIPPOSITION
+OIT_SHOWEMPTYBAGSLOTCOUNTER
+OIT_SHOWCHATBUBBLE
+OIT_SHOWFPS
+OIT_SHOWPLAYERFRAMELIFEALERTEFFECT
+OIT_USEQUESTDIRECTINGCLOSEUPCAMERA
+OIT_SHOWACTIONBAR_1
+OIT_SHOWACTIONBAR_2
+OIT_SHOWACTIONBAR_3
+OIT_SHOWACTIONBAR_4
+OIT_SHOWACTIONBAR_5
+OIT_SHOWACTIONBAR_6
+OIT_CLICK_TO_MOVE
+OIT_USE_CELERITY_WITH_DOUBLE_FORWARD
+OIT_GLIDER_START_WITH_DOUBLE_JUMP
+OIT_DOODAD_SMART_POSITIONING
+OIT_DECORATION_SMART_POSITIONING
+OIT_SHOW_GUIDEDECAL
+OIT_FIRE_ACTION_ON_BUTTON_DOWN
+OIT_AUTO_ENEMY_TARGETING
+OIT_AUTO_USE_ONLY_MY_PORTAL
+OIT_SMART_GROUND_TARGETING
+OIT_USE_AUTO_REGIST_DISTRICT
+OIT_OPTION_ITEM_MOUNT_ONLY_MY_PET
+OIT_COMBAT_MSG_LEVEL
+OIT_COMBAT_MSG_VISIBILITY
+OIT_COMBAT_MSG_DISPLAY_SHIP_COLLISION
+OIT_OPTION_CAMERA_FOV_SET
+OIT_CUSTOM_FOV
+OIT_CUSTOM_CAMERA_MAX_DIST
+OIT_CUSTOM_ZOOM_SENSITIVITY
+OIT_CAMERA_USE_SHAKE
+OIT_CR_SENSITIVITY
+OIT_CR_INVERT_X_AXIS
+OIT_CR_INVERT_Y_AXIS
+OIT_CURSOR_SIZE
+OIT_BASIC_CURSOR_SHAPE
+OIT_SKILL_SYNERGY_INFO_SHOW_TOOLTIP
+OIT_SKILL_DETAIL_DAMAGE_SHOW_TOOLTIP
+OIT_ITEM_MAKER_INFO_SHOW_TOOLTIP
+OIT_G_IGNORE_PARTY_INVITE
+OIT_G_IGNORE_RAID_INVITE
+OIT_G_IGNORE_RAID_JOINT
+OIT_G_IGNORE_SQUAD_INVITE
+OIT_G_IGNORE_EXPEDITION_INVITE
+OIT_G_IGNORE_FAMILY_INVITE
+OIT_G_IGNORE_JURY_INVITE
+OIT_G_IGNORE_TRADE_INVITE
+OIT_G_IGNORE_WHISPER_INVITE
+OIT_G_IGNORE_DUEL_INVITE
+OIT_G_IGNORE_CHAT_FILTER
+OIT_G_USE_CHAT_TIME_STAMP
+OIT_ACTION_BAR_LOCK
+OIT_SLOT_COOLDOWN_VISIBLE
+OIT_G_HIDE_TUTORIAL
+OIT_G_SHOW_LOOT_WINDOW
+OIT_E_CUSTOM_CLONE_MODE
+OIT_E_CUSTOM_MAX_CLONE_MODEL
+OIT_E_CUSTOM_MAX_MODEL
+OIT_OPTION_MAP_GIVEN_QUEST_DISTANCE
+OIT_OPTION_SKILL_ALERT_ENABLE
+OIT_OPTION_SKILL_ALERT_POSITION
+OIT_OPTION_OPTIMIZATION_ENABLE
+OIT_OPTION_SHOW_COMBAT_RESOURCE_WINDOW
+OIT_OPTION_CHARACTER_PRIVACY_STATUS
+OIT_GIVEN_QUEST_DISTANCE_DISPLAY_MODE
+OIT_OPTION_DISABLE_PRIVATE_MESSAGE_MUSIC
+OIT_OPTION_USE_KR_FONTS
+OIT_OPTION_ENABLE_COMBAT_CHAT_LOG
+OIT_OPTION_ENABLE_MISC_CHAT_LOG
+OIT_NAME_TAG_EXPEDITIONFAMILY_SHOW
+OIT_OPTION_HIDE_ENCHANT_BROADCAST
+OIT_OPTION_OVERHEAD_MARKER_FIXED_SIZE
+OIT_OPTION_HIDE_MOBILIZATION_ORDER
+OIT_OPTION_HIDE_BLOODLUST_MODE
+OIT_OPTION_CUSTOM_SKILL_QUEUE
+OIT_OPTION_CUSTOM_ADDON_FONTS
+OIT_OPTION_CUSTOM_ADDON_UI
+OIT_OPTION_GAME_LOGS_LIFE_TIME
+OIT_SHOWGAMETIME
+OIT_SHOWSERVERTIME
+OISLT_CHARACTER
+OISLT_SYSTEM
+OISLT_CHARACTER_MODE
 MAX_ACTION_BAR_COUNT
 ----------------------------------------------------------------------------------------
 
@@ -3825,12 +3769,13 @@ GetResolution(index)
 GetCursorSize()
 GetBasicCursorShape()
 EnumAAFormats()
-IsRestartOption(optionType)
+GetNextSysSpecFullValue()
 GetMinxMaxOfMouseSensitivity()
 IsPixelSyncSupported()
 HasOceanSimulateOption()
 OptimizationEnable(enable)
 GetSubOptionItemList(modeOptionId, selected)
+GetOptionInfo(optionType)
 GetConsoleVariable(name)
 SetConsoleVariable(name, value)
 ----------------------------------------------------------------------------------------
@@ -3839,7 +3784,6 @@ Available/not allowed functions
 ----------------------------------------------------------------------------------------
 GetModifiedRestartOption()
 RemoveModifiedOption()
-GetNextSysSpecFullValue()
 ----------------------------------------------------------------------------------------
 
 
@@ -3874,22 +3818,23 @@ ZPW_WAIT
 ZPW_OUT
 ZPW_EXPEL
 ZP_RESERVED
+BOT_QUESTION_CHAR_SIZE
+BOT_CHECK_ANSWER_COUNT
 ----------------------------------------------------------------------------------------
 
 Allowed functions
 ----------------------------------------------------------------------------------------
-ChangeAppellation(nameType, effectType)
 GetUnitAppellationRouteList()
 GetAppellationCount()
 GetAppellations(routeFilter, pageIndex)
 GetAppellationsCount(routeFilter)
+ChangeAppellation(nameType, effectType)
 GetShowingAppellation()
 GetEffectAppellation()
 GetAppellationMyLevelInfo()
 GetAppellationBuffInfoByLevels()
 GetAppellationRouteInfo(type)
 GetAppellationStampInfo()
-SetAppellationStamp(stampId)
 GetAppellationMyStamp()
 GetAppellationChangeItemInfo()
 GetStampChangeItemInfo()
@@ -3936,6 +3881,7 @@ OpendTutorialWindow(id)
 GetPayMethod()
 GetPayLocation()
 HasSlaveUnit()
+SetAppellationStamp(stampId)
 GetUseULC()
 GetULCList()
 GetULCInfo(ulcType)
@@ -3967,7 +3913,6 @@ AskToggleForceAttack()
 ToggleForceAttack()
 RefreshBotCheckInfo()
 AnswerBotCheck(answer)
-SetOpenMyEquipInfo(open)
 GetUIScreenState()
 GetPremiumItemReceiveCharacterName()
 GetPcbangLaborPowerTic()
@@ -3976,7 +3921,6 @@ GetZonePermissionCondition()
 OpenZonePermissionWaitWindow()
 OpenZonePermissionOutWindow()
 IsEnabledHeirLevel()
-IsAppliableHeirLevel()
 GetHeirExpInfo()
 GetInstantTime(type)
 HasAccountBuffUsingSpecialityConfig()
@@ -3997,7 +3941,6 @@ SetGameSchedule(enter)
 SetSpecialty(enter)
 IsAccountRestrictState()
 GetAccountRestrictInfo()
-SetCharacterPrivacyStatus(status)
 GetCharacterPrivacyStatus()
 ----------------------------------------------------------------------------------------
 
@@ -4061,7 +4004,6 @@ Initialize()
 UsePcbangBuff()
 GetPcbangBenefitList()
 GetPcbangBenefitUiStyle()
-GetPcbangBenefit()
 OpenPremiumWarringSite(index)
 IsPremiumNativeSite(index)
 GetPremiumServiceBuyItemInfo()
@@ -4101,11 +4043,15 @@ MAX_QUEST_OBJECTIVE
 
 Allowed functions
 ----------------------------------------------------------------------------------------
+GetQuestContextMainTitle(type)
+SetTrackingActiveQuest(idx)
+GetActiveQuestListCount()
+GetActiveQuestType(idx)
+IsCompleted(type)
 ----------------------------------------------------------------------------------------
 
 Available/not allowed functions
 ----------------------------------------------------------------------------------------
-GetQuestContextMainTitle(type)
 GetQuestContextGrade(type)
 GetQuestContextSummary(type)
 GetQuestContextReadySummary(type)
@@ -4132,7 +4078,6 @@ GetQuestContextSelectiveItemTooltip(type, idx)
 GetQuestContextObjectiveCount(type)
 GetQuestObjectiveText(type, idx)
 GetLastQuest()
-SetTrackingActiveQuest(idx)
 GetTrackingActiveQuest()
 IsMainQuest(type)
 IsSagaQuest(type)
@@ -4169,7 +4114,6 @@ IsScoreQuest(idx)
 GetScoreQuestObjective(idx)
 GetScoreQuestCurrentScore(idx)
 GetScoreQuestDoneScore(idx)
-GetActiveQuestListCount()
 GetActiveQuestLevel(idx)
 GetActiveQuestLevelByType(type)
 GetActiveQuestListName(idx)
@@ -4181,7 +4125,6 @@ GetActiveQuestListObjectiveCount(idx)
 GetActiveQuestListObjectiveText(idx, objIdx)
 GetActiveQuestTitle(type)
 GetActiveQuestObjectiveText(type, objIdx)
-GetActiveQuestType(idx)
 GetActiveQuestContextConditionMessage()
 GetQuestName(questType)
 GetQuestJournalTitle(idx)
@@ -4246,19 +4189,15 @@ IsReadyQuestInJournal(questType)
 GetLinkedQuestSummary(questType)
 GetLinkedQuestObjectives(questType)
 NowIsAggroComponent(questType)
-SetUseQuestCamera(enable)
-UseQuestCamera()
 GetQuestDirInfo(questType)
 GetTodayQuestInfo(questType)
 GetQuestNotifierLimit()
 IsReadyForCompleteQuest(questType)
 GetMaxLimitCountInfo()
-IsCompletedStaringQuest()
 GetMainQuestListCount()
 GetMainQuestType(idx)
 GetMainQuestVecIndex(type)
 GetZoneQuestVecIndex(type)
-IsCompleted(type)
 GetQuestContextQuestIdxByType(type)
 IsExistCinema(type)
 GetQuestAcceptName(type)
@@ -4302,6 +4241,7 @@ RK_EXPEDITION_BATTLE_RECORD
 RK_HEIR_LEVEL
 RK_ZONE_SCORE_SUM_BY_QUEST_COMPLETE
 RK_EXPEDITION_INSTANCE_RATING
+RK_GAME_POINTS
 ----------------------------------------------------------------------------------------
 
 Allowed functions
@@ -4315,6 +4255,7 @@ BuildRankTabInfo(tabCode)
 GetRankKind(rankType)
 IsRankerQueriable(rankType)
 IsRankRatingOnly(rankType)
+GetGamePointDetail(rankType)
 HasRankReward(rankType, divisionId)
 GetPersonalData(rankType, divisionId, preSeason)
 GetSnapshot(rankType, divisionId)
@@ -4375,9 +4316,9 @@ HOUSING_LIST_FILTER_PUBLIC
 
 Allowed functions
 ----------------------------------------------------------------------------------------
+RequestHousingTradeList(zoneGroupType, filterindex, searchWord)
+FilterHousingTradeList(filterindex, searchWord)
 GetResidentBoardContent(boardType)
-RequestHousingTradeList(zoneGroupType, filterindex, searchWord) -- answer return via UIEvent "RESIDENT_HOUSING_TRADE_LIST"
-FilterHousingTradeList(filterindex, searchWord) -- answer return via UIEvent "RESIDENT_HOUSING_TRADE_LIST"
 ----------------------------------------------------------------------------------------
 
 Available/not allowed functions
@@ -4469,18 +4410,18 @@ Global variables
 
 Allowed functions
 ----------------------------------------------------------------------------------------
-GetVehicleInfo()
-GetSlaveCustomizingType()
+GetSiegeWeaponSpeed()
+GetSiegeWeaponTurnSpeed()
 ----------------------------------------------------------------------------------------
 
 Available/not allowed functions
 ----------------------------------------------------------------------------------------
 SetSiegeWeaponName(name)
 IsTargetMySiegeWeapon()
-GetSiegeWeaponSpeed()
-GetSiegeWeaponTurnSpeed()
 GetMountedSiegeWeaponInfo()
+GetVehicleInfo()
 GetShipInfo()
+GetSlaveCustomizingType()
 GetSlaveEquipSlotInfo(equipSlot)
 GetSlaveEquipSlotUIInfo()
 PickEquipSlotOfSlave(equipSlot)
@@ -4531,7 +4472,6 @@ Allowed functions
 
 Available/not allowed functions
 ----------------------------------------------------------------------------------------
-EnableSkillAlert(enable)
 GetAbilitySkillList(abilityIndex)
 SaveSkillBlackList(blackList, whiteList)
 AddSkillToBlackList(skillIndex)
@@ -4588,7 +4528,7 @@ Available/not allowed functions
 GetMySquadInfo()
 GetMyRoleInfo()
 GetSquadList(instanceType, page)
-CreateSquad(selectedField, openType, explanation, partyInvitation)
+CreateSquad(selectedField, openType, explanation, partyInvitation, limitLevel, limitGearScore)
 DelegateSquadLeader(unitId)
 DelegateSquadLeaderByCId(cId)
 DisbandSquad()
@@ -4742,6 +4682,7 @@ TMROLE_NONE
 TMROLE_TANKER
 TMROLE_HEALER
 TMROLE_DEALER
+TMROLE_RANGED_DEALER
 TEAM_LOOT_FREE_FOR_ALL
 TEAM_LOOT_ROUND_ROBIN
 TEAM_LOOT_MASTER_LOOTER
@@ -4821,9 +4762,10 @@ GetRaidRecruitTypeList()
 GetRaidRecruitSubTypeList(recruitTypeList, recruitSubType, bExceptSiege)
 GetRaidRecruitSubType(recruitType, recruitSubType)
 GetRaidRecruitLimitLevelList()
+GetRaidRecruitLimitGearPointList()
 GetRaidRecruitHeadcountList()
 GetRaidRecruitExpense(hour, minute)
-RaidRecruitAdd(type, subType, headcount, limitLevel, autoJoin, msg, hour, minute)
+RaidRecruitAdd(type, subType, headcount, limitLevel, autoJoin, msg, hour, minute, limitGearPoint)
 RaidRecruitDel()
 RaidRecruitList()
 RaidRecruitSeachList(recruitTypeList, recruitSubType)
@@ -4875,12 +4817,12 @@ ShowRaidWindowSettings()
 
 Global variables
 ----------------------------------------------------------------------------------------
-GetGameTime()
-GetServerTime()
 ----------------------------------------------------------------------------------------
 
 Allowed functions
 ----------------------------------------------------------------------------------------
+GetGameTime()
+GetServerTime()
 ----------------------------------------------------------------------------------------
 
 Available/not allowed functions
@@ -5063,6 +5005,7 @@ RACE_HARIHARAN
 RACE_FERRE
 RACE_RETURNED
 RACE_WARBORN
+RACE_DARU
 GENDER_NONE
 GENDER_MALE
 GENDER_FEMALE
@@ -5074,6 +5017,7 @@ DUEL_TYPE_PARTY
 
 Allowed functions
 ----------------------------------------------------------------------------------------
+GetUnitId(unit)
 UnitName(unit)
 UnitNameWithWorld(unit)
 UnitHealth(unit)
@@ -5083,7 +5027,9 @@ UnitMana(unit)
 UnitMaxMana(unit)
 UnitManaInfo(unit)
 UnitLevel(unit)
+UnitCastingInfo(unit)
 UnitDistance(unit)
+UnitGearScore(unit, comma)
 UnitBuffTooltip(unit, buffIndex)
 UnitBuff(unit, buffIndex)
 UnitBuffCount(unit)
@@ -5096,15 +5042,13 @@ UnitHiddenBuffTooltip(unit, buffIndex)
 UnitRemovableDebuffTooltip(unit, buffIndex)
 UnitRemovableDebuff(unit, buffIndex)
 UnitRemovableDebuffCount(unit)
+GetUnitWorldPositionByTarget(unit)
 GetUnitScreenPosition(unit)
-UnitGearScore(unit)
 GetTargetAbilityTemplates(target)
 GetTargetUnitId()
 GetUnitNameById(stringId)
-GetUnitId(unit)
+GetUnitInfoById(stringId)
 GetCurrentZoneGroup()
-UnitCastingInfo(unit)
-
 ----------------------------------------------------------------------------------------
 
 Available/not allowed functions
@@ -5162,7 +5106,6 @@ TargetUnit(unit)
 ReleaseTarget()
 GetUnitType(unit)
 GetUnitGradeById(stringId)
-GetUnitInfoById(stringId)
 GetDoodadInfoById(id)
 GetUnitMateType(unit)
 GetUnitMateTypeById(stringId)
@@ -5361,7 +5304,6 @@ IsDivision(divisionId)
 EnterWorld(worldIndex, zoneId)
 LeaveWorld(target)
 CancelLeaveWorld()
-LeaveGame()
 LevelCount()
 LevelName(index)
 GetZoneCount()

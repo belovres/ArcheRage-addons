@@ -211,15 +211,6 @@ type: string
 current: no_error_message
 help: Error String
 
-variable: option_use_clone_mode 
-type: int
-current: 0
-help: Console variable group to apply settings to multiple variables
-
-option_use_clone_mode [0/1/x]:
- ... e_custom_clone_mode = 0/1/0
-
-
 variable: rope_skill_controller_fadeout_time 
 type: float
 current: 3000
@@ -353,7 +344,7 @@ help: If no-skill-success time go over this value, AI will cancel aggro.
 
 variable: name_tag_mode 
 type: int
-current: 1
+current: 0
 help: render name tag of all units and doodads. 0(default), 1(battle), 2(life), 3(box)
 
 variable: profile_disk_max_draw_items 
@@ -1837,6 +1828,11 @@ current: 1
 help: 0=disabled, 1=profile each DIP performance (may cause very low frame rate)
 r_ProfileShaders needs to be activated to see the statistics
 
+variable: VisibleMyEquipInfo 
+type: int
+current: 1
+help: visible my equip info
+
 variable: g_spectatorcollisions 
 type: int
 current: 1
@@ -2078,7 +2074,7 @@ help: delay for zh cn letter
 
 variable: e_time_of_day 
 type: float
-current: 17.0262
+current: 1.30747
 help: Current Time of Day
 
 variable: ca_Test 
@@ -2440,7 +2436,7 @@ help: [0,1] turn on/off facial streaming
 
 variable: r_ShaderEmailTags 
 type: string
-current: Build Version: 9.0.2.9
+current: Build Version: 9.5.2.3
 help: Adds optional tags to shader error emails e.g. own name or build run
 Usage: r_ShaderEmailTags "some set of tags or text" 
 Default is build version 
@@ -2495,7 +2491,7 @@ help: quest target cam move
 variable: user_music_disable_self 
 type: int
 current: 0
-help: disable my music. default is 0.
+help: disable others user music. default is 0.
 
 variable: r_OceanTexUpdate 
 type: int
@@ -2518,6 +2514,11 @@ variable: e_detail_materials_highlight
 type: string
 current: 
 help: Show terrain detail layer
+
+variable: UseQuestDirectingCloseUpCamera 
+type: int
+current: 1
+help: quest camera use option
 
 variable: r_ShadersBlackListGL 
 type: string
@@ -2628,11 +2629,6 @@ current: 0.5
 help: Distance to plane where hud stereo parallax converges to zero.
 If not zero, HUD needs to be rendered two times.
 
-variable: quest_camera_use 
-type: int
-current: -1
-help: quest camera use option
-
 variable: ca_SkeletonEffectsMaxCount 
 type: int
 current: 100
@@ -2728,6 +2724,11 @@ type: int
 current: -1
 help: 
 
+variable: ShowPlayerFrameLifeAlertEffect 
+type: int
+current: 1
+help: show lift alert effect in player frame
+
 variable: camera_min_pitch 
 type: float
 current: -88
@@ -2822,6 +2823,11 @@ variable: r_geforce7 DUMPTODISK, RESTRICTEDMODE
 type: int
 current: 0
 help: 
+
+variable: given_quest_distance_display_mode 
+type: int
+current: 1
+help: given quest display mode
 
 variable: sys_budget_tris_terrain_detail_3d 
 type: float
@@ -3521,6 +3527,11 @@ type: int
 current: 0
 help: 
 
+variable: custom_camera_max_dist 
+type: float
+current: 90
+help: 
+
 variable: ca_CachingCDFFiles DUMPTODISK
 type: int
 current: 1
@@ -3533,7 +3544,7 @@ help:
 
 variable: r_Gamma DUMPTODISK
 type: float
-current: 1
+current: 1.0001
 help: Adjusts the graphics card gamma correction (fast, needs hardware support, affects also HUD and desktop)
 Usage: r_Gamma 1.0
 1 off (default), try values like 1.6 or 2.2
@@ -4546,7 +4557,7 @@ help: Console variable group to apply settings to multiple variables
 option_view_dist_ratio [1/2/3/4/x]:
  ... ca_useDecals = 0/0/0/1/1
  ... cd_cattle_update_distance = 20/32/40/64/64
- ... cd_furniture_update_distance = 20/32/64/64/64
+ ... cd_furniture_update_distance = 20/32/40/64/64
  ... e_cbuffer_resolution = 128/128/256/256/256
  ... e_decals_allow_game_decals = 0/1/1/1/1
  ... e_lod_min = 0/0/0/0/0
@@ -4619,7 +4630,7 @@ help: (null)
 
 variable: s_GameMasterVolume DUMPTODISK
 type: float
-current: 0.500028
+current: 0.500096
 help: Allows for setting the application's master volume.
 Usage: s_GameMasterVolume [0...1]
 Default is 1 (full volume).
@@ -5829,6 +5840,11 @@ type: float
 current: 0.004
 help: Alpha cutoff for rendering particles
 
+variable: ShowMagicPointNumber 
+type: int
+current: 0
+help: show mana value in unit frame, party frame
+
 variable: r_ValidateDraw 
 type: int
 current: 0
@@ -6374,6 +6390,11 @@ type: string
 current: 
 help: 
 
+variable: ShowGameTime 
+type: int
+current: 1
+help: show game time
+
 variable: g_procedural_breaking 
 type: int
 current: 1
@@ -6519,6 +6540,11 @@ variable: e_ProcVegetationMaxSectorsInCache
 type: int
 current: 16
 help: Maximum number of 64x64 meter sectors cached in memory
+
+variable: ShowEmptyBagSlotCounter 
+type: int
+current: 1
+help: show empty bag slot counter
 
 variable: ag_forceAdjust 
 type: int
@@ -7446,7 +7472,7 @@ help: Controls the size of the bokeh artifacts (default 4).
 
 variable: s_GameSFXVolume 
 type: float
-current: 0.500028
+current: 0.500096
 help: Controls the sfx volume for game use.
 Usage: s_GameSFXVolume 0.5
 Default is 1, which is full volume.
@@ -7829,11 +7855,6 @@ type: int
 current: 0
 help: Disable playing of Cut-Scenes
 
-variable: option_hide_optimization_button 
-type: int
-current: 0
-help: hide optimization button
-
 variable: pl_zeroGFloatDuration 
 type: float
 current: 1.25
@@ -8175,6 +8196,11 @@ type: int
 current: 0
 help: Enables per-entity time step profiling
 
+variable: ShowFps 
+type: int
+current: 1
+help: show fps
+
 variable: ac_MCMHorOtherPlayer 
 type: int
 current: 1
@@ -8189,6 +8215,11 @@ variable: e_gsm_extra_range_sun_update_ratio
 type: float
 current: 0
 help: SunDir update ratio
+
+variable: ShowServerTime 
+type: int
+current: 1
+help: show server time
 
 variable: p_skip_redundant_colldet 
 type: int
@@ -8263,6 +8294,36 @@ variable: v_help_tank_steering
 type: int
 current: 0
 help: Enable tank steering help for AI
+
+variable: ShowActionBar_1 
+type: int
+current: 1
+help: show default action bar
+
+variable: ShowActionBar_2 
+type: int
+current: 1
+help: show second action bar
+
+variable: ShowActionBar_3 
+type: int
+current: 0
+help: show third action bar
+
+variable: ShowActionBar_4 
+type: int
+current: 0
+help: show fourth action bar
+
+variable: ShowActionBar_5 
+type: int
+current: 0
+help: show fifth action bar
+
+variable: ShowActionBar_6 
+type: int
+current: 0
+help: show sixth action bar
 
 variable: e_vegetation_min_size DUMPTODISK, REQUIRE_LEVEL_RELOAD
 type: float
@@ -8752,11 +8813,6 @@ Usage: r_MotionBlur [0/1/2/3/4/101/102/103/104]
 Default is 1 (screen motion blur on). 1 enables screen motion blur. 2 enables screen and object motion blur. 3 all motion blur and freezing. 4. only per object; modes above 100 also enable motion blur in multiplayer
 
 
-variable: option_camera_fov_limit 
-type: int
-current: 60
-help: set camera fov
-
 variable: ca_DrawCGAAsSkin 
 type: int
 current: 0
@@ -8922,7 +8978,7 @@ help: Stiffness of the spongy obstruct geometry
 
 variable: s_MusicVolume DUMPTODISK
 type: float
-current: 0.200028
+current: 0.200096
 help: Sets the music volume from 0 to 1 in the games option.
 Usage: s_MusicVolume 0.2
 Default is 1.0
@@ -9077,17 +9133,9 @@ type: int
 current: 0
 help: Sleep X in C3DEngine::Draw
 
-variable: option_set_optimization_mode 
-type: int
-current: 0
-help: Console variable group to apply settings to multiple variables
-
-option_set_optimization_mode [0/1/x]:
-
-
-variable: ca_spineOffsetMulInStandUp 
+variable: custom_zoom_sensitivity 
 type: float
-current: 0.5
+current: 1.5
 help: 
 
 variable: ca_DrawFaceAttachments 
@@ -9378,18 +9426,13 @@ help: Enable/disable vehicle mounted weapon camera debug draw
 
 variable: cr_sensitivity 
 type: float
-current: 20
+current: 20.0002
 help: 
 
 variable: swim_side_speed_mul 
 type: float
 current: 0.6
 help: Swimming sideways speed mul.
-
-variable: option_camera_dist_limit 
-type: int
-current: 10
-help: set camera dist
 
 variable: r_texturesstreamingPostponeThresholdKB 
 type: int
@@ -9496,16 +9539,6 @@ variable: ai_drawBeautifyPath DUMPTODISK
 type: float
 current: 0
 help: If enabled, you can see beautify path info
-
-variable: option_skeleton_effect 
-type: int
-current: 1
-help: Console variable group to apply settings to multiple variables
-
-option_skeleton_effect [0/1/x]:
- ... ca_SameSkeletonEffectsMaxCount = 15/15/15
- ... ca_SkeletonEffectsMaxCount = 0/100/100
-
 
 variable: movement_verify_move_speed_report_critical_point 
 type: float
@@ -9776,7 +9809,7 @@ help: How much time should non-snapped positions take to synchronize completely?
 
 variable: s_CinemaVolume DUMPTODISK
 type: float
-current: 0.700028
+current: 0.700096
 help: Sets the percentile volume of the cinema sound.
 Usage: s_CinemaVolume 0.7
 Default is 1, which is full volume.
@@ -9917,6 +9950,11 @@ current: 1
 help: Enables under water god rays.
 Usage: r_WaterGodRays [0/1]
 Default is 1 (enabled).
+
+variable: ShowBuffDuration 
+type: int
+current: 1
+help: show buff duration in unit frame, party frame
 
 variable: r_OceanHeightScale 
 type: int
@@ -10594,6 +10632,11 @@ type: float
 current: 0
 help: 
 
+variable: ShowChatBubble 
+type: int
+current: 1
+help: show chat bubble
+
 variable: r_DeferredShadingLightLodRatio 
 type: float
 current: 1
@@ -10637,14 +10680,6 @@ variable: e_decals_update_silhouette_scope
 type: int
 current: 0
 help: 0 - unit&doodad, 1 - unit only, 2 - doodad only
-
-variable: option_experimental_opt 
-type: int
-current: 0
-help: Console variable group to apply settings to multiple variables
-
-option_experimental_opt [0/x]:
-
 
 variable: name_tag_bottom_margin_on_bgmode 
 type: float
@@ -10800,6 +10835,11 @@ type: int
 current: 0
 help: if this is 1, it will print some debug text on the screen
 
+variable: custom_fov 
+type: float
+current: 60
+help: fov, the value will used when camera mode is custom.
+
 variable: r_NVSSAO_FogDistance 
 type: float
 current: 4000
@@ -10846,7 +10886,7 @@ help: mixed normals report
 
 variable: s_GameDialogVolume 
 type: float
-current: 0.500028
+current: 0.500096
 help: Controls the dialog volume for game use.
 Usage: s_GameDialogVolume 0.5
 Default is 1, which is full volume.
@@ -11034,6 +11074,11 @@ variable: ca_DrawAttachmentRadius
 type: int
 current: 0
 help: if this is 0, will not draw the attachments objects
+
+variable: ShowTargetCastingBar 
+type: int
+current: 1
+help: show target castring bar
 
 variable: p_max_LCPCG_contacts 
 type: int
@@ -11294,15 +11339,6 @@ current: 0
 help: disable cutscene caption
  0: enable caption
  1: disable caption
-
-
-variable: option_use_footstep 
-type: int
-current: 1
-help: Console variable group to apply settings to multiple variables
-
-option_use_footstep [0/1/x]:
- ... mfx_MaxFootStepCount = 0/50/50
 
 
 variable: r_UseCompactHDRFormat 
@@ -11962,7 +11998,6 @@ option_effect [1/2/3/4/x]:
  ... e_phys_foliage = 0/0/0/0/0
  ... e_phys_ocean_cell = 0/1/0.5/0.5/0.5
  ... e_water_ocean_soft_particles = 0/1/1/1/1
- ... e_zoneWeatherEffect = 0/0/1/1/1
  ... es_MaxPhysDist = 50/100/200/200/200
  ... es_MaxPhysDistInvisible = 10/15/25/25/25
  ... g_breakage_particles_limit = 80/130/200/250/250
@@ -12004,7 +12039,7 @@ help: show debug information of environment system
 
 variable: sys_max_fps DUMPTODISK
 type: float
-current: 120
+current: 150
 help: max frame per second for prevent overheat
 
 variable: tab_targeting_history_max 
@@ -12279,6 +12314,15 @@ type: float
 current: 8
 help: The higher, the more the blur preserves edges. from 0.0 to 16.0./n
 
+variable: optimization_use_footstep 
+type: int
+current: 1
+help: Console variable group to apply settings to multiple variables
+
+optimization_use_footstep [0/1/x]:
+ ... mfx_MaxFootStepCount = 0/50/50
+
+
 variable: e_terrain 
 type: int
 current: 1
@@ -12288,6 +12332,11 @@ variable: e_StreamPredictionTexelDensity
 type: int
 current: 1
 help: Use mesh texture mapping density info for textures streaming
+
+variable: MasterGrahicQuality DUMPTODISK
+type: int
+current: 4
+help: 
 
 variable: p_approx_caps_len 
 type: float
@@ -12575,6 +12624,39 @@ type: int
 current: 0
 help: Set to 1 to display stats about shader constant uploads.
 
+variable: optimization_mode 
+type: int
+current: 0
+help: Console variable group to apply settings to multiple variables
+
+optimization_mode [0/1/x]:
+ ... e_custom_clone_mode = 1/1/1
+ ... e_zoneWeatherEffect = 0/0/0
+ ... optimization_skeleton_effect = 0/0/0
+ ... optimization_use_footstep = 0/0/0
+ ... option_animation = 1/1/1
+ ... option_character_lod = 1/1/1
+ ... option_effect = 1/1/1
+ ... option_shadow_dist = 1/1/1
+ ... option_shadow_view_dist_ratio = 1/1/1
+ ... option_shadow_view_dist_ratio_character = 1/1/1
+ ... option_terrain_detail = 1/1/1
+ ... option_terrain_lod = 1/1/1
+ ... option_texture_bg = 1/1/1
+ ... option_texture_character = 1/1/1
+ ... option_use_cloud = 0/0/0
+ ... option_use_dof = 0/0/0
+ ... option_use_hdr = 0/0/0
+ ... option_use_shadow = 0/0/0
+ ... option_use_water_reflection = 0/0/0
+ ... option_view_dist_ratio = 1/1/1
+ ... option_view_dist_ratio_vegetation = 1/1/1
+ ... option_view_distance = 1/1/1
+ ... option_volumetric_effect = 1/1/1
+ ... option_water = 1/1/1
+ ... option_weapon_effect = 0/0/0
+
+
 variable: ac_MCMHor 
 type: int
 current: 0
@@ -12642,6 +12724,11 @@ variable: e_debug_draw_lod_error_no_lod_tris
 type: int
 current: 2000
 help: used in e_DebugDraw 25 (error threshold of tris count)
+
+variable: ShowHeatlthNumber 
+type: int
+current: 0
+help: show health value in unit frame, party frame
 
 variable: r_ShadowPoolMaxFrames 
 type: int
@@ -12754,6 +12841,11 @@ variable: p_max_substeps_large_group
 type: int
 current: 5
 help: Limits the number of substeps large groups of objects can make
+
+variable: FixedTooltipPosition 
+type: int
+current: 1
+help: fixed doodad tooltip position
 
 variable: r_NightVisionViewDist 
 type: float
@@ -13534,7 +13626,7 @@ help: Specifies whether the energy added by the simple solver is limited (0 or 1
 
 variable: s_GameMusicVolume 
 type: float
-current: 0.500028
+current: 0.500096
 help: Controls the music volume for game use.
 Usage: s_GameMusicVolume 0.2
 Default is 1.0
@@ -13556,7 +13648,7 @@ Default is 64.
 
 variable: cl_web_session_key 
 type: string
-current: E2C438355C2679005ACACFAC94D87FE2
+current: 1229A405719FA62E9CE477D0F6A6DBEA
 help: web session key
 
 variable: s_ObstructionVisArea 
@@ -13705,14 +13797,6 @@ variable: e_water_waves_tesselation_amount
 type: int
 current: 5
 help: Sets water waves tesselation amount
-
-variable: option_use_no_zpass 
-type: int
-current: 0
-help: Console variable group to apply settings to multiple variables
-
-option_use_no_zpass [0/x]:
-
 
 variable: caq_fist_randomidle_interval 
 type: float
@@ -14221,6 +14305,11 @@ type: int
 current: 0
 help: if set to 1, will run validation on animation data
 
+variable: ui_scale 
+type: float
+current: 1.0001
+help: ui scale
+
 variable: sys_flush_system_file_cache 
 type: int
 current: 1
@@ -14622,7 +14711,7 @@ Usage: MemStats [0..]
 
 variable: s_GameVehicleMusicVolume 
 type: float
-current: 0.500028
+current: 0.500096
 help: Controls the vehicle music volume for game use.
 Usage: s_GameVehicleMusicVolume 1.0
 Default is 1, which is full volume.
@@ -14665,7 +14754,7 @@ help: max custom model with clone mode
 
 variable: s_GameMIDIVolume 
 type: float
-current: 0.500028
+current: 0.500096
 help: Controls the MIDI volume for game use.
 Usage: s_GameMIDIVolume 1.0
 Default is 1, which is full volume.
@@ -14977,6 +15066,16 @@ type: int
 current: 1
 help: enable/disable custom skill queue
 
+variable: optimization_skeleton_effect 
+type: int
+current: 1
+help: Console variable group to apply settings to multiple variables
+
+optimization_skeleton_effect [0/1/x]:
+ ... ca_SameSkeletonEffectsMaxCount = 15/15/15
+ ... ca_SkeletonEffectsMaxCount = 0/100/100
+
+
 variable: e_GIPropagationAmp 
 type: float
 current: 3.3
@@ -15198,13 +15297,13 @@ help: draws the world position of the character (before update)
 
 variable: r_WindowX DUMPTODISK
 type: int
-current: 530
+current: 323
 help: Sets the window x position.
 Usage: r_WindowX [100/200/..]
 
 variable: r_WindowY DUMPTODISK
 type: int
-current: 114
+current: 102
 help: Sets the window y position.
 Usage: r_WindowY [100/200/..]
 
@@ -15448,7 +15547,7 @@ although the path may actually exist.
 
 variable: s_GameCinemaVolume 
 type: float
-current: 0.500028
+current: 0.500096
 help: Controls the cinema volume for game use.
 Usage: s_GameCinemaVolume 1.0
 Default is 1, which is full volume.
@@ -15556,7 +15655,7 @@ help: Enable/disable preview of custom resolution rendering in viewport(0 - no p
 
 variable: cl_world_cookie 
 type: int
-current: 27782098
+current: 427287575
 help: world cookie
 
 variable: ai_DrawShooting 
@@ -15793,7 +15892,6 @@ sys_spec_full [1/2/3/4/x]:
  ... option_use_cloud = 0/1/1/1/1
  ... option_use_dof = 0/0/1/1/1
  ... option_use_hdr = 0/0/1/1/1
- ... option_use_no_zpass = 0/0/0/0/0
  ... option_use_shadow = 1/1/1/1/1
  ... option_use_water_reflection = 0/1/1/1/1
  ... option_view_dist_ratio = 1/2/3/4/4
@@ -15900,6 +15998,11 @@ Where # sets the profiling to:
 	8: Standard Deviation
 	-1: Profiling enabled, but not displayed
 Default is 0 (off).
+
+variable: ShowTargetToTargetCastingBar 
+type: int
+current: 0
+help: show target target casting bar
 
 variable: r_StereoNearGeoScale DUMPTODISK
 type: float
@@ -16285,8 +16388,13 @@ help:
 
 variable: cl_immigration_passport_hash 
 type: string
-current: ü$gizwÖ˘ngªﬁ7 é⁄]
+current: õâ8≥ë-ZÅ›Éiµ–iúe
 help: cl_immigration_passport_hash
+
+variable: option_character_privacy_status 
+type: int
+current: 0
+help: set character privacy status
 
 variable: r_ssdoAmbientClamp 
 type: float
@@ -16854,11 +16962,6 @@ help: Max number of tests per ray (for version 0)
 variable: aux_use_breast 
 type: int
 current: 1
-help: 
-
-variable: next_option_experimental_opt DUMPTODISK
-type: int
-current: 0
 help: 
 
 variable: ca_FPWeaponInCamSpace 
