@@ -12,6 +12,59 @@ function dump(o)
  end
 end
 
+--movement handlers
+
+----- save draggable window ----------
+local function SaveButtonPosition(filePath, x, y)
+    local file = io.open(filePath, "w")
+    file:write(string.format("%d,%d", x, y))
+    file:close()
+end
+
+local function LoadSavedPosition(filePath)
+    local file = io.open(filePath, "r")
+    if not file then return 0, 0 end
+    local line = file:read("*line") 
+    file:close()
+    local x,y = line:match("(%d+),(%d+)")
+    if x and y then return x,y else return 0,0 end
+end
+
+--make simple button
+function CreateSimpleButton(buttonText, x, y)
+    newButton = UIParent:CreateWidget("button", "newButton", "UIParent", "")
+    newButton:SetText(buttonText)
+    newButton:SetStyle("text_default")
+    local savedX, savedY = LoadSavedPosition("user/" .. buttonText .. ".txt")
+    if savedX ~= 0 and savedY ~= 0 then
+        newButton:AddAnchor("TOPLEFT", "UIParent", tonumber(savedX), tonumber(savedY))
+    else
+        newButton:AddAnchor("BOTTOM", "UIParent", x, y)
+    end
+    newButton:Show(true)
+    newButton:EnableDrag(true)
+
+    function newButton:OnDragStart()
+        self:StartMoving()
+        self.moving = true
+    end
+    newButton:SetHandler("OnDragStart", newButton.OnDragStart)
+
+    function newButton:OnDragStop()
+        self:StopMovingOrSizing()
+        self.moving = false
+        local offsetX, offsetY = self:GetOffset()
+        local uiScale = UIParent:GetUIScale() or 1.0
+        local normalizedX = offsetX * uiScale
+        local normalizedY = offsetY * uiScale
+        SaveButtonPosition("user/" .. buttonText .. ".txt", normalizedX, normalizedY)
+    end
+    newButton:SetHandler("OnDragStop", newButton.OnDragStop)
+
+    return newButton
+end
+
+------------ generic from rage --------------------
 function SetButtonFontColor(button, color)
     local n = color.normal
     local h = color.highlight

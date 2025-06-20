@@ -17,61 +17,24 @@ ADDON:ImportObject(OBJECT_TYPE.IMAGE_DRAWABLE)
 ADDON:ImportAPI(API_TYPE.OPTION.id)
 ADDON:ImportAPI(API_TYPE.CHAT.id)
 
-local contentState = 1
-local okButton = nil
-local toggleButton = nil
-local function CreateButton(portalOption)
-    if okButton ~= nil then
-        return
-    end
-
-    okButton = UIParent:CreateWidget("button", "exampleButton", "UIParent", "")
-    okButton:SetText("Portal")
-    okButton:SetStyle("text_default")
-
-    SetButtonFontOneColor(okButton, {0.9, 0.333, 0.333, 1})
-    if portalOption == 0 then
-        SetButtonFontOneColor(okButton,  {0.348, 0.609, 0.370, 1})
-        X2Chat:DispatchChatMessage(CMF_SYSTEM, "Using all portals.")
-    else
-        X2Chat:DispatchChatMessage(CMF_SYSTEM, "Using only your portals.")
-    end
-    -- okButton:SetUILayer("game")
-    okButton:AddAnchor("BOTTOM", "UIParent", 700, -300)
-    okButton:Show(true)
-    okButton:EnableDrag(true)
-
-    function okButton:OnDragStart()
-        self:StartMoving()
-        self.moving = true
-    end
-    okButton:SetHandler("OnDragStart", okButton.OnDragStart)
-
-    function okButton:OnDragStop()
-        self:StopMovingOrSizing()
-        self.moving = false
-    end
-    okButton:SetHandler("OnDragStop", okButton.OnDragStop)
-
-    function okButton:OnClick()
-        local portalOption = X2Option:GetOptionItemValue(OIT_AUTO_USE_ONLY_MY_PORTAL)
-        if portalOption == 1 then
-            SetButtonFontOneColor(okButton,  {0.348, 0.609, 0.370, 1})
-            X2Chat:DispatchChatMessage(CMF_SYSTEM, "Using ALL portals.")
-            X2Option:SetItemFloatValue(OIT_AUTO_USE_ONLY_MY_PORTAL, 0)
-        else
-            SetButtonFontOneColor(okButton, {0.9, 0.333, 0.333, 1})
-            X2Chat:DispatchChatMessage(CMF_SYSTEM, "Using ONLY YOUR portals.")
-            X2Option:SetItemFloatValue(OIT_AUTO_USE_ONLY_MY_PORTAL, 1)
-        end
-        --ApplyButt-onSkin(okButton, buttonskin) fuck
-    end
-    okButton:SetHandler("OnClick", okButton.OnClick)
-
+local portalButton = CreateSimpleButton("Portal", 700, -300)
+--set color on start
+SetButtonFontOneColor(portalButton, {0.9, 0.333, 0.333, 1})
+if X2Option:GetOptionItemValue(OIT_AUTO_USE_ONLY_MY_PORTAL) == 0 then
+    SetButtonFontOneColor(portalButton,  {0.348, 0.609, 0.370, 1})
 end
 
-
---optional: force to 1 on login
---X2Option:SetItemFloatValue(OPTION_ITEM_USE_ONLY_MY_PORTAL, 1)
-local portalOption = X2Option:GetOptionItemValue(OIT_AUTO_USE_ONLY_MY_PORTAL)
-CreateButton(portalOption)
+--change color and setting on click
+function portalButton:OnClick()
+    local portalOption = X2Option:GetOptionItemValue(OIT_AUTO_USE_ONLY_MY_PORTAL)
+    if portalOption == 1 then
+        SetButtonFontOneColor(portalButton,  {0.348, 0.609, 0.370, 1})
+        X2Chat:DispatchChatMessage(CMF_SYSTEM, "Using ALL portals.")
+        X2Option:SetItemFloatValue(OIT_AUTO_USE_ONLY_MY_PORTAL, 0)
+    else
+        SetButtonFontOneColor(portalButton, {0.9, 0.333, 0.333, 1})
+        X2Chat:DispatchChatMessage(CMF_SYSTEM, "Using ONLY YOUR portals.")
+        X2Option:SetItemFloatValue(OIT_AUTO_USE_ONLY_MY_PORTAL, 1)
+    end
+end
+portalButton:SetHandler("OnClick", portalButton.OnClick)
