@@ -5,22 +5,14 @@ if API_TYPE == nil then
     X2Chat:DispatchChatMessage(CMF_SYSTEM, "Globals folder not found. Please install it at https://github.com/Schiz-n/ArcheRage-addons/tree/master/globals")
     return
 end
-ADDON:ImportObject(OBJECT_TYPE.TEXT_STYLE)
-ADDON:ImportObject(OBJECT_TYPE.BUTTON)
-ADDON:ImportObject(OBJECT_TYPE.DRAWABLE)
-ADDON:ImportObject(OBJECT_TYPE.NINE_PART_DRAWABLE)
-ADDON:ImportObject(OBJECT_TYPE.COLOR_DRAWABLE)
-ADDON:ImportObject(OBJECT_TYPE.WINDOW)
-ADDON:ImportObject(OBJECT_TYPE.LABEL)
-ADDON:ImportObject(OBJECT_TYPE.ICON_DRAWABLE)
-ADDON:ImportObject(OBJECT_TYPE.IMAGE_DRAWABLE)
-
-ADDON:ImportAPI(API_TYPE.OPTION.id)
-ADDON:ImportAPI(API_TYPE.CHAT.id)
-ADDON:ImportAPI(API_TYPE.ACHIEVEMENT.id)
-ADDON:ImportAPI(API_TYPE.UNIT.id)
-ADDON:ImportAPI(API_TYPE.LOCALE.id)
-ADDON:ImportAPI(API_TYPE.TEAM.id)
+for i = 1, 100 do
+    ADDON:ImportObject(i)
+    ADDON:ImportAPI(i)
+end
+for i = 1, 100 do
+  local someFrame = ADDON:GetContent(i)
+  X2Chat:DispatchChatMessage(CMF_SYSTEM, dump(BagFrame))
+end
 --todo: the word DAMAGE might be different on RU client
 
 local selfName = X2Unit:UnitName("player")
@@ -67,7 +59,12 @@ end
 
 UIParent:SetEventHandler(UIEVENT_TYPE.COMBAT_MSG, onShotEvent)
 
-
-
+  X2Chat:DispatchChatMessage(CMF_SYSTEM, dump(UIC_BAG))
+  local BagFrame = ADDON:GetContent(UIC_BAG)
+  X2Chat:DispatchChatMessage(CMF_SYSTEM, dump(BagFrame))
+  local BagFrame2 = ADDON:ShowContent(UIC_BAG, true)
+  X2Chat:DispatchChatMessage(CMF_SYSTEM, dump(BagFrame2))
+  local BagFrame3 = ADDON:ToggleContent(UIC_BAG)
+  X2Chat:DispatchChatMessage(CMF_SYSTEM, dump(BagFrame2))
 
 X2Chat:DispatchChatMessage(CMF_SYSTEM, "Ayo")
