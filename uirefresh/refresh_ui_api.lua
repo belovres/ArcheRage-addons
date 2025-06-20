@@ -21,53 +21,15 @@ ADDON:ImportAPI(API_TYPE.ACHIEVEMENT.id)
 ADDON:ImportAPI(API_TYPE.UNIT.id)
 ADDON:ImportAPI(API_TYPE.LOCALE.id)
 
+local refreshUIButton = CreateSimpleButton("Refresh", 700, -150)
+
 local contentState = 1
-local okButton = nil
-local toggleButton = nil
-local exampleWindow = nil
-local function CreateButton()
-    if okButton ~= nil then
-        return
+function refreshUIButton:OnClick()
+    if contentState == 1 then
+        X2Option:SetConsoleVariable("r_VSync", "1")
+    else
+        X2Option:SetConsoleVariable("r_VSync", "0")
     end
-
-    okButton = UIParent:CreateWidget("button", "exampleButton", "UIParent", "")
-    okButton:SetText("Refresh")
-    okButton:SetStyle("text_default")
-    -- okButton:SetUILayer("game")
-    okButton:AddAnchor("BOTTOM", "UIParent", 700, -150)
-    okButton:Show(true)
-    okButton:EnableDrag(true)
-
-    function okButton:OnDragStart()
-        self:StartMoving()
-        self.moving = true
-    end
-    okButton:SetHandler("OnDragStart", okButton.OnDragStart)
-
-    function okButton:OnDragStop()
-        self:StopMovingOrSizing()
-        self.moving = false
-    end
-    okButton:SetHandler("OnDragStop", okButton.OnDragStop)
-
-    function okButton:OnClick()
-        if contentState == 1 then
-            X2Option:SetConsoleVariable("r_VSync", "1")
-        elseif contentState == 2 then
-            X2Option:SetConsoleVariable("r_VSync", "0")
-        elseif contentState == 3 then
-            X2Option:SetConsoleVariable("r_VSync", "1")
-        elseif contentState == 4 then
-            X2Option:SetConsoleVariable("r_VSync", "0")
-        end
-    contentState = (contentState % 4) + 1
-    end
-    okButton:SetHandler("OnClick", okButton.OnClick)
-
+    contentState = (contentState % 2) + 1
 end
-
-local function EnteredWorld()
---    X2Chat:DispatchChatMessage(CMF_SYSTEM, string.format("My name is %s", X2Unit:UnitName("player")))
-    CreateButton()
-end
-UIParent:SetEventHandler(UIEVENT_TYPE.ENTERED_WORLD, EnteredWorld)
+refreshUIButton:SetHandler("OnClick", refreshUIButton.OnClick)

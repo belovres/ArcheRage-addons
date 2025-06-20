@@ -109,38 +109,10 @@ function checkBuffs()
 end
 
 
-local okButton = nil
-local toggleButton = nil
-local exampleWindow = nil
-local function CreateButton()
-    if okButton ~= nil then
-        return
-    end
 
-    okButton = UIParent:CreateWidget("button", "exampleButton", "UIParent", "")
-    okButton:SetText("Buff Check")
-    okButton:SetStyle("text_default")
-    -- okButton:SetUILayer("game")
-    okButton:AddAnchor("BOTTOM", "UIParent", 700, -230)
-    okButton:Show(true)
-    okButton:EnableDrag(true)
+local raidBuffsButton = CreateSimpleButton("Raid Buffs", 700, -230)
 
-    function okButton:OnDragStart()
-        self:StartMoving()
-        self.moving = true
-    end
-    okButton:SetHandler("OnDragStart", okButton.OnDragStart)
-
-    function okButton:OnDragStop()
-        self:StopMovingOrSizing()
-        self.moving = false
-    end
-    okButton:SetHandler("OnDragStop", okButton.OnDragStop)
-
-    function okButton:OnClick()
-            checkBuffs()
-    end
-    okButton:SetHandler("OnClick", okButton.OnClick)
-
+function raidBuffsButton:OnClick()
+        checkBuffs()
 end
-CreateButton()
+raidBuffsButton:SetHandler("OnClick", raidBuffsButton.OnClick)

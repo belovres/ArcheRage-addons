@@ -120,40 +120,9 @@ end
 
 
 
-local okButton = nil
-local toggleButton = nil
-local exampleWindow = nil
-local function CreateButton()
-    if okButton ~= nil then
-        return
-    end
+local raidClassesButton = CreateSimpleButton("Raid Classes", 700, -260)
 
-    okButton = UIParent:CreateWidget("button", "exampleButton", "UIParent", "")
-    okButton:SetText("Class Check")
-
-    okButton:SetStyle("text_default")
-    -- okButton:SetUILayer("game")
-    okButton:AddAnchor("BOTTOM", "UIParent", 700, -260)
-    okButton:Show(true)
-    okButton:EnableDrag(true)
-
-    function okButton:OnDragStart()
-        self:StartMoving()
-        self.moving = true
-    end
-    okButton:SetHandler("OnDragStart", okButton.OnDragStart)
-
-    function okButton:OnDragStop()
-        self:StopMovingOrSizing()
-        self.moving = false
-    end
-    okButton:SetHandler("OnDragStop", okButton.OnDragStop)
-
-    function okButton:OnClick()
-            checkClasses()
-    end
-    okButton:SetHandler("OnClick", okButton.OnClick)
-
+function raidClassesButton:OnClick()
+        checkClasses()
 end
-
-CreateButton()
+raidClassesButton:SetHandler("OnClick", raidClassesButton.OnClick)

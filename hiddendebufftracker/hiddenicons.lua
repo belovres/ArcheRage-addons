@@ -155,55 +155,26 @@ function buffAnchor:OnUpdate(dt)
     end
 end
 
+
+local hiddenBuffsButton = CreateSimpleButton("HiddenBuffs", 700, -120)
 local contentState = 1
-local okButton = nil
-local toggleButton = nil
-local exampleWindow = nil
-local function CreateButton()
-    if okButton ~= nil then
-        return
+
+function hiddenBuffsButton:OnClick()
+    if contentState == 1 then
+        X2Chat:DispatchChatMessage(CMF_SYSTEM, "Showing hidden icons.")
+        target_buffDebugMessages = false
+        showAllBuffs = true
+    elseif contentState == 2 then
+        X2Chat:DispatchChatMessage(CMF_SYSTEM, "Showing icons + dumping to chat.")
+        target_buffDebugMessages = true
+        showAllBuffs = true
+    elseif contentState == 3 then
+        X2Chat:DispatchChatMessage(CMF_SYSTEM, "Hiding hidden debuffs.")
+        target_buffDebugMessages = false
+        showAllBuffs = false
     end
-
-    okButton = UIParent:CreateWidget("button", "exampleButton", "UIParent", "")
-    okButton:SetText("Hidden")
-
-    okButton:SetStyle("text_default")
-    -- okButton:SetUILayer("game")
-    okButton:AddAnchor("BOTTOM", "UIParent", 700, -120)
-    okButton:Show(true)
-    okButton:EnableDrag(true)
-
-    function okButton:OnDragStart()
-        self:StartMoving()
-        self.moving = true
-    end
-    okButton:SetHandler("OnDragStart", okButton.OnDragStart)
-
-    function okButton:OnDragStop()
-        self:StopMovingOrSizing()
-        self.moving = false
-    end
-    okButton:SetHandler("OnDragStop", okButton.OnDragStop)
-
-    function okButton:OnClick()
-        if contentState == 1 then
-            X2Chat:DispatchChatMessage(CMF_SYSTEM, "Showing hidden icons.")
-            target_buffDebugMessages = false
-            showAllBuffs = true
-        elseif contentState == 2 then
-            X2Chat:DispatchChatMessage(CMF_SYSTEM, "Showing icons + dumping to chat.")
-            target_buffDebugMessages = true
-            showAllBuffs = true
-        elseif contentState == 3 then
-            X2Chat:DispatchChatMessage(CMF_SYSTEM, "Hiding hidden debuffs.")
-            target_buffDebugMessages = false
-            showAllBuffs = false
-        end
-    contentState = (contentState % 3) + 1
-    end
-    okButton:SetHandler("OnClick", okButton.OnClick)
+contentState = (contentState % 3) + 1
 end
-
-CreateButton()
+hiddenBuffsButton:SetHandler("OnClick", hiddenBuffsButton.OnClick)
 
 buffAnchor:SetHandler("OnUpdate", buffAnchor.OnUpdate)

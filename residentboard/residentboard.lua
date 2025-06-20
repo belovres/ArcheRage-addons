@@ -18,76 +18,51 @@ ADDON:ImportAPI(API_TYPE.CHAT.id)
 ADDON:ImportAPI(API_TYPE.UNIT.id)
 ADDON:ImportAPI(API_TYPE.RESIDENT.id)
 
-local okButton = nil
-local toggleButton = nil
-local function CreateButton()
-    if okButton ~= nil then
-        return
-    end
+local residentBoardButton = CreateSimpleButton("Board", 700, -180)
 
-    okButton = UIParent:CreateWidget("button", "exampleButton", "UIParent", "")
-    okButton:SetText("Board")
-    okButton:SetStyle("text_default")
-    okButton:AddAnchor("BOTTOM", "UIParent", 700, -180)
-    okButton:Show(true)
-    okButton:EnableDrag(true)
-
-    function okButton:OnDragStart()
-        self:StartMoving()
-        self.moving = true
-    end
-    okButton:SetHandler("OnDragStart", okButton.OnDragStart)
-
-    function okButton:OnDragStop()
-        self:StopMovingOrSizing()
-        self.moving = false
-    end
-    okButton:SetHandler("OnDragStop", okButton.OnDragStop)
-
-    local function checkBoard(index)
-        local contentA = X2Resident:GetResidentBoardContent(index)
-        local contents = ""
-        for i = 1, #contentA.contents do
-            if contents == "" then
-                contents = contentA.contents[i]
-            else
-                contents = contents .. "\n" .. contentA.contents[i] -- Add newline between entries
-            end
-        end
-        return contents
-    end
-
-    function okButton:OnClick()
-        local materials = {"Fabric", "Leather", "Lumber", "Iron Ingots", "Prince's Items", "Queen's Items", "Ancestor's Items"}
-        local boardLocator = X2Resident:GetResidentBoardContent(1)
-        local whereami = ""
-        local startIndex = 1
-        local endIndex = 7
-        if checkBoard(3) ~= "" and checkBoard(4) ~= "" then
-            whereami = "mainland"
-            startIndex = 1
-            endIndex = 4
-        elseif checkBoard(5) ~= "" or checkBoard(6) ~= "" then
-            whereami = "auroria"
-            startIndex = 5
-            endIndex = 7
+local function checkBoard(index)
+    local contentA = X2Resident:GetResidentBoardContent(index)
+    local contents = ""
+    for i = 1, #contentA.contents do
+        if contents == "" then
+            contents = contentA.contents[i]
         else
-            whereami = "unknown"
+            contents = contents .. "\n" .. contentA.contents[i] -- Add newline between entries
         end
-        if whereami ~= "unknown" then
-            X2Chat:DispatchChatMessage(CMF_SYSTEM, "----- Bonds for: " .. boardLocator.faction .. " -----")
-            for index = startIndex, endIndex do
-                local contents = checkBoard(index)
-                X2Chat:DispatchChatMessage(CMF_SYSTEM, "-- " ..materials[index] .. " --\n")
-                X2Chat:DispatchChatMessage(CMF_SYSTEM, contents .. "\n")
-            end
-            X2Chat:DispatchChatMessage(CMF_SYSTEM, "-------------------------------")
-        else
-            X2Chat:DispatchChatMessage(CMF_SYSTEM, "This location has no bonds.")
-        end
-
     end
-    okButton:SetHandler("OnClick", okButton.OnClick)
+    return contents
+end
+
+function residentBoardButton:OnClick()
+    local materials = {"Fabric", "Leather", "Lumber", "Iron Ingots", "Prince's Items", "Queen's Items", "Ancestor's Items"}
+    local boardLocator = X2Resident:GetResidentBoardContent(1)
+    local whereami = ""
+    local startIndex = 1
+    local endIndex = 7
+    if checkBoard(3) ~= "" and checkBoard(4) ~= "" then
+        whereami = "mainland"
+        startIndex = 1
+        endIndex = 4
+    elseif checkBoard(5) ~= "" or checkBoard(6) ~= "" then
+        whereami = "auroria"
+        startIndex = 5
+        endIndex = 7
+    else
+        whereami = "unknown"
+    end
+    if whereami ~= "unknown" then
+        X2Chat:DispatchChatMessage(CMF_SYSTEM, "----- Bonds for: " .. boardLocator.faction .. " -----")
+        for index = startIndex, endIndex do
+            local contents = checkBoard(index)
+            X2Chat:DispatchChatMessage(CMF_SYSTEM, "-- " ..materials[index] .. " --\n")
+            X2Chat:DispatchChatMessage(CMF_SYSTEM, contents .. "\n")
+        end
+        X2Chat:DispatchChatMessage(CMF_SYSTEM, "-------------------------------")
+    else
+        X2Chat:DispatchChatMessage(CMF_SYSTEM, "This location has no bonds.")
+    end
 
 end
+residentBoardButton:SetHandler("OnClick", residentBoardButton.OnClick)
+
 CreateButton()

@@ -99,40 +99,8 @@ function checkBuffs()
     end
 end
 
+local siegeCheckerButton = CreateSimpleButton("Siege Equips", 700, -200)
 
-local okButton = nil
-local toggleButton = nil
-local exampleWindow = nil
-local function CreateButton()
-    if okButton ~= nil then
-        return
-    end
-
-    okButton = UIParent:CreateWidget("button", "exampleButton", "UIParent", "")
-    okButton:SetText("Siege Check")
-
-    okButton:SetStyle("text_default")
-    -- okButton:SetUILayer("game")
-    okButton:AddAnchor("BOTTOM", "UIParent", 700, -200)
-    okButton:Show(true)
-    okButton:EnableDrag(true)
-
-    function okButton:OnDragStart()
-        self:StartMoving()
-        self.moving = true
-    end
-    okButton:SetHandler("OnDragStart", okButton.OnDragStart)
-
-    function okButton:OnDragStop()
-        self:StopMovingOrSizing()
-        self.moving = false
-    end
-    okButton:SetHandler("OnDragStop", okButton.OnDragStop)
-
-    function okButton:OnClick()
-            checkBuffs()
-    end
-    okButton:SetHandler("OnClick", okButton.OnClick)
-
+function siegeCheckerButton:OnClick()
+        checkBuffs()
 end
-CreateButton()
