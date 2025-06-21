@@ -37,7 +37,7 @@ function CreateSimpleButton(buttonText, x, y, addonName)
     newButton:SetStyle("text_default")
     newButton:SetHeight(25)
     newButton:SetWidth(80)
-    local savedX, savedY = LoadSavedPosition("user/" .. addonName .. buttonText .. ".txt")
+    local savedX, savedY = LoadSavedPosition("user/" .. addonName .. "/" .. buttonText .. ".txt")
     if savedX ~= 0 and savedY ~= 0 then
         newButton:AddAnchor("TOPLEFT", "UIParent", tonumber(savedX), tonumber(savedY))
     else
@@ -59,7 +59,7 @@ function CreateSimpleButton(buttonText, x, y, addonName)
         local uiScale = UIParent:GetUIScale() or 1.0
         local normalizedX = offsetX * uiScale
         local normalizedY = offsetY * uiScale
-        SaveButtonPosition("user/" .. addonName .. buttonText .. ".txt", normalizedX, normalizedY)
+        SaveButtonPosition("../Documents/" .. addonName .. "/" .. buttonText .. ".txt", normalizedX, normalizedY)
     end
     newButton:SetHandler("OnDragStop", newButton.OnDragStop)
 
