@@ -21,7 +21,7 @@ ADDON:ImportAPI(API_TYPE.ACHIEVEMENT.id)
 ADDON:ImportAPI(API_TYPE.UNIT.id)
 ADDON:ImportAPI(API_TYPE.LOCALE.id)
 
-local refreshUIButton = CreateSimpleButton("Refresh", 700, -150)
+local refreshUIButton = CreateSimpleButton("Refresh", 700, -150, "uiRefresher")
 
 local contentState = 1
 function refreshUIButton:OnClick()
