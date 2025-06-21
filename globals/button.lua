@@ -14,6 +14,10 @@ end
 
 --movement handlers
 
+function script_path()
+   return debug.getinfo(2).source:match("@?(.*/)")
+end
+
 ----- save draggable window ----------
 local function SaveButtonPosition(filePath, x, y)
     local file = io.open(filePath, "w")
