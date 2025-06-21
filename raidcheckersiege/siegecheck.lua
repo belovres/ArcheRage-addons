@@ -22,6 +22,8 @@ ADDON:ImportAPI(API_TYPE.CHAT.id)
 ADDON:ImportAPI(API_TYPE.UNIT.id)
 ADDON:ImportAPI(API_TYPE.LOCALE.id)
 
+local addonName = "raidcheckersiege"
+
 --https://wiki.archerage.to/ru-en/search/q is your friend
 local buffsToCheck = {
     catapult = {31757},
@@ -99,7 +101,7 @@ function checkBuffs()
     end
 end
 
-local siegeCheckerButton = CreateSimpleButton("Siege Equips", 700, -200)
+local siegeCheckerButton = CreateSimpleButton("Siege Equips", 700, -200, addonName)
 
 function siegeCheckerButton:OnClick()
         checkBuffs()
