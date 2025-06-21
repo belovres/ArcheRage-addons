@@ -14,10 +14,6 @@ end
 
 --movement handlers
 
-function script_path()
-   return debug.getinfo(2).source:match("@?(.*/)")
-end
-
 ----- save draggable window ----------
 local function SaveButtonPosition(filePath, x, y)
     local file = io.open(filePath, "w")
@@ -35,13 +31,13 @@ local function LoadSavedPosition(filePath)
 end
 
 --make simple button
-function CreateSimpleButton(buttonText, x, y)
+function CreateSimpleButton(buttonText, x, y, addonName)
     newButton = UIParent:CreateWidget("button", "newButton", "UIParent", "")
     newButton:SetText(buttonText)
     newButton:SetStyle("text_default")
     newButton:SetHeight(25)
     newButton:SetWidth(80)
-    local savedX, savedY = LoadSavedPosition("user/" .. buttonText .. ".txt")
+    local savedX, savedY = LoadSavedPosition("user/" .. addonName .. buttonText .. ".txt")
     if savedX ~= 0 and savedY ~= 0 then
         newButton:AddAnchor("TOPLEFT", "UIParent", tonumber(savedX), tonumber(savedY))
     else
@@ -63,7 +59,7 @@ function CreateSimpleButton(buttonText, x, y)
         local uiScale = UIParent:GetUIScale() or 1.0
         local normalizedX = offsetX * uiScale
         local normalizedY = offsetY * uiScale
-        SaveButtonPosition("user/" .. buttonText .. ".txt", normalizedX, normalizedY)
+        SaveButtonPosition("user/" .. addonName .. buttonText .. ".txt", normalizedX, normalizedY)
     end
     newButton:SetHandler("OnDragStop", newButton.OnDragStop)
 
