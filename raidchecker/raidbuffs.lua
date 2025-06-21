@@ -22,6 +22,7 @@ ADDON:ImportAPI(API_TYPE.CHAT.id)
 ADDON:ImportAPI(API_TYPE.UNIT.id)
 ADDON:ImportAPI(API_TYPE.LOCALE.id)
 
+local addonName = "raidchecker"
 --https://wiki.archerage.to/ru-en/search/q is your friend
 local buffsToCheck = {
     drum = {5700},
@@ -110,7 +111,7 @@ end
 
 
 
-local raidBuffsButton = CreateSimpleButton("Raid Buffs", 700, -230)
+local raidBuffsButton = CreateSimpleButton("Raid Buffs", 700, -230, addonName)
 
 function raidBuffsButton:OnClick()
         checkBuffs()
