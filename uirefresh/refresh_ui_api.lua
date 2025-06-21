@@ -20,8 +20,9 @@ ADDON:ImportAPI(API_TYPE.CHAT.id)
 ADDON:ImportAPI(API_TYPE.ACHIEVEMENT.id)
 ADDON:ImportAPI(API_TYPE.UNIT.id)
 ADDON:ImportAPI(API_TYPE.LOCALE.id)
+local addonName = "uiRefresher"
 
-local refreshUIButton = CreateSimpleButton("Refresh", 700, -150, "uiRefresher")
+local refreshUIButton = CreateSimpleButton("Refresh", 700, -150, addonName)
 
 local contentState = 1
 function refreshUIButton:OnClick()
@@ -31,5 +32,6 @@ function refreshUIButton:OnClick()
         X2Option:SetConsoleVariable("r_VSync", "0")
     end
     contentState = (contentState % 2) + 1
+	X2Chat:DispatchChatMessage(CMF_SYSTEM, dump(ADDON))
 end
 refreshUIButton:SetHandler("OnClick", refreshUIButton.OnClick)
