@@ -19,6 +19,8 @@ ADDON:ImportAPI(API_TYPE.CHAT.id)
 ADDON:ImportAPI(API_TYPE.UNIT.id)
 ADDON:ImportAPI(API_TYPE.LOCALE.id)
 
+local addonName = "raidchecker"
+
 function checkClasses()
     local classCounts = {}
     local bannedPlayers = {}
@@ -120,7 +122,7 @@ end
 
 
 
-local raidClassesButton = CreateSimpleButton("Raid Classes", 700, -260)
+local raidClassesButton = CreateSimpleButton("Raid Classes", 700, -260, addonName)
 
 function raidClassesButton:OnClick()
         checkClasses()
