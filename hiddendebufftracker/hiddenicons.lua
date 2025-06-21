@@ -21,6 +21,7 @@ ADDON:ImportAPI(API_TYPE.ACHIEVEMENT.id)
 ADDON:ImportAPI(API_TYPE.UNIT.id)
 ADDON:ImportAPI(API_TYPE.LOCALE.id)
 
+local addonName = "hiddendebufftracker"
 -- Create a basic invisible window to attach icons to
 local buffAnchor = CreateEmptyWindow("buffAnchor", "UIParent")
 buffAnchor:Show(true)
@@ -156,7 +157,7 @@ function buffAnchor:OnUpdate(dt)
 end
 
 
-local hiddenBuffsButton = CreateSimpleButton("HiddenBuffs", 700, -120)
+local hiddenBuffsButton = CreateSimpleButton("HiddenBuffs", 700, -120, addonName)
 local contentState = 1
 
 function hiddenBuffsButton:OnClick()
