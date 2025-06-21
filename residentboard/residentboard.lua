@@ -18,7 +18,9 @@ ADDON:ImportAPI(API_TYPE.CHAT.id)
 ADDON:ImportAPI(API_TYPE.UNIT.id)
 ADDON:ImportAPI(API_TYPE.RESIDENT.id)
 
-local residentBoardButton = CreateSimpleButton("Board", 700, -180)
+local addonName = "residentboard"
+
+local residentBoardButton = CreateSimpleButton("Board", 700, -180, addonName)
 
 local function checkBoard(index)
     local contentA = X2Resident:GetResidentBoardContent(index)
