@@ -115,7 +115,13 @@ lessEntries:SetHandler("OnClick", lessEntries.OnClick)
 
 ----- save draggable window ----------
 local filePath = "TimeUntilWindowPos.txt"
+local function GetUIScaleFactor()
+    return UIParent:GetUIScale() or 1.0
+end
 local function SaveWindowPosition(x, y)
+    local uiScale = GetUIScaleFactor()
+    x = math.floor(x / uiScale)
+    y = math.floor(y / uiScale)
     local file = io.open(filePath, "w")
     file:write(string.format("%d,%d", x, y))
     file:close()
