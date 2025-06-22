@@ -168,7 +168,7 @@ local function saveGearsToFile()
     end
     file:write("}\n")
     file:close()
-    X2Chat:DispatchChatMessage(CMF_SYSTEM, "Gear sets saved.")
+    --X2Chat:DispatchChatMessage(CMF_SYSTEM, "Gear sets saved.")
 end
 
 local function loadGearSetsFromFile()
@@ -279,11 +279,11 @@ local function createGearList()
     gearListWindow:SetExtent(windowWidth, windowHeight) 
 end
 
-X2Chat:DispatchChatMessage(CMF_SYSTEM,"Loading gear sets")
+--X2Chat:DispatchChatMessage(CMF_SYSTEM,"Loading gear sets")
 loadGearSetsFromFile()
-X2Chat:DispatchChatMessage(CMF_SYSTEM, "Creating list")
+--X2Chat:DispatchChatMessage(CMF_SYSTEM, "Creating list")
 createGearList()
-X2Chat:DispatchChatMessage(CMF_SYSTEM, "end")
+--X2Chat:DispatchChatMessage(CMF_SYSTEM, "end")
 
 
 
@@ -308,7 +308,7 @@ end
 --
 local function saveGear(gearName)
     local currentEquipment = getEquippedGearArray()
-    X2Chat:DispatchChatMessage(CMF_SYSTEM, "saving:" .. dump(getEquippedGearArray()))
+    --X2Chat:DispatchChatMessage(CMF_SYSTEM, "saving:" .. dump(getEquippedGearArray()))
     gears[gearName] = currentEquipment
     saveGearsToFile()
     createGearList()
