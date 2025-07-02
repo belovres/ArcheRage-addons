@@ -1,10 +1,8 @@
 -------------- Original Author: Strawberry --------------
 ----------------- Discord: exec_noir --------------------
 -- proof of concept for drawing an arrow pointing at   --
--- something on the screen, it reverses when the       --
--- target is offscreen, but someone who isn't me can   --
--- figure out the maths to fix that, I just wanted to  --
--- be able to draw the arrow, yippie, good luck        --
+-- something on the screen, please reconsider drawing  --
+-- the arrow every frame, it could be taxing idk       --
 ---------------------------------------------------------
 if API_TYPE == nil then
     ADDON:ImportAPI(8)
