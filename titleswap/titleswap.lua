@@ -23,58 +23,6 @@ ADDON:ImportAPI(API_TYPE.UNIT.id)
 ADDON:ImportAPI(API_TYPE.LOCALE.id)
 ADDON:ImportAPI(API_TYPE.PLAYER.id)
 
-local function dump(o)
- if type(o) == 'table' then
-  local s = '{ '
-  for k,v in pairs(o) do
-    if type(k) ~= 'number' then k = '"'..k..'"' end
-    s = s .. '['..k..'] = ' .. dump(v) .. ','
-  end
-  return s .. '} '
- else
-  return tostring(o)
- end
-end
-
---button skin settings
-local color = {}
-color.normal    = UIParent:GetFontColor("btn_df")
-color.highlight = UIParent:GetFontColor("btn_ov")
-color.pushed    = UIParent:GetFontColor("btn_on")
-color.disabled  = UIParent:GetFontColor("btn_dis")
-
-local buttonskin = {
-    drawableType = "ninePart",
-    path = "ui/common/default.dds",
-    coordsKey = "btn",
-    autoResize = true,
-    fontColor = color,
-    fontInset = {
-        left = 11,
-        right = 11,
-        top = 0,
-        bottom = 0,
-    },
-}
-local color_selected = {}
-color_selected.normal    = UIParent:GetFontColor("green")
-color_selected.highlight = UIParent:GetFontColor("green")
-color_selected.pushed    = UIParent:GetFontColor("green")
-color_selected.disabled  = UIParent:GetFontColor("btn_dis")
-local buttonskin_selected = {
-    drawableType = "ninePart",
-    path = "ui/common/default.dds",
-    coordsKey = "btn",
-    autoResize = true,
-    fontColor = color_selected,
-    fontInset = {
-        left = 11,
-        right = 11,
-        top = 0,
-        bottom = 0,
-    },
-}
-
 -- actual title box
 local titles = {}
 local titlesFile = "titles.lua"
