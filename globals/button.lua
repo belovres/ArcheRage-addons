@@ -22,7 +22,7 @@ function loadData(buttonText)
 	return savedX,savedY
 end
 
-function saveDate(buttonText, x, y)
+function saveData(buttonText, x, y)
 	local buttonSettings={["x"] = x,["y"] = y}
 	ADDON:ClearData(buttonText)
 	ADDON:SaveData(buttonText, buttonSettings)
@@ -56,7 +56,7 @@ function CreateSimpleButton(buttonText, x, y)
         local uiScale = UIParent:GetUIScale() or 1.0
         local normalizedX = offsetX * uiScale
         local normalizedY = offsetY * uiScale
-	saveDate(buttonText, normalizedX, normalizedY)
+	saveData(buttonText, normalizedX, normalizedY)
     end
     newButton:SetHandler("OnDragStop", newButton.OnDragStop)
 
