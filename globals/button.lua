@@ -12,6 +12,21 @@ function dump(o)
  end
 end
 
+function loadData(buttonText)
+	local buttonSettings = ADDON:LoadData(buttonText)
+	local savedY, savedX = 0
+	if buttonSettings ~= nil then
+		savedX = tonumber(buttonSettings["x"])
+		savedY = tonumber(buttonSettings["y"])
+	end
+	return savedX,savedY
+end
+
+function saveDate(buttonText, x, y)
+	local buttonSettings={["x"] = x,["y"] = y}
+	ADDON:ClearData(buttonText)
+	ADDON:SaveData(buttonText, buttonSettings)
+end
 --make simple button
 function CreateSimpleButton(buttonText, x, y)
     newButton = UIParent:CreateWidget("button", "newButton", "UIParent", "")
@@ -19,12 +34,7 @@ function CreateSimpleButton(buttonText, x, y)
     newButton:SetStyle("text_default")
     newButton:SetHeight(25)
     newButton:SetWidth(80)
-	local buttonSettings = ADDON:LoadData(buttonText)
-	local savedY, savedX = 0
-	if buttonSettings ~= nil then
-		savedX = tonumber(buttonSettings["x"])
-		savedY = tonumber(buttonSettings["y"])
-	end
+    local savedX,savedY = loadData(buttonText)
     if savedX ~= 0 and savedY ~= 0 then
         newButton:AddAnchor("TOPLEFT", "UIParent", savedX, savedY)
     else
@@ -46,9 +56,7 @@ function CreateSimpleButton(buttonText, x, y)
         local uiScale = UIParent:GetUIScale() or 1.0
         local normalizedX = offsetX * uiScale
         local normalizedY = offsetY * uiScale
-		      local buttonSettings={["x"] = normalizedX,["y"] = normalizedY}
-		      ADDON:ClearData(buttonText)
-		      ADDON:SaveData(buttonText, buttonSettings)
+	saveDate(buttonText, normalizedX, normalizedY)
     end
     newButton:SetHandler("OnDragStop", newButton.OnDragStop)
 
