@@ -12,24 +12,6 @@ function dump(o)
  end
 end
 
---movement handlers
-
------ save draggable window ----------
-local function SaveButtonPosition(filePath, x, y)
-    local file = io.open(filePath, "w")
-    file:write(string.format("%d,%d", x, y))
-    file:close()
-end
-
-local function LoadSavedPosition(filePath)
-    local file = io.open(filePath, "r")
-    if not file then return 0, 0 end
-    local line = file:read("*line") 
-    file:close()
-    local x,y = line:match("(%d+),(%d+)")
-    if x and y then return x,y else return 0,0 end
-end
-
 --make simple button
 function CreateSimpleButton(buttonText, x, y)
     newButton = UIParent:CreateWidget("button", "newButton", "UIParent", "")
@@ -37,9 +19,14 @@ function CreateSimpleButton(buttonText, x, y)
     newButton:SetStyle("text_default")
     newButton:SetHeight(25)
     newButton:SetWidth(80)
-    local savedX, savedY = LoadSavedPosition("user/" .. buttonText .. ".txt")
+	local buttonSettings = ADDON:LoadData(buttonText)
+	local savedY, savedX = 0
+	if buttonSettings ~= nil then
+		savedX = tonumber(buttonSettings["x"])
+		savedY = tonumber(buttonSettings["y"])
+	end
     if savedX ~= 0 and savedY ~= 0 then
-        newButton:AddAnchor("TOPLEFT", "UIParent", tonumber(savedX), tonumber(savedY))
+        newButton:AddAnchor("TOPLEFT", "UIParent", savedX, savedY)
     else
         newButton:AddAnchor("BOTTOM", "UIParent", x, y)
     end
@@ -59,7 +46,9 @@ function CreateSimpleButton(buttonText, x, y)
         local uiScale = UIParent:GetUIScale() or 1.0
         local normalizedX = offsetX * uiScale
         local normalizedY = offsetY * uiScale
-        SaveButtonPosition("user/" .. buttonText .. ".txt", normalizedX, normalizedY)
+		      local buttonSettings={["x"] = normalizedX,["y"] = normalizedY}
+		      ADDON:ClearData(buttonText)
+		      ADDON:SaveData(buttonText, buttonSettings)
     end
     newButton:SetHandler("OnDragStop", newButton.OnDragStop)
 
