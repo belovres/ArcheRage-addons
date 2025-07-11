@@ -21,7 +21,7 @@ local function SaveButtonPosition(buttonText, x, y)
     ADDON:SaveData(buttonText, buttonSettings)
 end
 
-function LoadSavedPosition(buttonText)
+local function LoadSavedPosition(buttonText)
     local buttonSettings = ADDON:LoadData(buttonText)
     local savedY, savedX = 0
     if buttonSettings ~= nil then
