@@ -38,7 +38,7 @@ function CreateSimpleButton(buttonText, x, y)
     newButton:SetStyle("text_default")
     newButton:SetHeight(25)
     newButton:SetWidth(80)
-    local savedX,savedY = LoadSavedPosition(buttonText)
+    local savedX, savedY = LoadSavedPosition(buttonText)
     if savedX ~= 0 and savedY ~= 0 then
         newButton:AddAnchor("TOPLEFT", "UIParent", savedX, savedY)
     else
