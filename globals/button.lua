@@ -11,6 +11,7 @@ function dump(o)
   return tostring(o)
  end
 end
+--movement handlers
 
 ----- save draggable window ----------
 local function SaveButtonPosition(buttonText, x, y)
