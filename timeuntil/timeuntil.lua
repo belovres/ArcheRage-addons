@@ -205,36 +205,31 @@ local eventsName = {
 				Wonderland = "Wonderland"
 			},
 	["zh_cn"] = {
+		                Hiram = "古代 T6",
+		                CR = "征兆",
 				GR = "迷雾",
-				CR = "征兆",
-				Hiram = "Hiram T6",
-				SG_CR = "安塔伦",
-				JMG = "JMG",
+			        SG_CR = "安塔伦",
+		                aegis = "烛台",
+		                whalesong = "鲸鱼，
+		                Halcy = "黄金",
+				JMG = "JMG"，
 				Lusca = "阿肯",
 				BD = "黑龙",
 				Kraken = "克拉肯",
 				Leviathan = "利维坦",
 				Charybdis = "卡里迪斯",
 				Anthalon_G = "庭院安塔伦",
-				Halcy = "黄金",
 				RD = "红龙",
 				Abyssal_Atk = "深渊",
 				Hasla = "翡翠谷征兆",
 				Akasch = "守山",
 				Prairie = "大草原",
-				Wonderland = "Wonderland"
+				Wonderland = "仙境"
 			}				
 }
 
 local dynamicEventsName = {
-	["ru"] = {
-			aegis = "Эфен",
-			whalesong = "Бухта"
-		},
-	["en_us"] = {
-			aegis = "Aegis",
-			whalesong = "Whalesong"
-		},
+	
 	["zh_cn"] = {
 			aegis = "烛台",
 			whalesong = "鲸鱼"
