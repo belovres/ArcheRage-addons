@@ -164,46 +164,7 @@ if locale~="en_us" and locale~="ru" and locale~="zh_cn" then
 end
 
 local eventsName = {
-	["ru"] = {
-				GR = "Призрачка",
-				CR = "Кровь",
-				Hiram = "Рамианский",
-				SG_CR = "Анталон",--rename other event name
-				JMG = "АГЛ",
-				Lusca = "Спруты",
-				BD = "Ксанатос",
-				Kraken = "Кракен",
-				Leviathan = "Левиафан",
-				Charybdis = "Калидис",
-				Anthalon_G = "Анталон(Сады)",
-				Halcy = "Даскшир",
-				RD = "Гартарейн",
-				Abyssal_Atk = "Спруты",
-				Hasla = "Зомби",
-				Akasch = "Ифнир",
-				Prairie = "Луг",
-				Wonderland = "Чудесариум"
-			},
-	["en_us"] = {
-				GR = "GR",
-				CR = "CR",
-				Hiram = "Hiram T6",
-				SG_CR = "SG CR",
-				JMG = "JMG",
-				Lusca = "Lusca",
-				BD = "BD",
-				Kraken = "Kraken",
-				Leviathan = "Leviathan",
-				Charybdis = "Charybdis",
-				Anthalon_G = "Anthalon(G)",
-				Halcy = "Halcyona",
-				RD = "RD",
-				Abyssal_Atk = "Abyssal Atk",
-				Hasla = "Hasla",
-				Akasch = "Akasch",
-				Prairie = "Prairie",
-				Wonderland = "Wonderland"
-			},
+	
 	["zh_cn"] = {
 		                Hiram = "古代 T6",
 		                CR = "征兆",
